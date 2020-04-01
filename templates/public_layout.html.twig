@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}On est là pour vous !{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+<header>
+    <nav>
+        <ul style="display: flex; justify-content: space-evenly;">
+            <li><a href="{{ path('index') }}">Accueil</a></li>
+            <li><a href="{{ path('ask_for_help') }}">Demander de l'aide</a></li>
+            <li><a href="{{ path('therapist_register') }}">Proposer mon aide</a></li>
+            <li><a href="{{ path('how_it_works') }}">Comment ça marche ?</a></li>
+            <li><a href="{{ path('emergency_numbers') }}">Numéros d'urgence</a></li>
+        </ul>
+    </nav>
+    <div class="container jumbotron text-center">
+        <h1>onestlapourvous.org</h1>
+        <h2>Réseau de soutien psychologique durant la crise du Covid-19</h2>
+        <h2>L'approche de la Gestalt-thérapie au service du plus grand nombre</h2>
+    </div>
+</header>
+{% block body %}{% endblock %}
+<footer>
+    <nav>
+        <ul style="display: flex; justify-content: space-evenly;">
+            <li><a href="{{ path('the_project') }}">Le projet</a></li>
+            <li><a href="{{ path('who_are_we') }}">Qui sommes-nous ?</a></li>
+            <li><a href="{{ path('data_privacy_policy') }}">Politique de Protection des données</a></li>
+            <li><a href="{{ path('terms_of_use') }}">Conditions d'utilisation</a></li>
+            <li><a href="{{ path('legal_notices') }}">Mentions légales</a></li>
+        </ul>
+    </nav>
+</footer>
+{% block javascripts %}{% endblock %}
+</body>
+</html>
