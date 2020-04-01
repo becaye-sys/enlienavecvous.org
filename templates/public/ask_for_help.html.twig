@@ -1,0 +1,57 @@
+{% extends "public_layout.html.twig" %}
+
+{% block body %}
+    <div class="container text-center">
+        <h1>Demander de l'aide</h1>
+        <p>La crise actuelle vous confronte à des situations déstabilisantes.</p>
+        <p>
+            Un.e thérapeute est une personne qui a des compétences particulières pour vous accompagner dans ce que vous vivez en ce moment. Être
+            en lien avec un.e thérapeute va vous aider à sortir de l’état dans lequel vous êtes, retrouver du discernement, vous sentir moins seul.e,
+            prendre de la distance, retrouver du calme, etc.
+        </p>
+        <p>
+            Durant cette période inédite de crise, nous sommes confronté.e.s à un changement de style de vie qui peut être source de difficultés au
+            quotidien. La perte de notre routine peut nous impacter de diverses manières, que l’on doive travailler ou que l’on soit confiné : irritabilité,
+            angoisse, peur du virus, pertes financières, isolement, manque d’intimité, ennui, manque de contact physique, tensions familiales, violences,
+            difficultés à s’occuper des enfants, perte d’un proche, etc. Le soutien dont vous avez besoin est à quelques clics.
+        </p>
+        <p>
+            Si un ou des enfants autour de vous vivent des difficultés durant cette période, nous pouvons vous aider à trouver la manière de les aider au
+            mieux à traverser cette crise.
+        </p>
+        <p>
+            Remplissez le formulaire ci-dessous afin de vous enregistrer et accéder à notre calendrier de prise de rendez-vous.
+        </p>
+        <p>
+            <i>
+                Attention ce service est réservé aux personnes majeures (18 ans et +). Si vous êtes mineur, <a href="{{ path('emergency_numbers') }}">appelez la ligne dédiée aux mineur.e.s.</a>
+            </i>
+        </p>
+        <p>
+            <a href="{{ path('how_it_works') }}">En savoir plus le fonctionnement de la plateforme</a> {# renvoie à la page comment ça marche #}
+        </p>
+        <h2>Formulaire d'inscription</h2>
+        <form>
+            <input type="text" placeholder="Prénom (requis)">
+            <input type="text" placeholder="Nom (requis)">
+            <input type="text" placeholder="Pays (requis)">
+            <input type="text" placeholder="Code Postal (requis)">
+            <input type="text" placeholder="N° de tél. (requis)">
+            <input type="text" placeholder="Adresse e-mail (requis)">
+            <input type="checkbox"> Je certifie être majeur.e
+            <input type="checkbox"> J'ai lu et j'accepte la <a target="_blank" href="{{ path('data_privacy_policy') }}">Politique de Confidentialité</a> et les <a target="_blank" href="{{ path('terms_of_use') }}">Conditions d'utilisation</a> de Onestlapourvous.org
+            <button>Valider</button>
+        </form>
+        <p>
+            (Un email vous sera envoyé afin de confirmer votre compte et vous permettra de vous connecter)
+        </p>
+        <p>
+            (Vous ne pourrez pas vous connecter avant d'avoir confirmé votre compte par email)
+        </p>
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="text-center">En cas d'urgence, si votre vie ou celle d'autrui est en danger, <a href="{{ path('emergency_numbers') }}">contactez les numéros d'urgence de votre pays.</a></h2>
+            </div>
+        </div>
+    </div>
+{% endblock %}
