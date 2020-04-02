@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <title>{% block title %}On est là pour vous !{% endblock %}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    {% block stylesheets %}{% endblock %}
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
 </head>
 <body>
 <header>
@@ -28,11 +30,6 @@
             <a class="btn btn-outline-primary" href="{{ path('app_login') }}">Connexion</a>
         {% endif %}
     </div>
-    <div class="container jumbotron text-center">
-        <h1>onestlapourvous.org</h1>
-        <h2>Réseau de soutien psychologique durant la crise du Covid-19</h2>
-        <h2>L'approche de la Gestalt-thérapie au service du plus grand nombre</h2>
-    </div>
 </header>
 {% block body %}{% endblock %}
 <footer class="container">
@@ -46,6 +43,8 @@
         </nav>
     </div>
 </footer>
-{% block javascripts %}{% endblock %}
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
 </body>
 </html>
