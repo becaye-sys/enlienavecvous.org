@@ -103,11 +103,7 @@ class PublicController extends AbstractController
     public function registrationConfirmationCheck(Request $request, RequestContext $requestContext, UserRepository $userRepository, TherapistRepository $therapistRepository, EntityManagerInterface $entityManager)
     {
         $token = substr($requestContext->getPathInfo(), 20, strlen($requestContext->getPathInfo()));
-        dump($token);
-        $therapist = $therapistRepository->findOneBy(['emailToken' => $token]);
-        dump($therapist);
         $user = $userRepository->findOneBy(['emailToken' => $token]);
-        dd($user);
         if ($user && false === $user->isActive()) {
             $user->setEmailToken('')->setIsActive(true);
             $entityManager->flush();

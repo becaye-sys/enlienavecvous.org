@@ -17,12 +17,7 @@ class Therapist extends User implements TherapistInterface
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    protected $id;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $labelName;
+    private $id;
 
     /**
      * @ORM\Column(type="string")
@@ -58,23 +53,6 @@ class Therapist extends User implements TherapistInterface
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function setRoles(array $roles): User
-    {
-        $this->roles = $roles;
-    }
-
-    public function getLabelName(): ?string
-    {
-        return $this->labelName;
-    }
-
-    public function setLabelName(?string $labelName): self
-    {
-        $this->labelName = $labelName;
-
-        return $this;
     }
 
     public function getEthicEntityCodeLabel(): ?string
