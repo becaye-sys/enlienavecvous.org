@@ -52,6 +52,7 @@ class Therapist extends User implements TherapistInterface
     public function __construct()
     {
         parent::__construct();
+        $this->roles = ["ROLE_USER", self::ROLE_THERAPIST];
     }
 
     public function getId(): ?int
@@ -61,7 +62,7 @@ class Therapist extends User implements TherapistInterface
 
     public function setRoles(array $roles): User
     {
-        $this->roles = ['ROLE_USER', self::ROLE_THERAPIST];
+        $this->roles = $roles;
     }
 
     public function getLabelName(): ?string
