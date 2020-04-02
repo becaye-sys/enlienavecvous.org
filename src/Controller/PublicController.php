@@ -64,7 +64,7 @@ class PublicController extends AbstractController
                     ->from('hello@onestlapourvous.org')
                     ->to('louisthomas76750@gmail.com')
                     ->subject("Inscription sur la plateforme Onestlapourvous.org")
-                    ->html('<a href=\'https://127.0.0.1:8000/mon-compte/confirmation/'.$emailToken.'\'>Confirmer mon compte<a>', 'utf-8');
+                    ->html('<a href=\'https://127.0.0.1:8000/email/confirmation/'.$emailToken.'\'>Confirmer mon compte<a>', 'utf-8');
                 try {
                     $mailer->send($email);
                 } catch (TransportExceptionInterface $e) {
@@ -94,12 +94,12 @@ class PublicController extends AbstractController
     }
 
     /**
-     * @Route(path="/mon-compte/confirmation/{emailToken}")
+     * @Route(path="/email/confirmation/{emailToken}")
      * @param Request $request
      */
     public function registrationConfirmationCheck(Request $request, RequestContext $requestContext, UserRepository $userRepository, EntityManagerInterface $entityManager)
     {
-        $token = substr($requestContext->getPathInfo(), 25, strlen($requestContext->getPathInfo()));
+        $token = substr($requestContext->getPathInfo(), 20, strlen($requestContext->getPathInfo()));
         $user = $userRepository->findOneBy(['emailToken' => $token]);
         if ($user && false === $user->isActive()) {
             $user->setEmailToken('')->setIsActive(true);
