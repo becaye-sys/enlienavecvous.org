@@ -4,8 +4,10 @@
 namespace App\Controller;
 
 
+use App\Entity\Therapist;
 use App\Entity\User;
 use App\Form\TherapistRegisterType;
+use App\Repository\TherapistRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -52,9 +54,9 @@ class PublicController extends AbstractController
         $therapistForm->handleRequest($request);
 
         if ($request->isMethod('POST') && $therapistForm->isSubmitted() && $therapistForm->isValid()) {
-            if ($therapistForm->getData() instanceof User) {
+            if ($therapistForm->getData() instanceof Therapist) {
                 dump($therapistForm->getData());
-                /** @var User $user */
+                /** @var Therapist $user */
                 $user = $therapistForm->getData();
                 $user = $user->setUniqueEmailToken();
                 $user = $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
@@ -97,10 +99,11 @@ class PublicController extends AbstractController
      * @Route(path="/email/confirmation/{emailToken}")
      * @param Request $request
      */
-    public function registrationConfirmationCheck(Request $request, RequestContext $requestContext, UserRepository $userRepository, EntityManagerInterface $entityManager)
+    public function registrationConfirmationCheck(Request $request, RequestContext $requestContext, UserRepository $userRepository, TherapistRepository $therapistRepository, EntityManagerInterface $entityManager)
     {
         $token = substr($requestContext->getPathInfo(), 20, strlen($requestContext->getPathInfo()));
         $user = $userRepository->findOneBy(['emailToken' => $token]);
+        dd($user);
         if ($user && false === $user->isActive()) {
             $user->setEmailToken('')->setIsActive(true);
             $entityManager->flush();

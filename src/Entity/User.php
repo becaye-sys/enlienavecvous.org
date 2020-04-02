@@ -2,14 +2,13 @@
 
 namespace App\Entity;
 
-use App\Interfaces\TherapistInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User implements UserInterface, TherapistInterface
+class User implements UserInterface
 {
     /**
      * @ORM\Id()
@@ -75,34 +74,9 @@ class User implements UserInterface, TherapistInterface
     protected $phoneNumber;
 
     /**
-     * @ORM\Column(type="string")
-     */
-    private $ethicEntityCodeLabel;
-
-    /**
-     * @ORM\Column(type="string")
-     */
-    private $schoolEntityLabel;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     protected $hasAcceptedTermsAndPolicies;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    protected $hasCertification;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    protected $isSupervised;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    protected $isRespectingEthicalFrameWork;
 
     public function __construct()
     {
@@ -280,26 +254,6 @@ class User implements UserInterface, TherapistInterface
         $this->phoneNumber = $phoneNumber;
     }
 
-    public function getEthicEntityCodeLabel(): ?string
-    {
-        return $this->ethicEntityCodeLabel;
-    }
-
-    public function setEthicEntityCodeLabel(string $ethicEntityCodeLabel): void
-    {
-        $this->ethicEntityCodeLabel = $ethicEntityCodeLabel;
-    }
-
-    public function getSchoolEntityLabel(): ?string
-    {
-        return $this->schoolEntityLabel;
-    }
-
-    public function setSchoolEntityLabel(string $schoolEntityLabel): void
-    {
-        $this->schoolEntityLabel = $schoolEntityLabel;
-    }
-
     public function getHasAcceptedTermsAndPolicies(): ?bool
     {
         return $this->hasAcceptedTermsAndPolicies;
@@ -308,51 +262,6 @@ class User implements UserInterface, TherapistInterface
     public function setHasAcceptedTermsAndPolicies(bool $hasAcceptedTermsAndPolicies): void
     {
         $this->hasAcceptedTermsAndPolicies = $hasAcceptedTermsAndPolicies;
-    }
-
-    public function getHasCertification(): ?bool
-    {
-        return $this->hasCertification;
-    }
-
-    public function isOwningCertification(): ?bool
-    {
-        return $this->hasCertification;
-    }
-
-    public function setHasCertification(bool $hasCertification): void
-    {
-        $this->hasCertification = $hasCertification;
-    }
-
-    public function getIsSupervised(): ?bool
-    {
-        return $this->isSupervised;
-    }
-
-    public function isSupervised(): ?bool
-    {
-        return $this->isSupervised;
-    }
-
-    public function setIsSupervised(bool $isSupervised): void
-    {
-        $this->isSupervised = $isSupervised;
-    }
-
-    public function getIsRespectingEthicalFrameWork(): ?bool
-    {
-        return $this->isRespectingEthicalFrameWork;
-    }
-
-    public function setIsRespectingEthicalFrameWork(bool $isRespectingEthicalFrameWork): void
-    {
-        $this->isRespectingEthicalFrameWork = $isRespectingEthicalFrameWork;
-    }
-
-    public function isRespectingEthicalFrameWork(): ?bool
-    {
-        return $this->isRespectingEthicalFrameWork;
     }
 
     public function setUniqueEmailToken(): self
