@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discriminator", type="string")
- * @ORM\DiscriminatorMap({"user" = "User", "therapist" = "Therapist"})
+ * @ORM\DiscriminatorMap({"user" = "User", "therapist" = "Therapist", "patient" = "Patient"})
  * @UniqueEntity(fields={"email"}, message="Cette adresse est déjà utilisée.")
  */
 class User implements UserInterface

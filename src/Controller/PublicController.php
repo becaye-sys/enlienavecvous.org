@@ -4,8 +4,9 @@
 namespace App\Controller;
 
 
+use App\Entity\Patient;
 use App\Entity\Therapist;
-use App\Entity\User;
+use App\Form\PatientRegisterType;
 use App\Form\TherapistRegisterType;
 use App\Repository\TherapistRepository;
 use App\Repository\UserRepository;
@@ -38,10 +39,43 @@ class PublicController extends AbstractController
     /**
      * @Route(path="/demander-de-l-aide", name="ask_for_help")
      */
-    public function askForHelpRegister()
+    public function askForHelpRegister(Request $request, UserPasswordEncoderInterface $encoder, MailerInterface $mailer, EntityManagerInterface $entityManager)
     {
+        $patient = new Patient();
+        $patientForm = $this->createForm(PatientRegisterType::class, $patient);
+        $patientForm->handleRequest($request);
+
+        if ($request->isMethod('POST') && $patientForm->isSubmitted() && $patientForm->isValid()) {
+            if ($patientForm->getData() instanceof Patient) {
+                dd($patientForm->getData());
+                /** @var Patient $user */
+                $user = $patientForm->getData();
+                $user = $user->setUniqueEmailToken();
+                $user = $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
+                $emailToken = $user->getEmailToken();
+                // send email
+                $email = (new Email())
+                    ->from('hello@onestlapourvous.org')
+                    ->to('louisthomas76750@gmail.com')
+                    ->subject("Inscription sur la plateforme Onestlapourvous.org")
+                    ->html('<a href=\'https://127.0.0.1:8000/email/confirmation/'.$emailToken.'\'>Confirmer mon compte<a>', 'utf-8');
+                try {
+                    $mailer->send($email);
+                } catch (TransportExceptionInterface $e) {
+                    throw new TransportException($e->getMessage(), $e->getCode());
+                }
+                $entityManager->persist($user);
+                $entityManager->flush();
+                $this->addFlash("success","Votre compte a été créé avec succès !");
+                return $this->redirectToRoute('registration_waiting_for_email_validation', [], Response::HTTP_CREATED);
+            }
+        }
+
         return $this->render(
-            'public/ask_for_help.html.twig'
+            'public/ask_for_help.html.twig',
+            [
+                'patient_register_form' => $patientForm->createView()
+            ]
         );
     }
 

@@ -1,5 +1,7 @@
 {% extends "public_layout.html.twig" %}
 
+{% set form = patient_register_form %}
+
 {% block body %}
     <div class="container text-center">
         <h1>Demander de l'aide</h1>
@@ -31,17 +33,34 @@
             <a href="{{ path('how_it_works') }}">En savoir plus le fonctionnement de la plateforme</a> {# renvoie à la page comment ça marche #}
         </p>
         <h2>Formulaire d'inscription</h2>
-        <form>
-            <input type="text" placeholder="Prénom (requis)">
-            <input type="text" placeholder="Nom (requis)">
-            <input type="text" placeholder="Pays (requis)">
-            <input type="text" placeholder="Code Postal (requis)">
-            <input type="text" placeholder="N° de tél. (requis)">
-            <input type="text" placeholder="Adresse e-mail (requis)">
-            <input type="checkbox"> Je certifie être majeur.e
-            <input type="checkbox"> J'ai lu et j'accepte la <a target="_blank" href="{{ path('data_privacy_policy') }}">Politique de Confidentialité</a> et les <a target="_blank" href="{{ path('terms_of_use') }}">Conditions d'utilisation</a> de Onestlapourvous.org
-            <button>Valider</button>
-        </form>
+        {{ form_start(form) }}
+        <fieldset>
+            {{ form_widget(form.firstName, {'attr': {'placeholder': "Votre prénom"}}) }}
+            {{ form_widget(form.lastName, {'attr': {'placeholder': "Votre nom"}}) }}
+        </fieldset>
+        <fieldset>
+            {{ form_widget(form.country) }}
+            {{ form_widget(form.zipCode, {'attr': {'placeholder': "Votre code postal"}}) }}
+        </fieldset>
+        <fieldset>
+            {{ form_widget(form.phoneNumber, {'attr': {'placeholder': "Votre numéro de téléphone"}}) }}
+            {{ form_widget(form.email, {'attr': {'placeholder': "Votre email"}}) }}
+        </fieldset>
+        <fieldset>
+            {{ form_label(form.password.first) }}
+            {{ form_widget(form.password.first, {'attr': {'placeholder': "Votre mot de passe"}}) }}
+            {{ form_label(form.password.second) }}
+            {{ form_widget(form.password.second, {'attr': {'placeholder': "Confirmez votre mot de passe"}}) }}
+        </fieldset>
+        <fieldset>
+            {{ form_widget(form.isMajor) }} Je certifie être majeur.e
+        </fieldset>
+        <fieldset>
+            {{ form_widget(form.hasAcceptedTermsAndPolicies) }} J'ai lu et j'accepte la <a>Politique de Confidentialité</a> et les <a>Conditions d'utilisation</a> de Onestlapourvous.org
+        </fieldset>
+
+        <button type="submit">Valider</button>
+        {{ form_end(form) }}
         <p>
             (Un email vous sera envoyé afin de confirmer votre compte et vous permettra de vous connecter)
         </p>
