@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}On est là pour vous !{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+<header>
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+        <h5 class="my-0 mr-md-auto font-weight-normal">On est là pour vous !</h5>
+        <nav class="my-2 my-md-0 mr-md-3">
+            <a class="p-2 text-dark" href="{{ path('index') }}">Accueil</a>
+            <a class="p-2 text-dark" href="{{ path('ask_for_help') }}">Demander de l'aide</a>
+            <a class="p-2 text-dark" href="{{ path('therapist_register') }}">Proposer mon aide</a>
+            <a class="p-2 text-dark" href="{{ path('how_it_works') }}">Comment ça marche ?</a>
+            <a class="p-2 text-dark" href="{{ path('emergency_numbers') }}">Numéros d'urgence</a>
+        </nav>
+        <a class="btn btn-outline-primary" href="#">Connexion</a>
+    </div>
+    <div class="container jumbotron text-center">
+        <h1>onestlapourvous.org</h1>
+        <h2>Réseau de soutien psychologique durant la crise du Covid-19</h2>
+        <h2>L'approche de la Gestalt-thérapie au service du plus grand nombre</h2>
+    </div>
+</header>
+{% block body %}{% endblock %}
+<footer class="container">
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+        <nav class="my-2 my-md-0 mr-md-3">
+            <a class="p-2 text-dark" href="{{ path('the_project') }}">Le projet</a>
+            <a class="p-2 text-dark" href="{{ path('who_are_we') }}">Qui sommes-nous ?</a>
+            <a class="p-2 text-dark" href="{{ path('data_privacy_policy') }}">Politique de Protection des données</a>
+            <a class="p-2 text-dark" href="{{ path('terms_of_use') }}">Conditions d'utilisation</a>
+            <a class="p-2 text-dark" href="{{ path('legal_notices') }}">Mentions légales</a>
+        </nav>
+    </div>
+</footer>
+{% block javascripts %}{% endblock %}
+</body>
+</html>

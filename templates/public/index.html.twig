@@ -1,0 +1,60 @@
+{% extends "public_layout.html.twig" %}
+
+{% block body %}
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a href="">Je partage l'initiative</a>
+                <a href="">Facebook</a>
+                <a href="">Twitter</a>
+                <a href="">Telegram</a>
+                <a href="">WhatsApp</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 jumbotron bg-light">
+                <h3>J'ai besoin d'aide</h3>
+                <p class="text-left">La crise actuelle vous confronte à des situations déstabilisantes :</p>
+                <p class="text-left">
+                    Perte de repères et de rythme, manque d’intimité,
+                    présence constante des enfants, inquiétudes quant à
+                    l’avenir, solitude, peur du virus. Nombreuses sont les
+                    peurs ou le mal-être qui peuvent émerger. Ne restez pas
+                    seul.e face à ces difficultés. Contactez-nous.
+                </p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <a href="{{ path('ask_for_help') }}">Demander de l'aide</a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{{ path('how_it_works') }}">Comment ça marche ?</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 jumbotron bg-light">
+                <h3>Je suis thérapeute gestalt et je rejoins le mouvement</h3>
+                <p class="text-left">Vous êtes thérapeute ou praticien.ne Gestalt ?</p>
+                <p class="text-left">
+                    Dans un élan de solidarité nationale, face à cette
+                    crise sanitaire sans précédent qui bouleverse nos
+                    vies, vous avez à cœur de vous rendre utile en
+                    mettant vos compétences au service du plus grand
+                    nombre. Rejoignez-nous !
+                </p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <a href="{{ path('therapist_register') }}">Proposer mon aide</a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{{ path('how_it_works') }}">Comment ça marche ?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="text-center">En cas d'urgence, si votre vie ou celle d'autrui est en danger, <a href="{{ path('emergency_numbers') }}">contactez les numéros d'urgence de votre pays.</a></h2>
+            </div>
+        </div>
+    </div>
+{% endblock %}
