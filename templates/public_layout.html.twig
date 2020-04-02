@@ -18,7 +18,11 @@
             <a class="p-2 text-dark" href="{{ path('emergency_numbers') }}">Numéros d'urgence</a>
         </nav>
         {% if is_granted('ROLE_USER') %}
-            <a class="btn btn-outline-primary" href="{{ path('account') }}">Mon compte</a>
+            {% if is_granted('ROLE_THERAPIST') %}
+                <a class="btn btn-outline-primary" href="{{ path('therapist_dashboard') }}">Mon compte</a>
+            {% else %}
+                <a class="btn btn-outline-primary" href="{{ path('patient_dashboard') }}">Mon compte</a>
+            {% endif %}
             <a class="btn btn-outline-primary" href="{{ path('app_logout') }}">Déconnexion</a>
         {% else %}
             <a class="btn btn-outline-primary" href="{{ path('app_login') }}">Connexion</a>
