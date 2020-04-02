@@ -1,0 +1,26 @@
+{% extends "account_layout.html.twig" %}
+
+{% set form = change_password_form %}
+
+{% block body %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Sécurité</h1>
+    </div>
+    <div class="container">
+    <div class="row">
+        <div class="col-md-8 order-md-1">
+            <h4 class="mb-3">Mon mot de passe</h4>
+            {{ form_start(form) }}
+            <fieldset class="form-group">
+                {{ form_label(form.password.first) }}
+                {{ form_widget(form.password.first, {'attr': {'placeholder': "Votre nouveau mot de passe"}}) }}
+            </fieldset>
+            <fieldset class="form-group">
+                {{ form_label(form.password.second) }}
+                {{ form_widget(form.password.second, {'attr': {'placeholder': "Confirmez votre nouveau mot de passe"}}) }}
+            </fieldset>
+            <button class="btn btn-primary btn-md btn-block" type="submit">Valider mon nouveau mot de passe</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
