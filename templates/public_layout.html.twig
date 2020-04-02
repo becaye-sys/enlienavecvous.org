@@ -17,7 +17,12 @@
             <a class="p-2 text-dark" href="{{ path('how_it_works') }}">Comment ça marche ?</a>
             <a class="p-2 text-dark" href="{{ path('emergency_numbers') }}">Numéros d'urgence</a>
         </nav>
-        <a class="btn btn-outline-primary" href="#">Connexion</a>
+        {% if is_granted('ROLE_USER') %}
+            <a class="btn btn-outline-primary" href="{{ path('account') }}">Mon compte</a>
+            <a class="btn btn-outline-primary" href="{{ path('app_logout') }}">Déconnexion</a>
+        {% else %}
+            <a class="btn btn-outline-primary" href="{{ path('app_login') }}">Connexion</a>
+        {% endif %}
     </div>
     <div class="container jumbotron text-center">
         <h1>onestlapourvous.org</h1>
