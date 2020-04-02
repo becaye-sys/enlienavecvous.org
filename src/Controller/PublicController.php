@@ -47,7 +47,7 @@ class PublicController extends AbstractController
 
         if ($request->isMethod('POST') && $patientForm->isSubmitted() && $patientForm->isValid()) {
             if ($patientForm->getData() instanceof Patient) {
-                dd($patientForm->getData());
+                dump($patientForm->getData());
                 /** @var Patient $user */
                 $user = $patientForm->getData();
                 $user = $user->setUniqueEmailToken();
@@ -141,7 +141,7 @@ class PublicController extends AbstractController
         if ($user && false === $user->isActive()) {
             $user->setEmailToken('')->setIsActive(true);
             $entityManager->flush();
-            return $this->redirectToRoute('index');
+            return $this->redirectToRoute('app_login');
         } else {
             $this->addFlash('error', "Votre code de confirmation n'est pas valide, veuillez contacter le support de la plateforme ou créer votre compte.");
             return $this->redirectToRoute('therapist_register');

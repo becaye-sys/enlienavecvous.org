@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discriminator", type="string")
  * @ORM\DiscriminatorMap({"user" = "User", "therapist" = "Therapist", "patient" = "Patient"})
  * @UniqueEntity(fields={"email"}, message="Cette adresse est déjà utilisée.")
@@ -21,7 +21,7 @@ class User implements UserInterface
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)

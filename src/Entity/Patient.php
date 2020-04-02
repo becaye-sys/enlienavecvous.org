@@ -16,7 +16,7 @@ class Patient extends User
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="boolean")
@@ -31,7 +31,7 @@ class Patient extends User
 
     public function getId(): ?int
     {
-        return $this->id;
+        return parent::getId();
     }
 
     public function getIsMajor(): ?bool

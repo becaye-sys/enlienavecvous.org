@@ -17,7 +17,7 @@ class Therapist extends User implements TherapistInterface
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string")
@@ -52,7 +52,7 @@ class Therapist extends User implements TherapistInterface
 
     public function getId(): ?int
     {
-        return $this->id;
+        return parent::getId();
     }
 
     public function getEthicEntityCodeLabel(): ?string
