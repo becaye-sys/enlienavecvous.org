@@ -1,0 +1,8 @@
+{% extends "public_layout.html.twig" %}
+
+{% block body %}
+    <div class="container">
+        <h1>Mon compte</h1>
+        <p>Role: {{ dump(app.user.roles) }}</p>
+    </div>
+{% endblock %}

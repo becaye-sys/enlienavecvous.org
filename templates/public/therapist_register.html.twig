@@ -1,5 +1,7 @@
 {% extends "public_layout.html.twig" %}
 
+{% set form = therapist_register_form %}
+
 {% block body %}
     <div class="container text-center">
         <h1>Je suis thérapeute et je m'inscris</h1>
@@ -53,21 +55,46 @@
             Vous pouvez nous contacter à <a href="mailto:contact-therapeutes@onestlapourvous.org">contact-therapeutes@onestlapourvous.org</a>
         </p>
         <h2>Formulaire d'inscription</h2>
-        <form>
-            <input type="text" placeholder="Prénom (requis)">
-            <input type="text" placeholder="Nom (requis)">
-            <input type="text" placeholder="Pays (requis)">
-            <input type="text" placeholder="Code Postal (requis)">
-            <input type="text" placeholder="N° de tél. (requis)">
-            <input type="text" placeholder="Adresse e-mail (requis)">
-            Le code de déontologie auquel j'adhére est celui de : <input type="text" placeholder="Code de déontologie">
-            L'école au sein de laquelle je me suis formée : <input type="text" placeholder="Ecole de thérapeute">
-            <input type="checkbox"> Je certifie détenir un diplôme autorisant mon activité dans le domaine de la Gestalt
-            <input type="checkbox"> Je certifie être inscrit.e dans un processus régulier de supervision (de l'ordre d'une fois par mois)
-            <input type="checkbox"> Je m'engage à respecter le cadre déontologique des gestalt-thérapeutes de cette plateforme
-            <input type="checkbox"> J'ai lu et j'accepte la <a>Politique de Confidentialité</a> et les <a>Conditions d'utilisation</a> de Onestlapourvous.org
-            <button>Valider</button>
-        </form>
+        {{ form_start(form) }}
+        <fieldset>
+            {{ form_widget(form.firstName, {'attr': {'placeholder': "Votre prénom"}}) }}
+            {{ form_widget(form.lastName, {'attr': {'placeholder': "Votre nom"}}) }}
+        </fieldset>
+        <fieldset>
+            {{ form_widget(form.country) }}
+            {{ form_widget(form.zipCode, {'attr': {'placeholder': "Votre code postal"}}) }}
+        </fieldset>
+        <fieldset>
+            {{ form_widget(form.phoneNumber, {'attr': {'placeholder': "Votre numéro de téléphone"}}) }}
+            {{ form_widget(form.email, {'attr': {'placeholder': "Votre email"}}) }}
+        </fieldset>
+        <fieldset>
+            {{ form_label(form.password.first) }}
+            {{ form_widget(form.password.first, {'attr': {'placeholder': "Votre mot de passe"}}) }}
+            {{ form_label(form.password.second) }}
+            {{ form_widget(form.password.second, {'attr': {'placeholder': "Confirmez votre mot de passe"}}) }}
+        </fieldset>
+        <fieldset>
+            Le code de déontologie auquel j'adhére est celui de : {{ form_widget(form.ethicEntityCodeLabel) }}
+        </fieldset>
+        <fieldset>
+            L'école au sein de laquelle je me suis formée : {{ form_widget(form.schoolEntityLabel) }}
+        </fieldset>
+        <fieldset>
+            {{ form_widget(form.hasCertification) }} Je certifie détenir un diplôme autorisant mon activité dans le domaine de la Gestalt
+        </fieldset>
+        <fieldset>
+            {{ form_widget(form.isSupervised) }} Je certifie être inscrit.e dans un processus régulier de supervision (de l'ordre d'une fois par mois)
+        </fieldset>
+        <fieldset>
+            {{ form_widget(form.isRespectingEthicalFrameWork) }} Je m'engage à respecter le cadre déontologique des gestalt-thérapeutes de cette plateforme
+        </fieldset>
+        <fieldset>
+            {{ form_widget(form.hasAcceptedTermsAndPolicies) }} J'ai lu et j'accepte la <a>Politique de Confidentialité</a> et les <a>Conditions d'utilisation</a> de Onestlapourvous.org
+        </fieldset>
+
+        <button type="submit">Valider</button>
+        {{ form_end(form) }}
         <p>
             (Un email vous sera envoyé afin de confirmer votre compte et vous permettra de vous connecter)
         </p>
