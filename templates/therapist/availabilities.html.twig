@@ -40,7 +40,7 @@
             </div>
             <div class="col-md-1 col-sm-6">
                 <fieldset class="form-group">
-                    <button class="btn btn-primary">+</button>
+                    <button class="btn btn-primary" type="submit">+</button>
                 </fieldset>
             </div>
         </div>
@@ -57,6 +57,7 @@
                 <th>Lieu</th>
                 <th>Réservé</th>
                 <th>Annulé</th>
+                <th></th>
             </tr>
             </thead>
             {% if availabilities|length %}
@@ -81,6 +82,11 @@
                             {% else %}
                                 Non
                             {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ path('therapist_availability_edit', {'id': a.id}) }}" class="btn btn-outline-primary">
+                                Modifier
+                            </a>
                         </td>
                     </tr>
                 {% endfor %}

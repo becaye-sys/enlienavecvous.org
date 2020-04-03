@@ -14,6 +14,7 @@ use App\Repository\AppointmentRepository;
 use App\Repository\TherapistRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -66,11 +67,40 @@ class TherapistController extends AbstractController
             $manager->flush();
             return $this->redirectToRoute('therapist_availabilites');
         }
+
         return $this->render(
             'therapist/availabilities.html.twig',
             [
                 'appointment_form' => $appointmentForm->createView(),
-                'availabilities' => $appointmentRepository->findBy(['therapist' => $currentUser])
+                'availabilities' => $appointmentRepository->findBy(['therapist' => $currentUser]),
+            ]
+        );
+    }
+
+    /**
+     * @Route(path="/availabilities/{id}/edit", name="therapist_availability_edit")
+     * @ParamConverter(name="id", class="App\Entity\Appointment")
+     * @return Response
+     */
+    public function availabilitiesEdit(TherapistRepository $therapistRepository, Appointment $appointment, Request $request, EntityManagerInterface $manager)
+    {
+        $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
+        /** @var Therapist $currentUser */
+        $currentUser = $therapistRepository->findOneBy(['email' => $this->getUser()->getUsername()]);
+        if (!$currentUser instanceof Therapist) {
+            return $this->redirectToRoute('therapist_dashboard');
+        }
+        $appointmentForm = $this->createForm(AppointmentType::class, $appointment);
+        $appointmentForm->handleRequest($request);
+        if ($request->isMethod('POST') && $appointmentForm->isSubmitted() && $appointmentForm->isValid()) {
+            $manager->flush();
+            return $this->redirectToRoute('therapist_availabilites');
+        }
+
+        return $this->render(
+            'therapist/availability_edit.html.twig',
+            [
+                'appointment_form' => $appointmentForm->createView(),
             ]
         );
     }

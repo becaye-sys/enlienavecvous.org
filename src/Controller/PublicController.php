@@ -99,7 +99,8 @@ class PublicController extends AbstractController
                 // send email
                 $email = (new Email())
                     ->from('hello@onestlapourvous.org')
-                    ->to('louisthomas76750@gmail.com')
+                    ->to($user->getEmail())
+                    ->addTo('hapinow@mailo.com')
                     ->subject("Inscription sur la plateforme Onestlapourvous.org")
                     ->html('<a href=\'https://127.0.0.1:8000/email/confirmation/'.$emailToken.'\'>Confirmer mon compte<a>', 'utf-8');
                 try {
