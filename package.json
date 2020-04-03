@@ -13,6 +13,12 @@
         "watch": "encore dev --watch",
         "build": "encore production --progress"
     },
+    "name": "onestlapourvous.org",
+    "version": "0.1.0",
+    "engines": {
+        "node": "12.13.x",
+        "npm": "6.12.x"
+    },
     "dependencies": {
         "gijgo": "^1.9.13",
         "jquery": "^3.4.1",
