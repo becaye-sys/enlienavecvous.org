@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Interfaces\TherapistInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -44,10 +46,16 @@ class Therapist extends User implements TherapistInterface
      */
     protected $isRespectingEthicalFrameWork;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Appointment", mappedBy="therapist")
+     */
+    private $appointments;
+
     public function __construct()
     {
         parent::__construct();
         $this->roles = ["ROLE_USER", self::ROLE_THERAPIST];
+        $this->appointments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -118,5 +126,36 @@ class Therapist extends User implements TherapistInterface
     public function isRespectingEthicalFrameWork(): ?bool
     {
         return $this->isRespectingEthicalFrameWork;
+    }
+
+    /**
+     * @return Collection|Appointment[]
+     */
+    public function getAppointments(): Collection
+    {
+        return $this->appointments;
+    }
+
+    public function addAppointment(Appointment $appointment): self
+    {
+        if (!$this->appointments->contains($appointment)) {
+            $this->appointments[] = $appointment;
+            $appointment->setTherapist($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAppointment(Appointment $appointment): self
+    {
+        if ($this->appointments->contains($appointment)) {
+            $this->appointments->removeElement($appointment);
+            // set the owning side to null (unless already changed)
+            if ($appointment->getTherapist() === $this) {
+                $appointment->setTherapist(null);
+            }
+        }
+
+        return $this;
     }
 }

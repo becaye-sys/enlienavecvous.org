@@ -98,7 +98,12 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
             return new RedirectResponse($targetPath);
         }
 
-        return new RedirectResponse($this->urlGenerator->generate('account'));
+        $roles = $token->getUser()->getRoles();
+        if ("ROLE_THERAPIST" === $roles[1]) {
+            return new RedirectResponse($this->urlGenerator->generate('therapist_dashboard'));
+        } else {
+            return new RedirectResponse($this->urlGenerator->generate('patient_dashboard'));
+        }
     }
 
     protected function getLoginUrl()

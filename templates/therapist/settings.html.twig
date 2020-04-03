@@ -1,0 +1,83 @@
+{% extends "account_layout.html.twig" %}
+
+{% set form = settings_form %}
+
+{% block body %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Paramètres</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group mr-2">
+                <button class="btn btn-sm btn-outline-secondary">Share</button>
+                <button class="btn btn-sm btn-outline-secondary">Export</button>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 order-md-1">
+                <h4 class="mb-3">Mes informations</h4>
+                {{ form_start(form) }}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="firstName">Prénom</label>
+                            {{ form_widget(form.firstName, {'attr': {'class': 'form-control'}}) }}
+                            <div class="invalid-feedback">
+                                Valid first name is required.
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="lastName">Nom de famille</label>
+                            {{ form_widget(form.lastName, {'attr': {'class': 'form-control'}}) }}
+                            <div class="invalid-feedback">
+                                Valid last name is required.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="email">E-mail <span class="text-muted">(Un mail de confirmation comme à l'inscription vous sera envoyé afin de confirmer votre nouvelle adresse email)</span></label>
+                            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                            <div class="invalid-feedback">
+                                Please enter a valid email address for shipping updates.
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="phoneNumber">Téléphone </label>
+                            {{ form_widget(form.phoneNumber, {'attr': {'class': 'form-control'}}) }}
+                            <div class="invalid-feedback">
+                                Please enter a valid phone number.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-5 mb-3">
+                            <label for="country">Pays</label>
+                            {{ form_widget(form.country, {'attr': {'class': 'form-control'}}) }}
+                            <div class="invalid-feedback">
+                                Please select a valid country.
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="zip">Code postal</label>
+                            {{ form_widget(form.zipCode, {'attr': {'class': 'form-control'}}) }}
+                            <div class="invalid-feedback">
+                                Zip code required.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="code">Code de conduite</label>
+                            {{ form_widget(form.ethicEntityCodeLabel, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="school">Ecole de formation</label>
+                            {{ form_widget(form.schoolEntityLabel, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">Valider mes modifications</button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+{% endblock %}
