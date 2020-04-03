@@ -120,6 +120,7 @@ class TherapistController extends AbstractController
             $manager->flush();
             return $this->redirectToRoute('therapist_settings');
         }
+
         return $this->render(
             'therapist/settings.html.twig',
             [
