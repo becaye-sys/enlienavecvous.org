@@ -26,7 +26,7 @@ class PublicController extends AbstractController
 {
 
     /**
-     * @Route(path="/", name="index")
+     * @Route(path="/", name="index", schemes={"https"})
      * @return Response
      */
     public function index()
@@ -58,7 +58,7 @@ class PublicController extends AbstractController
                     ->from('hello@onestlapourvous.org')
                     ->to('louisthomas76750@gmail.com')
                     ->subject("Inscription sur la plateforme Onestlapourvous.org")
-                    ->html('<a href=\'https://127.0.0.1:8000/email/confirmation/'.$emailToken.'\'>Confirmer mon compte<a>', 'utf-8');
+                    ->html('<a href=\'https://onestlapourvous.herokuapp.com/email/confirmation/'.$emailToken.'\'>Confirmer mon compte<a>', 'utf-8');
                 try {
                     $mailer->send($email);
                 } catch (TransportExceptionInterface $e) {
@@ -90,7 +90,6 @@ class PublicController extends AbstractController
 
         if ($request->isMethod('POST') && $therapistForm->isSubmitted() && $therapistForm->isValid()) {
             if ($therapistForm->getData() instanceof Therapist) {
-                dump($therapistForm->getData());
                 /** @var Therapist $user */
                 $user = $therapistForm->getData();
                 $user = $user->setUniqueEmailToken();
@@ -102,7 +101,7 @@ class PublicController extends AbstractController
                     ->to($user->getEmail())
                     ->addTo('hapinow@mailo.com')
                     ->subject("Inscription sur la plateforme Onestlapourvous.org")
-                    ->html('<a href=\'https://127.0.0.1:8000/email/confirmation/'.$emailToken.'\'>Confirmer mon compte<a>', 'utf-8');
+                    ->html('<a href=\'https://onestlapourvous.herokuapp.com/email/confirmation/'.$emailToken.'\'>Confirmer mon compte<a>', 'utf-8');
                 try {
                     $mailer->send($email);
                 } catch (TransportExceptionInterface $e) {
