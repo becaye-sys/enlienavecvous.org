@@ -9,8 +9,12 @@ import  moment from "moment";
 function PatientSearch(props) {
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState({
+        userId: undefined
+    });
     const [appoints, setAppoints] = useState([]);
     const [filtered, setFiltered] = useState([]);
+    const [booking, setBooking] = useState({});
     const [search, setSearch] = useState({
         bookingDate: undefined,
         location: undefined
@@ -27,10 +31,17 @@ function PatientSearch(props) {
         setSearch({...search, [name]: value});
     };
 
+    const getCurrentUser = async () => {
+        const userId = document.querySelector('h1.h2').dataset.userId;
+        if (userId !== undefined && userId !== '') {
+            setUser({...user, userId})
+        }
+    }
+
     const getAppointments = async () => {
         const res = await axios.get(`${API_URL}appointments`).then(response => {return response.data});
         if (res.length > 0) {
-            console.log('res:',res);
+            //console.log('res:',res);
             const appoints = filterWithTherapistDelay(res);
             setAppoints(appoints);
             setLoading(false);
@@ -40,20 +51,20 @@ function PatientSearch(props) {
     const filterWithTherapistDelay = (appoints) => {
         const filtered = appoints.filter(a => {
             const nowDate = moment().format('YYYY-MM-DD');
-            console.log('nowDate:',nowDate);
+            //console.log('nowDate:',nowDate);
             if (nowDate === formatDate(a.bookingDate)) {
-                console.log('delay param:');
-                console.log("c'est pour aujourd'hui");
+                //console.log('delay param:');
+                //console.log("c'est pour aujourd'hui");
                 const arrayTime = getArrayTime(a.bookingStart);
-                console.log('arrayTimeBooking:',arrayTime);
+                //console.log('arrayTimeBooking:',arrayTime);
                 const nowTime = moment();
-                console.log('nowTime', nowTime);
+                //console.log('nowTime', nowTime);
                 const targetTime = moment().hours(arrayTime[0]).minutes(arrayTime[1]);
-                console.log('targetTime:',targetTime);
+                //console.log('targetTime:',targetTime);
                 let startTime = moment([arrayTime[0], arrayTime[1]]).format('HH:mm');
-                console.log('start time:',startTime);
+                //console.log('start time:',startTime);
                 const delay = targetTime.diff(nowTime, 'hours');
-                console.log('delay:',delay);
+                //console.log('delay:',delay);
                 if (delay >= 12) {
                     return a;
                 }
@@ -65,17 +76,21 @@ function PatientSearch(props) {
         return filtered;
     }
 
-    useEffect(() => {
-        getAppointments();
-    },[]);
-
-    useEffect(() => {
-        updateAppointsByUserFilters();
-    },[search]);
+    const createPatientBooking = async (appointId, userId) => {
+        setLoading(true);
+        const booking = await axios.post(
+            `${API_URL}create/booking/${appointId}/${userId}`)
+            .then(response => {
+                console.log('create booking response:',response);
+                localStorage.setItem('booking', JSON.stringify(response.data));
+                return response.data
+            });
+        console.log('booking:',booking);
+        setBooking(booking);
+        setLoading(false);
+    }
 
     const updateAppointsByUserFilters = () => {
-        console.log('search changed');
-        console.log('date:',search.bookingDate);
         if (search.bookingDate === undefined && search.location === undefined) {
             setFiltered(appoints);
         } else if (search.bookingDate !== undefined && (search.location === undefined || search.location === '')) {
@@ -84,7 +99,7 @@ function PatientSearch(props) {
             });
             setFiltered(updatedAppoints);
         } else if ((search.bookingDate === undefined || search.bookingDate === '') && search.location !== undefined) {
-            console.log('location only changed');
+            //console.log('location only changed');
             const updatedAppoints = appoints.filter(a => {return a.location.toLowerCase().includes(search.location.toLowerCase())});
             setFiltered(updatedAppoints);
         } else {
@@ -95,11 +110,6 @@ function PatientSearch(props) {
         }
     }
 
-    const getInfo = id => {
-        const appoint = appoints.filter(a => {return a.id === id});
-        alert("Cette fonctionnalité n'est pas encore prête");
-    }
-
     const appointsToDisplay = filtered.length ? filtered : appoints;
 
     const paginatedAppoints = appointsToDisplay.length > itemsPerPage ? Pagination.getData(
@@ -108,11 +118,18 @@ function PatientSearch(props) {
         itemsPerPage
     ) : appointsToDisplay;
 
-    console.log(filtered.length);
+    useEffect(() => {
+        getAppointments();
+        getCurrentUser();
+    },[]);
+
+    useEffect(() => {
+        updateAppointsByUserFilters();
+    },[search]);
 
     return (
         <div>
-            <div className="container-fluid mb-3">
+            <div className="container mb-3">
                 <form>
                     <div className="row">
                         <div className="col-lg-4 col-md-6 col-sm-6">
@@ -130,54 +147,117 @@ function PatientSearch(props) {
                     </div>
                 </form>
             </div>
-            <div className="container">
-                <div className="table-responsive js-rep-log-table">
-                    <table className="table table-striped table-sm">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>id</th>
-                            <th>Date</th>
-                            <th>Début</th>
-                            <th>Fin</th>
-                            <th>Lieu</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        {
-                            paginatedAppoints.length > 0 &&
-                            <tbody>
-                            {paginatedAppoints.map(a => {
+            {
+                localStorage.getItem('booking') ?
+                    <BookingConfirmation booking={booking} /> :
+                    <div className="container">
+                        <div className="table-responsive js-rep-log-table">
+                            <table className="table table-striped table-sm">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>id</th>
+                                    <th>Date</th>
+                                    <th>Début</th>
+                                    <th>Fin</th>
+                                    <th>Lieu</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                {
+                                    paginatedAppoints.length > 0 &&
+                                    <tbody>
+                                    {paginatedAppoints.map(a => {
 
-                                return (
-                                    <tr key={a.id}>
-                                        <td>
-                                            <button onClick={() => getInfo(a.id)} className={"btn btn-outline-primary"}>
-                                                Réserver
-                                            </button>
-                                        </td>
-                                        <td>{a.id}</td>
-                                        <td>{formatDateForTable(a.bookingDate)}</td>
-                                        <td>{formatTime(a.bookingStart)}</td>
-                                        <td>{formatTime(a.bookingEnd)}</td>
-                                        <td>{a.location}</td>
-                                    </tr>
-                                )
-                            })}
-                            </tbody>
+                                        return (
+                                            <tr key={a.id}>
+                                                <td>
+                                                    <button onClick={() => createPatientBooking(a.id, user.userId)} className={"btn btn-outline-primary"}>
+                                                        Réserver
+                                                    </button>
+                                                </td>
+                                                <td>{a.id}</td>
+                                                <td>{formatDateForTable(a.bookingDate)}</td>
+                                                <td>{formatTime(a.bookingStart)}</td>
+                                                <td>{formatTime(a.bookingEnd)}</td>
+                                                <td>{a.location}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                    </tbody>
+                                }
+                            </table>
+                            {loading && <p>Chargement en cours...</p>}
+                        </div>
+                        {itemsPerPage < appointsToDisplay.length &&
+                        <Pagination
+                            currentPage={currentPage}
+                            itemsPerPage={itemsPerPage}
+                            onPageChanged={handlePageChange}
+                            length={appointsToDisplay.length}
+                        />
                         }
-                    </table>
-                    {loading && <p>Chargement en cours...</p>}
-                </div>
-                {itemsPerPage < appointsToDisplay.length &&
-                <Pagination
-                    currentPage={currentPage}
-                    itemsPerPage={itemsPerPage}
-                    onPageChanged={handlePageChange}
-                    length={appointsToDisplay.length}
-                />
-                }
-            </div>
+                    </div>
+            }
+        </div>
+    )
+}
+
+export function BookingConfirmation(props) {
+    const [appoint, setAppoint] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [isConfirmed, setIsConfirmed] = useState(false);
+
+    useEffect(() => {
+        setLoading(true);
+        if (booking.length === undefined) {
+            const appoint = JSON.parse(localStorage.getItem('booking'));
+            setAppoint(appoint);
+        }
+        setLoading(false);
+        console.log(booking.length);
+    },[]);
+
+    const handleSubmit = async event => {
+        event.preventDefault();
+        setLoading(true);
+        const status = await axios.post(`${API_URL}confirm/booking/${booking.id}`).then(response => {
+            return response.status
+        });
+        if (status === 200) {
+            localStorage.removeItem('booking');
+            setIsConfirmed(true);
+        }
+        setLoading(false);
+    }
+
+    var booking = props.booking.length === undefined ? appoint : booking
+
+    return (
+        <div>
+            {loading && <div className="container"><p>Chargement en cours...</p></div>}
+            {
+                !loading &&
+                    <div className="container">
+                        {
+                            isConfirmed ?
+                                <div className="alert alert-success">
+                                    Rendez-vous confirmé !
+                                </div> :
+                                <div>
+                                    <h2>Demande de rendez-vous</h2>
+                                    {booking.bookingDate && formatDateForTable(booking.bookingDate)} avec {booking.therapist?.firstName} {booking.therapist?.lastName}
+                                    {booking.therapist?.zipCode}
+                                    <div className="alert alert-warning">
+                                        En cas d'annulation, merci de prévenir votre thérapeute au plus vite en cliquant sur le bouton d'annulation disponible dans vos rendez-vous.
+                                    </div>
+                                    <form onSubmit={handleSubmit}>
+                                        <button className="btn btn-primary" type="submit">Confirmer mon rendez-vous</button>
+                                    </form>
+                                </div>
+                        }
+                    </div>
+            }
         </div>
     )
 }

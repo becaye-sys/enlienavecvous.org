@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Entity\Appointment;
 use App\Entity\Patient;
 use App\Entity\User;
 use App\Form\ChangePasswordType;
@@ -11,11 +12,13 @@ use App\Form\PatientSettingsType;
 use App\Repository\AppointmentRepository;
 use App\Repository\PatientRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Class PatientController
@@ -52,7 +55,7 @@ class PatientController extends AbstractController
         $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
         /** @var Patient $currentPatient */
         $currentPatient = $this->getCurrentPatient();
-        $appoints = $appointmentRepository->findBy(['patient' => $currentPatient]);
+        $appoints = $appointmentRepository->findBy(['patient' => $currentPatient, 'booked' => true]);
         return $this->render(
             'patient/appointments.html.twig',
             [
@@ -62,14 +65,39 @@ class PatientController extends AbstractController
     }
 
     /**
+     * @Route(path="/rendez-vous/annuler/{id}", name="patient_appointment_cancel")
+     * @ParamConverter(name="id", class="App\Entity\Appointment")
+     * @return Response
+     */
+    public function appointmentCancel(Appointment $appointment, EntityManagerInterface $entityManager)
+    {
+        $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
+        if ($appointment instanceof Appointment && $appointment->getBooked() === true) {
+            $appointment->setBooked(false);
+            $appointment->setCancelled(true);
+            $appointment->setPatient(null);
+            $entityManager->flush();
+            $this->addFlash('info', "Rendez-vous annulé. Vous allez recevoir un mail de confirmation de l'annulation.");
+            // mail
+            return $this->redirectToRoute('patient_appointments');
+        } else {
+            $this->addFlash('error', "Erreur lors de l'annulation.");
+            return $this->redirectToRoute('patient_appointments');
+        }
+    }
+
+    /**
      * @Route(path="/recherche", name="patient_research")
      * @return Response
      */
-    public function research(Request $request, AppointmentRepository $appointmentRepository)
+    public function research(Request $request, AppointmentRepository $appointmentRepository, Security $security)
     {
         $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
         return $this->render(
-            'patient/research.html.twig'
+            'patient/research.html.twig',
+            [
+                'current_user' => $security->getUser()
+            ]
         );
     }
 

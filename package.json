@@ -28,6 +28,7 @@
         "moment": "^2.24.0",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
+        "react-toastify": "^5.5.0",
         "tui-calendar": "^1.12.12"
     }
 }
