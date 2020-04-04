@@ -1,41 +1,11 @@
 {% extends "account_layout.html.twig" %}
 
-{% set form = appointment_form %}
+{% block stylesheets %}
+{% endblock %}
 
 {% block body %}
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Disponibilités</h1>
-    </div>
-    <div class="container-fluid" style="margin-top: 80px;">
-        {{ form_start(form) }}
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <fieldset class="form-group">
-                    {{ form_widget(form.bookingDate, {'attr': {'class': 'form-control'}}) }}
-                </fieldset>
-            </div>
-            <div class="col-md-3 col-sm-6">
-                <fieldset class="form-group">
-                    {{ form_widget(form.bookingStart, {'attr': {'class': 'booking_start_picker'}}) }}
-                </fieldset>
-            </div>
-            <div class="col-md-3 col-sm-6">
-                <fieldset class="form-group">
-                    {{ form_widget(form.bookingEnd, {'attr': {'class': 'booking_end_picker'}}) }}
-                </fieldset>
-            </div>
-            <div class="col-md-2 col-sm-6">
-                <fieldset class="form-group">
-                    {{ form_widget(form.location, {'attr': {'value': app.user.zipCode, 'class': 'booking_location' }}) }}
-                </fieldset>
-            </div>
-            <div class="col-md-1 col-sm-6">
-                <fieldset class="form-group">
-                    <button class="btn btn-primary" type="submit">+</button>
-                </fieldset>
-            </div>
-        </div>
-        {{ form_end(form) }}
+        <h1 class="h2">Mes rendez-vous</h1>
     </div>
     <div class="table-responsive">
         <table class="table table-striped table-sm">
@@ -51,9 +21,9 @@
                 <th></th>
             </tr>
             </thead>
-            {% if availabilities|length %}
+            {% if appoints|length %}
                 <tbody>
-                {% for a in availabilities %}
+                {% for a in appoints %}
                     <tr>
                         <td>{{ a.id }}</td>
                         <td>{{ a.bookingDate|date('d/m/Y') }}</td>
@@ -76,14 +46,14 @@
                         </td>
                         <td>
                             <a href="{{ path('therapist_availability_edit', {'id': a.id}) }}" class="btn btn-outline-primary">
-                                Modifier
+                                Annuler
                             </a>
                         </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             {% else %}
-                <p>Enregistrez vos disponibilités dès maintenant !</p>
+                <p>Vous n'avez pas encore de rendez-vous !</p>
             {% endif %}
         </table>
     </div>

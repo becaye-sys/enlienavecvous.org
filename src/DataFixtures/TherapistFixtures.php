@@ -39,7 +39,7 @@ class TherapistFixtures extends Fixture
             $therapist->setFirstName($faker->firstName);
             $therapist->setLastName($faker->lastName);
             $therapist->setCountry("France");
-            $therapist->setZipCode($faker->postcode);
+            $therapist->setZipCode($faker->randomElement(['01500', '01430', '69000']));
             $therapist->setPhoneNumber($faker->phoneNumber);
             $therapist->setHasAcceptedTermsAndPolicies(true);
             $this->addReference(self::THERAPIST_USER_REFERENCE."_$i", $therapist);

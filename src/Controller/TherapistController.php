@@ -55,16 +55,14 @@ class TherapistController extends AbstractController
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         /** @var Therapist $currentUser */
-        $currentUser = $therapistRepository->findOneBy(['email' => $this->getUser()->getUsername()]);
-        if (!$currentUser instanceof Therapist) {
-            return $this->redirectToRoute('therapist_dashboard');
-        }
+        $currentUser = $this->getCurrentTherapist();
         $appointment = new Appointment($currentUser);
         $appointmentForm = $this->createForm(AppointmentType::class, $appointment);
         $appointmentForm->handleRequest($request);
         if ($request->isMethod('POST') && $appointmentForm->isSubmitted() && $appointmentForm->isValid()) {
             $manager->persist($appointment);
             $manager->flush();
+            $this->addFlash('success',"Créneau ajouté !");
             return $this->redirectToRoute('therapist_availabilites');
         }
 
@@ -86,7 +84,7 @@ class TherapistController extends AbstractController
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         /** @var Therapist $currentUser */
-        $currentUser = $therapistRepository->findOneBy(['email' => $this->getUser()->getUsername()]);
+        $currentUser = $this->getCurrentTherapist();
         if (!$currentUser instanceof Therapist) {
             return $this->redirectToRoute('therapist_dashboard');
         }
@@ -94,6 +92,7 @@ class TherapistController extends AbstractController
         $appointmentForm->handleRequest($request);
         if ($request->isMethod('POST') && $appointmentForm->isSubmitted() && $appointmentForm->isValid()) {
             $manager->flush();
+            $this->addFlash('success',"Créneau modifié !");
             return $this->redirectToRoute('therapist_availabilites');
         }
 
@@ -113,7 +112,7 @@ class TherapistController extends AbstractController
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         /** @var Therapist $currentUser */
-        $currentUser = $therapistRepository->findOneBy(['email' => $this->getUser()->getUsername()]);
+        $currentUser = $this->getCurrentTherapist();
         return $this->render(
             'therapist/history.html.twig',
             [
@@ -142,19 +141,19 @@ class TherapistController extends AbstractController
     public function settings(UserRepository $userRepository, Request $request, EntityManagerInterface $manager)
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
-        /** @var User $currentUser */
-        $currentUser = $userRepository->findOneBy(['email' => $this->getUser()->getUsername()]);
+        /** @var Therapist $currentUser */
+        $currentUser = $this->getCurrentTherapist();
         $settingsType = $this->createForm(TherapistSettingsType::class, $currentUser);
         $settingsType->handleRequest($request);
         if ($request->isMethod('POST') && $settingsType->isSubmitted() && $settingsType->isValid()) {
             $manager->flush();
+            $this->addFlash('success',"Informations mises à jour !");
             return $this->redirectToRoute('therapist_settings');
         }
 
         return $this->render(
             'therapist/settings.html.twig',
             [
-                'user' => $currentUser,
                 'settings_form' => $settingsType->createView()
             ]
         );
@@ -176,6 +175,7 @@ class TherapistController extends AbstractController
             $encoded = $encoder->encodePassword($user, $newPassword);
             $user->setPassword($encoded);
             $manager->flush();
+            $this->addFlash('success',"Votre mot de passe a été mis à jour !");
             return $this->redirectToRoute('therapist_security');
         }
         return $this->render(

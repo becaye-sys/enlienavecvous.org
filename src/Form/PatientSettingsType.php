@@ -5,11 +5,10 @@ namespace App\Form;
 
 
 use App\Entity\User;
-use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TherapistSettingsType extends TherapistRegisterType
+class PatientSettingsType extends PatientRegisterType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -17,19 +16,7 @@ class TherapistSettingsType extends TherapistRegisterType
         $builder
             ->remove('password')
             ->remove('hasAcceptedTermsAndPolicies')
-            ->remove('hasCertification')
-            ->remove('isSupervised')
-            ->remove('isRespectingEthicalFrameWork')
-            ->add(
-                'waitBeforeBooking',
-                TimeType::class,
-                [
-                    'input'  => 'datetime',
-                    'widget' => 'choice',
-                    'required' => false
-                ]
-            )
-        ;
+            ->remove('isMajor');
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -9,5 +9,4 @@
 import '../css/app.css';
 import '../css/dashboard.css';
 
-
 console.log('Hello Webpack Encore! Edit me in assets/js/app.js');
