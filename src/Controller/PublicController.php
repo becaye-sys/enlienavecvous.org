@@ -47,7 +47,6 @@ class PublicController extends AbstractController
 
         if ($request->isMethod('POST') && $patientForm->isSubmitted() && $patientForm->isValid()) {
             if ($patientForm->getData() instanceof Patient) {
-                dump($patientForm->getData());
                 /** @var Patient $user */
                 $user = $patientForm->getData();
                 $user = $user->setUniqueEmailToken();
@@ -90,7 +89,6 @@ class PublicController extends AbstractController
 
         if ($request->isMethod('POST') && $therapistForm->isSubmitted() && $therapistForm->isValid()) {
             if ($therapistForm->getData() instanceof Therapist) {
-                dump($therapistForm->getData());
                 /** @var Therapist $user */
                 $user = $therapistForm->getData();
                 $user = $user->setUniqueEmailToken();
