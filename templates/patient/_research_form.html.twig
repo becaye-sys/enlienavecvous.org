@@ -1,0 +1,29 @@
+<div class="container-fluid" style="margin-top: 80px;">
+    {{ form_start(form, {'attr': {'class': 'form-inline js-new-rep-log-form', 'novalidate': 'novalidate'}}) }}
+    <div class="row">
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <fieldset class="form-group">
+                {{ form_label(form.start) }}
+                {{ form_widget(form.start, {'attr': {'class': 'form-control'}}) }}
+            </fieldset>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <fieldset class="form-group">
+                {{ form_label(form.end) }}
+                {{ form_widget(form.end, {'attr': {'class': 'form-control'}}) }}
+            </fieldset>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <fieldset class="form-group">
+                {{ form_label(form.zipCode) }}
+                {{ form_widget(form.zipCode, {'attr': {'class': 'form-control'}}) }}
+            </fieldset>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <fieldset class="form-group">
+                <button class="btn btn-primary" type="submit">Rechercher</button>
+            </fieldset>
+        </div>
+    </div>
+    {{ form_end(form) }}
+</div>

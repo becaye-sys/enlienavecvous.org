@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AppointmentRepository")
@@ -29,11 +30,13 @@ class Appointment
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Therapist", inversedBy="appointments")
      * @ORM\JoinColumn(nullable=false)
+     * @MaxDepth(1)
      */
     private $therapist;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Patient", inversedBy="appointments")
+     * @MaxDepth(1)
      */
     private $patient;
 
