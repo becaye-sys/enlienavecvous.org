@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AppointmentRepository")
@@ -14,39 +15,43 @@ class Appointment
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"create_booking"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"create_booking"})
      */
     private $booked;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"create_booking"})
      */
     private $bookingDate;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Therapist", inversedBy="appointments")
      * @ORM\JoinColumn(nullable=false)
-     * @MaxDepth(1)
+     * @Groups({"create_booking"})
      */
     private $therapist;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Patient", inversedBy="appointments")
-     * @MaxDepth(1)
      */
     private $patient;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"create_booking"})
      */
     private $location;
 
     /**
      * @ORM\Column(type="time")
+     * @Groups({"create_booking"})
      */
     private $bookingStart;
 

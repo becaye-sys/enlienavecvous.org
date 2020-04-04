@@ -35,7 +35,7 @@ class TherapistFixtures extends Fixture
             $therapist->setIsRespectingEthicalFrameWork(true);
             $therapist->setEmail("therapist$i@gmail.com");
             $therapist->setPassword($this->encoder->encodePassword($therapist, "password"));
-            $therapist->setUniqueEmailToken();
+            $therapist->setIsActive(true);
             $therapist->setFirstName($faker->firstName);
             $therapist->setLastName($faker->lastName);
             $therapist->setCountry("France");

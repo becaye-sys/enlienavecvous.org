@@ -15,6 +15,7 @@
                 <th>Lieu</th>
                 <th>Réservé</th>
                 <th>Annulé</th>
+                <th></th>
             </tr>
             </thead>
             {% if history|length %}
@@ -39,6 +40,9 @@
                             {% else %}
                                 Non
                             {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ path('therapist_history_cancel', {'id': a.id}) }}" class="btn btn-outline-danger">Annuler</a>
                         </td>
                     </tr>
                 {% endfor %}
