@@ -1,3 +1,4 @@
+require("dotenv").config();
 var Encore = require('@symfony/webpack-encore');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
@@ -24,7 +25,7 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/js/app.js')
-    .addEntry('therapist_availabilities', './assets/js/therapist_availabilities.js')
+    .addEntry('patient_search_app', './assets/js/patient_search_app.js')
     //.addEntry('page2', './assets/js/page2.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
@@ -67,8 +68,11 @@ Encore
     .autoProvidejQuery()
 
     // uncomment if you use API Platform Admin (composer req api-admin)
-    //.enableReactPreset()
+    .enableReactPreset()
     //.addEntry('admin', './assets/js/admin.js')
 ;
+Encore.configureDefinePlugin(options => {
+    options["process.env"].API_URL = process.env.API_URL;
+});
 
 module.exports = Encore.getWebpackConfig();

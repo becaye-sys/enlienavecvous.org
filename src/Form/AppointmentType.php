@@ -30,7 +30,7 @@ class AppointmentType extends AbstractType
                 TimeType::class,
                 [
                     'input'  => 'datetime',
-                    'widget' => 'single_text',
+                    'widget' => 'choice',
                 ]
             )
             ->add(
@@ -38,7 +38,7 @@ class AppointmentType extends AbstractType
                 TimeType::class,
                 [
                     'input'  => 'datetime',
-                    'widget' => 'single_text',
+                    'widget' => 'choice',
                 ]
             )
             ->add(

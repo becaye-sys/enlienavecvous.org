@@ -19,6 +19,54 @@ class AppointmentRepository extends ServiceEntityRepository
         parent::__construct($registry, Appointment::class);
     }
 
+    public function findAvailableAppointmentsByParamsSplited(array $params)
+    {
+        $query = $this->createQueryBuilder('a')
+            ->where('a.booked = :booked')
+            ->setParameter('booked', false)
+            ->orderBy('a.bookingDate', 'desc')
+            ;
+
+        if (isset($params['bookingDate'])) {
+            $query->andWhere("a.bookingDate = :bookingDate")
+                ->setParameter('bookingDate', $params['bookingDate']);
+        }
+
+        if (isset($params['location'])) {
+            $query->andWhere('a.location LIKE :location')
+                ->setParameter('location', $params['location']);
+        }
+
+        return $query
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAvailableAppointmentsByParams(array $params)
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.booked = :booked')
+            ->setParameter('booked', false)
+            ->andWhere("a.bookingDate = :bookingDate")
+            ->setParameter('bookingDate', $params['bookingDate'])
+            ->andWhere('a.location = :location')
+            ->setParameter('location', $params['location'])
+            ->orderBy('a.bookingDate', 'desc')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function findAvailableAppointments()
+    {
+        return $this->createQueryBuilder('a')
+            ->orderBy('a.bookingDate', 'asc')
+            ->where('a.booked = :booked')
+            ->setParameter('booked', false)
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Appointment[] Returns an array of Appointment objects
     //  */
