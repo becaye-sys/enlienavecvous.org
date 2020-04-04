@@ -7,6 +7,7 @@ import { formatDate, formatDateForTable, formatTime } from "./utils/DateUtils";
 
 function PatientSearch(props) {
     const [currentPage, setCurrentPage] = useState(1);
+    const [loading, setLoading] = useState(true);
     const [appoints, setAppoints] = useState([]);
     const [filtered, setFiltered] = useState([]);
     const [search, setSearch] = useState({
@@ -23,14 +24,14 @@ function PatientSearch(props) {
     const handleChange = ({currentTarget}) => {
         const { name, value } = currentTarget;
         setSearch({...search, [name]: value});
-        console.log('value:',value);
     };
 
     const getAppointments = async () => {
-        console.log('fetch appoints');
         const res = await axios.get(`${API_URL}appointments`).then(response => {return response.data});
         if (res.length > 0) {
+            console.log('res:',res);
             setAppoints(res);
+            setLoading(false);
         }
     }
 
@@ -43,23 +44,20 @@ function PatientSearch(props) {
     },[search]);
 
     const updateAppointsByUserFilters = () => {
-        console.log('update appoints');
-        console.log('search date value: ',search.bookingDate);
-        console.log('search location value: ',search.location);
-
+        console.log('search changed');
+        console.log('date:',search.bookingDate);
         if (search.bookingDate === undefined && search.location === undefined) {
             setFiltered(appoints);
-        } else if (search.bookingDate !== undefined && search.location === undefined) {
+        } else if (search.bookingDate !== undefined && (search.location === undefined || search.location === '')) {
             const updatedAppoints = appoints.filter(function (a) {
                 return formatDate(a.bookingDate) === search.bookingDate;
             });
             setFiltered(updatedAppoints);
-        } else if (search.bookingDate === undefined && search.location !== undefined) {
-            console.log('case 2 ',search.location);
+        } else if ((search.bookingDate === undefined || search.bookingDate === '') && search.location !== undefined) {
+            console.log('location only changed');
             const updatedAppoints = appoints.filter(a => {return a.location.toLowerCase().includes(search.location.toLowerCase())});
             setFiltered(updatedAppoints);
         } else {
-            console.log(`case 3: ${search.bookingDate} + ${search.location}`);
             const updatedAppoints = appoints.filter(function (a) {
                 return formatDate(a.bookingDate) === search.bookingDate && a.location.toLowerCase().includes(search.location.toLowerCase())
             });
@@ -67,9 +65,9 @@ function PatientSearch(props) {
         }
     }
 
-    const getInfo = bookingDate => {
-        const appoint = appoints.filter(a => a.bookingDate === bookingDate);
-        console.log('info:',appoint);
+    const getInfo = id => {
+        const appoint = appoints.filter(a => {return a.id === id});
+        alert("Cette fonctionnalité n'est pas encore prête");
     }
 
     const appointsToDisplay = filtered.length ? filtered : appoints;
@@ -79,6 +77,8 @@ function PatientSearch(props) {
         currentPage,
         itemsPerPage
     ) : appointsToDisplay;
+
+    console.log(filtered.length);
 
     return (
         <div>
@@ -94,34 +94,34 @@ function PatientSearch(props) {
                         <div className="col-lg-4 col-md-6 col-sm-6">
                             <fieldset className="form-group">
                                 <label htmlFor="location">Code postal / Commune</label>
-                                <input onChange={handleChange} value={search.location} type="text" name={"location"} id={"location"} className={"form-control"}/>
+                                <input onChange={(event) => handleChange(event)} value={search.location} type="text" name={"location"} id={"location"} className={"form-control"}/>
                             </fieldset>
                         </div>
                     </div>
                 </form>
             </div>
-            {
-                paginatedAppoints.length > 0 &&
-                <div className="container">
-                    <div className="table-responsive js-rep-log-table">
-                        <table className="table table-striped table-sm">
-                            <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>id</th>
-                                <th>Date</th>
-                                <th>Début</th>
-                                <th>Fin</th>
-                                <th>Lieu</th>
-                                <th></th>
-                            </tr>
-                            </thead>
+            <div className="container">
+                <div className="table-responsive js-rep-log-table">
+                    <table className="table table-striped table-sm">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>id</th>
+                            <th>Date</th>
+                            <th>Début</th>
+                            <th>Fin</th>
+                            <th>Lieu</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        {
+                            paginatedAppoints.length > 0 &&
                             <tbody>
                             {paginatedAppoints.map(a => {
                                 return (
                                     <tr key={a.id}>
                                         <td>
-                                            <button onClick={() => getInfo(a.bookingDate)} className={"btn btn-outline-primary"}>
+                                            <button onClick={() => getInfo(a.id)} className={"btn btn-outline-primary"}>
                                                 Réserver
                                             </button>
                                         </td>
@@ -134,15 +134,19 @@ function PatientSearch(props) {
                                 )
                             })}
                             </tbody>
-                        </table>
-                    </div>
-                    <Pagination
-                        currentPage={currentPage}
-                        itemsPerPage={itemsPerPage}
-                        onPageChanged={handlePageChange}
-                        length={appoints.length} />
+                        }
+                    </table>
+                    {loading && <p>Chargement en cours...</p>}
                 </div>
-            }
+                {itemsPerPage < appointsToDisplay.length &&
+                <Pagination
+                    currentPage={currentPage}
+                    itemsPerPage={itemsPerPage}
+                    onPageChanged={handlePageChange}
+                    length={appointsToDisplay.length}
+                />
+                }
+            </div>
         </div>
     )
 }

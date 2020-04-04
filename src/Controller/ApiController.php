@@ -5,6 +5,8 @@ namespace App\Controller;
 
 
 use App\Repository\AppointmentRepository;
+use App\Repository\PatientRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,23 +46,33 @@ class ApiController extends AbstractController
      * @param Request $request
      * @param AppointmentRepository $appointmentRepository
      * @return JsonResponse
+     * // Not used but keep it
      */
     public function getAvailableAppointmentsFilter(Request $request, AppointmentRepository $appointmentRepository, SerializerInterface $serializer): JsonResponse
     {
         $params = get_object_vars(json_decode($request->getContent()));
-        dump($params);
-        //$params['bookingDate'] = new \DateTime($params['bookingDate']);
-        dump($params['bookingDate']);
         $appoints = $appointmentRepository->findAvailableAppointmentsByParamsSplited($params);
-        //$appoints = $appointmentRepository->findBy(
-        //    ['location' => $params['location']]
-        //);
-        dump($appoints);
         $normalizer = new ObjectNormalizer();
         $encoder = new JsonEncoder();
 
         $serializer = new Serializer([$normalizer], [$encoder]);
         $data = $serializer->serialize($appoints, 'json', ['ignored_attributes' => ['therapist', 'patient']]);
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
+    }
+
+    /**
+     * @Route(path="/current/user", name="api_current_user", methods={"GET"})
+     * @return JsonResponse
+     */
+    public function getCurrentUser(PatientRepository $patientRepository): JsonResponse
+    {
+        $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette entrée.");
+        $currentUser = $patientRepository->findOneBy(['email' => $this->getUser()->getUsername()]);
+        $normalizer = new ObjectNormalizer();
+        $encoder = new JsonEncoder();
+
+        $serializer = new Serializer([$normalizer], [$encoder]);
+        $data = $serializer->serialize($currentUser, 'json');
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 }
