@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -65,39 +64,6 @@ class ApiController extends AbstractController
     }
 
     /**
-     * @Route(path="/current/{role}", name="api_current_role", methods={"GET"})
-     * @return JsonResponse
-     */
-    public function getCurrentUser(Request $request, PatientRepository $patientRepository, Security $security): JsonResponse
-    {
-        //$this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette entrée.");
-        dump($security->getUser());
-        $routeParams = $request->attributes->get('_route_params');
-        if (array_key_exists('role', $routeParams)) {
-            switch ($routeParams['role']) {
-                case 'patient':
-                    //$user = $patientRepository->findOneBy(['email' => $this->getUser()]);
-                    break;
-                case 'therapist':
-                    $user = '';
-                    break;
-                case 'manager':
-                    $user = '';
-                    break;
-                default:
-                    $user = '';
-            }
-        }
-        //$currentUser = $patientRepository->findOneBy(['email' => $this->getUser()->getUsername()]);
-        $normalizer = new ObjectNormalizer();
-        $encoder = new JsonEncoder();
-
-        $serializer = new Serializer([$normalizer], [$encoder]);
-        $data = $serializer->serialize("Get current user", 'json');
-        return new JsonResponse($data, Response::HTTP_OK, [], true);
-    }
-
-    /**
      * @Route(path="/create/booking/{appointment}/{user}", name="api_create_booking", methods={"POST"})
      * @param Request $request
      * @return JsonResponse
@@ -109,15 +75,12 @@ class ApiController extends AbstractController
         EntityManagerInterface $entityManager
     ): JsonResponse
     {
-        dump($request->attributes->get('appointment'));
-        dump($request->attributes->get('user'));
         $appointId = (int)$request->attributes->get('appointment');
         $userId = (int)$request->attributes->get('user');
         $patient = $patientRepository->find($userId);
         $appointment = $appointmentRepository->find($appointId);
         $patient->addAppointment($appointment);
         $entityManager->flush();
-        dump($appointment);
         $normalizer = new ObjectNormalizer();
         $encoder = new JsonEncoder();
         $defaultContext = [
@@ -151,11 +114,10 @@ class ApiController extends AbstractController
     {
         $appointment->setBooked(true);
         $entityManager->flush();
-        $normalizer = new ObjectNormalizer();
 
         $data = $serializer->serialize(
             "Rendez-vous confirmé !",
-            'json',
+            'json'
         );
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }

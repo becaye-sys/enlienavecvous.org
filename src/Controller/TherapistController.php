@@ -147,8 +147,6 @@ class TherapistController extends AbstractController
     public function historyCancel(Appointment $appointment, EntityManagerInterface $entityManager)
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
-        /** @var Therapist $currentUser */
-        $currentUser = $this->getCurrentTherapist();
         $appointment->setBooked(false);
         $appointment->setCancelled(true);
         $entityManager->flush();
