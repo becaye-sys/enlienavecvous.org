@@ -1,0 +1,16 @@
+<p>Bonjour,</p>
+<p>Vous avez rendez-vous :</p>
+<p>Le {{ appointment.bookingDate|date('dd/MM/YYYY') }}</p>
+<p>À {{ appointment.bookingStart|date('H:i') }}</p>
+<p>Avec {{ appointment.patient.displayName }}</p>
+<p>Tel: {{ appointment.patient.phoneNumber }}, email: {{ appointment.patient.email }}</p>
+
+<p>La personne vous contactera par téléphone au moment du rendez-vous.</p>
+
+<p>Vous pouvez proposer à la personne que le rendez-vous se déroule sur d’autres interfaces tels skype, zoom, etc.</p>
+
+<p>Toute prise de rendez-vous, changement de planning, annulation de rendez-vous, doit se faire via la plateforme. En cas
+    d’annulation, respectez autant que possible un délai d’au moins 24h.</p>
+
+<p>Cordialement,</p>
+<p>L'équipe de Onestlapourvous.org</p>

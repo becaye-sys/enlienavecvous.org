@@ -11,11 +11,13 @@ use App\Form\ChangePasswordType;
 use App\Form\PatientSettingsType;
 use App\Repository\AppointmentRepository;
 use App\Repository\PatientRepository;
+use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
@@ -69,14 +71,24 @@ class PatientController extends AbstractController
      * @ParamConverter(name="id", class="App\Entity\Appointment")
      * @return Response
      */
-    public function appointmentCancel(Appointment $appointment, EntityManagerInterface $entityManager)
+    public function appointmentCancel(
+        Appointment $appointment,
+        EntityManagerInterface $entityManager,
+        MailerFactory $mailerFactory
+    )
     {
         $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
         if ($appointment instanceof Appointment && $appointment->getBooked() === true) {
             $appointment->setBooked(false);
-            $appointment->setCancelled(true);
             $appointment->setPatient(null);
             $entityManager->flush();
+            $mailerFactory->createAndSend(
+                "Annulation du rendez-vous",
+                $appointment->getTherapist()->getEmail(),
+                'no-reply@onestlapourvous.org',
+                'appointment_cancelled_from_patient',
+                ['appointment' => $appointment]
+            );
             $this->addFlash('info', "Rendez-vous annulé. Vous allez recevoir un mail de confirmation de l'annulation.");
             // mail
             return $this->redirectToRoute('patient_appointments');

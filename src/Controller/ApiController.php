@@ -109,11 +109,40 @@ class ApiController extends AbstractController
         Request $request,
         Appointment $appointment,
         EntityManagerInterface $entityManager,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        \Swift_Mailer $mailer
     ): JsonResponse
     {
         $appointment->setBooked(true);
         $entityManager->flush();
+
+        $message = (new \Swift_Message("Confirmation de rendez-vous"))
+            ->setTo($appointment->getTherapist()->getEmail())
+            ->setFrom('no-reply@onestlapourvous.org')
+            ->setBody(
+                $this->renderView(
+                    'email/appointment_booked_patient.html.twig',
+                    [
+                        'appointment' => $appointment
+                    ]
+                ),
+                'text/html'
+            );
+        $mailer->send($message);
+
+        $message2 = (new \Swift_Message("Confirmation de rendez-vous"))
+            ->setTo($appointment->getTherapist()->getEmail())
+            ->setFrom('no-reply@onestlapourvous.org')
+            ->setBody(
+                $this->renderView(
+                    'email/appointment_booked_therapist.html.twig',
+                    [
+                        'appointment' => $appointment
+                    ]
+                ),
+                'text/html'
+            );
+        $mailer->send($message2);
 
         $data = $serializer->serialize(
             "Rendez-vous confirmé !",

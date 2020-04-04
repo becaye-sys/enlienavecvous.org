@@ -144,12 +144,25 @@ class TherapistController extends AbstractController
      * @ParamConverter(name="id", class="App\Entity\Appointment")
      * @return Response
      */
-    public function historyCancel(Appointment $appointment, EntityManagerInterface $entityManager)
+    public function historyCancel(Appointment $appointment, EntityManagerInterface $entityManager, \Swift_Mailer $mailer)
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         $appointment->setBooked(false);
-        $appointment->setCancelled(true);
         $entityManager->flush();
+
+        $message = (new \Swift_Message("Annulation du rendez-vous"))
+            ->setTo($appointment->getTherapist()->getEmail())
+            ->setFrom('no-reply@onestlapourvous.org')
+            ->setBody(
+                $this->renderView(
+                    'email/appointment_cancelled_from_therapist.html.twig',
+                    [
+                        'appointment' => $appointment
+                    ]
+                ),
+                'text/html'
+            );
+        $mailer->send($message);
         $this->addFlash('info', "Créneau annulé");
         return $this->redirectToRoute('therapist_history');
     }
