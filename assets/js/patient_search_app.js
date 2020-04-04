@@ -3,7 +3,8 @@ import ReactDOM from "react-dom";
 import axios from "axios";
 import {API_URL, customHeaders} from "./config";
 import Pagination from "./components/Pagination";
-import { formatDate, formatDateForTable, formatTime } from "./utils/DateUtils";
+import { formatDate, formatDateForTable, formatTime, getArrayDate, getArrayTime } from "./utils/DateUtils";
+import  moment from "moment";
 
 function PatientSearch(props) {
     const [currentPage, setCurrentPage] = useState(1);
@@ -30,9 +31,38 @@ function PatientSearch(props) {
         const res = await axios.get(`${API_URL}appointments`).then(response => {return response.data});
         if (res.length > 0) {
             console.log('res:',res);
-            setAppoints(res);
+            const appoints = filterWithTherapistDelay(res);
+            setAppoints(appoints);
             setLoading(false);
         }
+    }
+
+    const filterWithTherapistDelay = (appoints) => {
+        const filtered = appoints.filter(a => {
+            const nowDate = moment().format('YYYY-MM-DD');
+            console.log('nowDate:',nowDate);
+            if (nowDate === formatDate(a.bookingDate)) {
+                console.log('delay param:');
+                console.log("c'est pour aujourd'hui");
+                const arrayTime = getArrayTime(a.bookingStart);
+                console.log('arrayTimeBooking:',arrayTime);
+                const nowTime = moment();
+                console.log('nowTime', nowTime);
+                const targetTime = moment().hours(arrayTime[0]).minutes(arrayTime[1]);
+                console.log('targetTime:',targetTime);
+                let startTime = moment([arrayTime[0], arrayTime[1]]).format('HH:mm');
+                console.log('start time:',startTime);
+                const delay = targetTime.diff(nowTime, 'hours');
+                console.log('delay:',delay);
+                if (delay >= 12) {
+                    return a;
+                }
+            } else {
+                return a;
+            }
+            //return nowDate !== formatDate(a.bookingDate);
+        });
+        return filtered;
     }
 
     useEffect(() => {
@@ -118,6 +148,7 @@ function PatientSearch(props) {
                             paginatedAppoints.length > 0 &&
                             <tbody>
                             {paginatedAppoints.map(a => {
+
                                 return (
                                     <tr key={a.id}>
                                         <td>

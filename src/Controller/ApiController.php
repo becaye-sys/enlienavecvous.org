@@ -6,7 +6,6 @@ namespace App\Controller;
 
 use App\Repository\AppointmentRepository;
 use App\Repository\PatientRepository;
-use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
