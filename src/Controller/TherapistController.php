@@ -105,6 +105,24 @@ class TherapistController extends AbstractController
     }
 
     /**
+     * @Route(path="/appointments", name="therapist_apppointments")
+     * @return Response
+     */
+    public function appointments(AppointmentRepository $appointmentRepository, TherapistRepository $therapistRepository)
+    {
+        $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
+        /** @var Therapist $currentUser */
+        $currentUser = $this->getCurrentTherapist();
+        $appointments = $appointmentRepository->findBy(['therapist' => $currentUser, 'booked' => true]);
+        return $this->render(
+            'therapist/history.html.twig',
+            [
+                'history' => $appointmentRepository->findBy(['therapist' => $currentUser, 'booked' => true])
+            ]
+        );
+    }
+
+    /**
      * @Route(path="/history", name="therapist_history")
      * @return Response
      */
@@ -119,6 +137,23 @@ class TherapistController extends AbstractController
                 'history' => $appointmentRepository->findBy(['therapist' => $currentUser, 'booked' => true])
             ]
         );
+    }
+
+    /**
+     * @Route(path="/history/cancel/{id}", name="therapist_history_cancel")
+     * @ParamConverter(name="id", class="App\Entity\Appointment")
+     * @return Response
+     */
+    public function historyCancel(Appointment $appointment, EntityManagerInterface $entityManager)
+    {
+        $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
+        /** @var Therapist $currentUser */
+        $currentUser = $this->getCurrentTherapist();
+        $appointment->setBooked(false);
+        $appointment->setCancelled(true);
+        $entityManager->flush();
+        $this->addFlash('info', "Créneau annulé");
+        return $this->redirectToRoute('therapist_history');
     }
 
     /**

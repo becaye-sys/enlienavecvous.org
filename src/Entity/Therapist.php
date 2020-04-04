@@ -6,6 +6,8 @@ use App\Interfaces\TherapistInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TherapistRepository")
@@ -18,6 +20,7 @@ class Therapist extends User implements TherapistInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"create_booking"})
      */
     protected $id;
 
@@ -48,6 +51,7 @@ class Therapist extends User implements TherapistInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Appointment", mappedBy="therapist")
+     * @Groups({"get_bookings"})
      */
     private $appointments;
 
