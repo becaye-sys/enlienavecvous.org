@@ -17,7 +17,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
@@ -80,17 +79,16 @@ class PatientController extends AbstractController
         $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
         if ($appointment instanceof Appointment && $appointment->getBooked() === true) {
             $appointment->setBooked(false);
+            $appointment->setCancelled(true);
             $appointment->setPatient(null);
             $entityManager->flush();
             $mailerFactory->createAndSend(
                 "Annulation du rendez-vous",
                 $appointment->getTherapist()->getEmail(),
                 'no-reply@onestlapourvous.org',
-                'appointment_cancelled_from_patient',
-                ['appointment' => $appointment]
+                $this->renderView('email/appointment_cancelled_from_patient.html.twig', ['appointment' => $appointment])
             );
             $this->addFlash('info', "Rendez-vous annulé. Vous allez recevoir un mail de confirmation de l'annulation.");
-            // mail
             return $this->redirectToRoute('patient_appointments');
         } else {
             $this->addFlash('error', "Erreur lors de l'annulation.");
@@ -102,7 +100,7 @@ class PatientController extends AbstractController
      * @Route(path="/recherche", name="patient_research")
      * @return Response
      */
-    public function research(Request $request, AppointmentRepository $appointmentRepository, Security $security)
+    public function research(Security $security)
     {
         $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
         return $this->render(

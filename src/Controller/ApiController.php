@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Appointment;
 use App\Repository\AppointmentRepository;
 use App\Repository\PatientRepository;
+use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -110,39 +111,25 @@ class ApiController extends AbstractController
         Appointment $appointment,
         EntityManagerInterface $entityManager,
         SerializerInterface $serializer,
-        \Swift_Mailer $mailer
+        MailerFactory $mailer
     ): JsonResponse
     {
         $appointment->setBooked(true);
         $entityManager->flush();
 
-        $message = (new \Swift_Message("Confirmation de rendez-vous"))
-            ->setTo($appointment->getTherapist()->getEmail())
-            ->setFrom('no-reply@onestlapourvous.org')
-            ->setBody(
-                $this->renderView(
-                    'email/appointment_booked_patient.html.twig',
-                    [
-                        'appointment' => $appointment
-                    ]
-                ),
-                'text/html'
-            );
-        $mailer->send($message);
+        $mailer->createAndSend(
+            "Confirmation de rendez-vous",
+            $appointment->getPatient()->getEmail(),
+            'no-reply@onestlapourvous.org',
+            $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment])
+        );
 
-        $message2 = (new \Swift_Message("Confirmation de rendez-vous"))
-            ->setTo($appointment->getTherapist()->getEmail())
-            ->setFrom('no-reply@onestlapourvous.org')
-            ->setBody(
-                $this->renderView(
-                    'email/appointment_booked_therapist.html.twig',
-                    [
-                        'appointment' => $appointment
-                    ]
-                ),
-                'text/html'
-            );
-        $mailer->send($message2);
+        $mailer->createAndSend(
+            "Confirmation de rendez-vous",
+            $appointment->getTherapist()->getEmail(),
+            'no-reply@onestlapourvous.org',
+            $this->renderView('email/appointment_booked_therapist.html.twig', ['appointment' => $appointment])
+        );
 
         $data = $serializer->serialize(
             "Rendez-vous confirmé !",

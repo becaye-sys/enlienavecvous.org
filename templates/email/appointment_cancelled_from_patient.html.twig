@@ -1,9 +1,13 @@
-<p>Bonjour,</p>
-<p>Votre rendez-vous est annulé :</p>
-<p>Le {{ appointment.bookingDate|date('dd/MM/YYYY') }}</p>
-<p>À {{ appointment.bookingStart|date('H:i') }}</p>
-<p>Avec {{ appointment.therapist.displayName }}</p>
-<p>Tel: {{ appointment.therapist.phoneNumber }}, email: {{ appointment.therapist.email }}</p>
+{% extends "email_layout.html.twig" %}
 
-<p>Cordialement,</p>
-<p>L'équipe de Onestlapourvous.org</p>
+{% block body %}
+    <p>Bonjour,</p>
+    <p>Votre rendez-vous est annulé :</p>
+    <p>Le {{ appointment.bookingDate|date('d/M/Y') }}</p>
+    <p>À {{ appointment.bookingStart|date('H:i') }}</p>
+    <p>Avec {{ appointment.therapist.displayName }}</p>
+    <p>Tel: {{ appointment.therapist.phoneNumber }}, email: {{ appointment.therapist.email }}</p>
+
+    <p>Cordialement,</p>
+    <p>L'équipe de Onestlapourvous.org</p>
+{% endblock %}

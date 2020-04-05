@@ -58,8 +58,10 @@ class PublicController extends AbstractController
                     "Validation de votre inscription",
                     $user->getEmail(),
                     'no-reply@onestlapourvous.org',
-                    'patient_registration',
-                    ['email_token' => $emailToken]
+                    $this->renderView(
+                        'email/patient_registration.html.twig',
+                        ['email_token' => $emailToken, 'project_url' => $_ENV['PROJECT_URL']]
+                    )
                 );
                 $entityManager->persist($user);
                 $entityManager->flush();
@@ -82,7 +84,7 @@ class PublicController extends AbstractController
     public function therapistRegister(
         Request $request,
         UserPasswordEncoderInterface $encoder,
-        \Swift_Mailer $mailer,
+        MailerFactory $mailer,
         EntityManagerInterface $entityManager,
         RequestContext $requestContext
     )
@@ -98,19 +100,15 @@ class PublicController extends AbstractController
                 $user = $user->setUniqueEmailToken();
                 $user = $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
                 $emailToken = $user->getEmailToken();
-                $message = (new \Swift_Message("Validation de votre inscription"))
-                    ->setTo($user->getEmail())
-                    ->setFrom('no-reply@onestlapourvous.org')
-                    ->setBody(
-                        $this->renderView(
-                            'email/therapist_registration.html.twig',
-                            [
-                                'email_token' => $emailToken
-                            ]
-                        ),
-                        'text/html'
-                    );
-                $mailer->send($message);
+                $mailer->createAndSend(
+                    "Validation de votre inscription",
+                    $user->getEmail(),
+                    'no-reply@onestlapourvous.org',
+                    $this->renderView(
+                        'email/therapist_registration.html.twig',
+                        ['email_token' => $emailToken, 'project_url' => $_ENV['PROJECT_URL']]
+                    )
+                );
                 $entityManager->persist($user);
                 $entityManager->flush();
                 $this->addFlash("success","Votre compte a été créé avec succès !");
