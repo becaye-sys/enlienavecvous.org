@@ -82,7 +82,12 @@ function PatientSearch(props) {
             `${API_URL}create/booking/${appointId}/${userId}`)
             .then(response => {
                 console.log('create booking response:',response);
-                localStorage.setItem('booking', JSON.stringify(response.data));
+                if (localStorage.getItem('booking')) {
+                    localStorage.removeItem('booking');
+                    localStorage.setItem('booking', JSON.stringify(response.data));
+                } else {
+                    localStorage.setItem('booking', JSON.stringify(response.data));
+                }
                 return response.data
             });
         console.log('booking:',booking);
