@@ -5,17 +5,20 @@ namespace App\Controller;
 
 
 use App\Entity\Appointment;
+use App\Entity\Patient;
 use App\Entity\Therapist;
 use App\Entity\User;
 use App\Form\AppointmentType;
 use App\Form\ChangePasswordType;
+use App\Form\TherapistAppointmentCancellationMessageType;
 use App\Form\TherapistSettingsType;
 use App\Repository\AppointmentRepository;
 use App\Repository\TherapistRepository;
-use App\Repository\UserRepository;
+use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -48,10 +51,88 @@ class TherapistController extends AbstractController
     }
 
     /**
+     * @Route(path="/bookings", name="therapist_bookings")
+     * @return Response
+     */
+    public function bookings(AppointmentRepository $appointmentRepository)
+    {
+        $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
+        /** @var Therapist $currentUser */
+        $currentUser = $this->getCurrentTherapist();
+
+        return $this->render(
+            'therapist/bookings.html.twig',
+            [
+                'bookings' => $appointmentRepository->findBy(['therapist' => $currentUser, 'booked' => true]),
+            ]
+        );
+    }
+
+    /**
+     * @Route(path="/booking/cancel/{id}", name="therapist_booking_cancel", methods={"POST","GET"})
+     * @ParamConverter(name="id", class="App\Entity\Appointment")
+     * @param Appointment $appointment
+     * @return Response
+     */
+    public function bookingCancellation(
+        Appointment $appointment,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        MailerFactory $mailer
+    )
+    {
+        $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
+
+        if (!$appointment instanceof Appointment) {
+            $this->addFlash('error',"Réservation introuvable...");
+            return $this->redirectToRoute('therapist_bookings');
+        }
+        if ($appointment->getBooked() === false && !$appointment->getPatient() instanceof Patient) {
+            $this->addFlash('error', "Ce créneau n'est pas réservé...");
+            return $this->redirectToRoute('therapist_bookings');
+        }
+        if ($appointment->getBooked() === false || !$appointment->getPatient() instanceof Patient) {
+            $this->addFlash('error', "Ce créneau n'a pas été réservé correctement...");
+            return $this->redirectToRoute('therapist_bookings');
+        }
+
+        $form = $this->createForm(TherapistAppointmentCancellationMessageType::class, $appointment);
+        $form->handleRequest($request);
+
+        if ($request->isMethod("POST") && $form->isSubmitted() && $form->isValid()) {
+            $appointment->setBooked(false);
+            $patientEmail = $appointment->getPatient()->getEmail();
+            $appointment->setCancelled(true);
+            $appointment->setPatient(null);
+            $entityManager->flush();
+            $mailer->createAndSend(
+                "Annulation du rendez-vous",
+                $patientEmail,
+                'no-reply@onestlapourvous.org',
+                $this->renderView(
+                    'email/appointment_cancelled_from_therapist.html.twig',
+                    [
+                        'appointment' => $appointment
+                    ]
+                )
+            );
+            $this->addFlash('info', "Rendez-vous annulé et message envoyé.");
+            return $this->redirectToRoute('therapist_bookings');
+        }
+
+        return $this->render(
+            'therapist/booking_cancellation.html.twig',
+            [
+                'booking_cancellation_form' => $form->createView()
+            ]
+        );
+    }
+
+    /**
      * @Route(path="/availabilities", name="therapist_availabilites")
      * @return Response
      */
-    public function availabilities(TherapistRepository $therapistRepository, AppointmentRepository $appointmentRepository, Request $request, EntityManagerInterface $manager)
+    public function availabilities(AppointmentRepository $appointmentRepository, Request $request, EntityManagerInterface $manager)
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         /** @var Therapist $currentUser */
@@ -80,13 +161,12 @@ class TherapistController extends AbstractController
      * @ParamConverter(name="id", class="App\Entity\Appointment")
      * @return Response
      */
-    public function availabilitiesEdit(TherapistRepository $therapistRepository, Appointment $appointment, Request $request, EntityManagerInterface $manager)
+    public function availabilitiesEdit(Appointment $appointment, Request $request, EntityManagerInterface $manager)
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
-        /** @var Therapist $currentUser */
-        $currentUser = $this->getCurrentTherapist();
-        if (!$currentUser instanceof Therapist) {
-            return $this->redirectToRoute('therapist_dashboard');
+        if ($appointment->getPatient() instanceof Patient) {
+            $this->addFlash('error',"Ce créneau a été réservé, impossible de le modifier.");
+            return $this->redirectToRoute('therapist_availabilites');
         }
         $appointmentForm = $this->createForm(AppointmentType::class, $appointment);
         $appointmentForm->handleRequest($request);
@@ -105,28 +185,33 @@ class TherapistController extends AbstractController
     }
 
     /**
-     * @Route(path="/appointments", name="therapist_apppointments")
-     * @return Response
+     * @Route(path="/availabilities/{id}/delete", name="therapist_availability_delete")
+     * @ParamConverter(name="id", class="App\Entity\Appointment")
+     * @return RedirectResponse
      */
-    public function appointments(AppointmentRepository $appointmentRepository, TherapistRepository $therapistRepository)
+    public function availabilitiesDelete(Appointment $appointment, EntityManagerInterface $manager): RedirectResponse
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
-        /** @var Therapist $currentUser */
-        $currentUser = $this->getCurrentTherapist();
-        $appointments = $appointmentRepository->findBy(['therapist' => $currentUser, 'booked' => true]);
-        return $this->render(
-            'therapist/history.html.twig',
-            [
-                'history' => $appointmentRepository->findBy(['therapist' => $currentUser, 'booked' => true])
-            ]
-        );
+        if (!$appointment || !$appointment instanceof Appointment) {
+            $this->addFlash('error', "Créneau introuvable...");
+            return $this->redirectToRoute('therapist_availabilites');
+        }
+        if ($appointment->getPatient() instanceof Patient) {
+            $this->addFlash('error',"Ce créneau a été réservé... veuillez l'annuler avant de le supprimer.");
+            return $this->redirectToRoute('therapist_availabilites');
+        } else {
+            $manager->remove($appointment);
+            $manager->flush();
+            $this->addFlash('success',"Créneau supprimé avec succès !");
+            return $this->redirectToRoute('therapist_availabilites');
+        }
     }
 
     /**
      * @Route(path="/history", name="therapist_history")
      * @return Response
      */
-    public function history(AppointmentRepository $appointmentRepository, TherapistRepository $therapistRepository)
+    public function history(AppointmentRepository $appointmentRepository)
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         /** @var Therapist $currentUser */
@@ -137,21 +222,6 @@ class TherapistController extends AbstractController
                 'history' => $appointmentRepository->findBy(['therapist' => $currentUser, 'booked' => true])
             ]
         );
-    }
-
-    /**
-     * @Route(path="/history/cancel/{id}", name="therapist_history_cancel")
-     * @ParamConverter(name="id", class="App\Entity\Appointment")
-     * @return Response
-     */
-    public function historyCancel(Appointment $appointment, EntityManagerInterface $entityManager)
-    {
-        $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
-        $appointment->setBooked(false);
-        $appointment->setCancelled(true);
-        $entityManager->flush();
-        $this->addFlash('info', "Créneau annulé");
-        return $this->redirectToRoute('therapist_history');
     }
 
     /**
@@ -161,7 +231,6 @@ class TherapistController extends AbstractController
     public function patients()
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
-        $currentUser = $this->getCurrentTherapist();
         return $this->render(
             'therapist/patients.html.twig'
         );
@@ -171,7 +240,7 @@ class TherapistController extends AbstractController
      * @Route(path="/settings", name="therapist_settings")
      * @return Response
      */
-    public function settings(UserRepository $userRepository, Request $request, EntityManagerInterface $manager)
+    public function settings(Request $request, EntityManagerInterface $manager)
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         /** @var Therapist $currentUser */
@@ -196,7 +265,7 @@ class TherapistController extends AbstractController
      * @Route(path="/security", name="therapist_security")
      * @return Response
      */
-    public function security(UserRepository $userRepository, Request $request, UserPasswordEncoderInterface $encoder, EntityManagerInterface $manager)
+    public function security(Request $request, UserPasswordEncoderInterface $encoder, EntityManagerInterface $manager)
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         /** @var User $user */

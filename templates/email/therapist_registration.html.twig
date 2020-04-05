@@ -1,0 +1,13 @@
+{% extends "email_layout.html.twig" %}
+
+{% block body %}
+    <h1>Votre inscription a bien été enregistrée.</h1>
+    <p>L'équipe de Onestlapourvous.org vous souhaite la bienvenue et vous remercie pour votre engagement dans ce réseau gestaltiste de soutien psychologique.</p>
+
+    <p>Nous vous proposons de renseigner dès maintenant vos disponibilités en cliquant sur le lien ci-dessous :</p>
+    <a href="{{ project_url }}/email/confirmation/{{ email_token }}">https://onestlapourvous.herokuapp.com/email/confirmation/{{ email_token }}</a>
+
+    <p>Nous avons créé un groupe Facebook d'échange entre thérapeutes de la plateforme. Nous vous invitons à rejoindre cet espace pour partager votre expérience et chercher du soutien si besoin.</p>
+    <p>Pour toutes questions d'utilisation de la plateforme vous pouvez nous contacter à :</p>
+    <a href="mailto:contact-therapeutes@onestlapourvous.org">contact-therapeutes@onestlapourvous.org</a>
+{% endblock %}

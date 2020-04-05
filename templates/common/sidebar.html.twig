@@ -1,7 +1,44 @@
 <nav class="col-md-2 d-none d-md-block bg-light sidebar">
     <div class="sidebar-sticky">
         <ul class="nav flex-column">
-            {% if is_granted('ROLE_PATIENT') %}
+            {% if is_granted('ROLE_THERAPIST') %}
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ path('therapist_dashboard') }}">
+                        <span data-feather="home"></span>
+                        Dashboard <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('therapist_bookings') }}">
+                        <span data-feather="check-circle"></span>
+                        Réservations
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('therapist_availabilites') }}">
+                        <span data-feather="check-circle"></span>
+                        Disponibilités
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('therapist_history') }}">
+                        <span data-feather="clock"></span>
+                        Historique
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('therapist_settings') }}">
+                        <span data-feather="settings"></span>
+                        Paramètres
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('therapist_security') }}">
+                        <span data-feather="lock"></span>
+                        Sécurité
+                    </a>
+                </li>
+            {% elseif is_granted('ROLE_PATIENT') %}
                 <li class="nav-item">
                     <a class="nav-link active" href="{{ path('patient_dashboard') }}">
                         <span data-feather="home"></span>
@@ -35,31 +72,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('patient_security') }}">
                         <span data-feather="check-circle"></span>
-                        Sécurité
-                    </a>
-                </li>
-            {% elseif is_granted('ROLE_THERAPIST') %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('therapist_availabilites') }}">
-                        <span data-feather="check-circle"></span>
-                        Disponibilités
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('therapist_history') }}">
-                        <span data-feather="clock"></span>
-                        Historique
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('therapist_settings') }}">
-                        <span data-feather="settings"></span>
-                        Paramètres
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('therapist_security') }}">
-                        <span data-feather="lock"></span>
                         Sécurité
                     </a>
                 </li>

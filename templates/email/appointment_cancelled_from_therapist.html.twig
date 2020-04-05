@@ -1,0 +1,19 @@
+{% extends "email_layout.html.twig" %}
+
+{% block body %}
+    <p>Bonjour,</p>
+    <p>Nous sommes désolé.e.s pour cet inconvénient, mais votre rendez-vous a été annulé par votre thérapeute :</p>
+
+    <p>{{ appointment.cancelMessage }}</p>
+
+    <p>Le {{ appointment.bookingDate|date('d/m/Y') }}</p>
+    <p>À {{ appointment.bookingStart|date('H:i') }}</p>
+    <p>Avec {{ appointment.therapist.displayName }}</p>
+    <p>Tel: {{ appointment.therapist.phoneNumber }}, email: {{ appointment.therapist.email }}</p>
+
+    <p>Nous vous invitons à <a href="https://onestlapourvous.herokuapp.com">reprendre rendez-vous</a> dès maintenant avec ce thérapeute ou un.e autre thérapeute via la
+        plateforme.</p>
+
+    <p>Cordialement,</p>
+    <p>L'équipe de Onestlapourvous.org</p>
+{% endblock %}

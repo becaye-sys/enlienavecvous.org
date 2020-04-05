@@ -16,14 +16,18 @@ class AppointmentFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = Factory::create("fr");
 
-        for ($i = 1; $i <= 50; $i++) {
+        for ($i = 1; $i <= 80; $i++) {
             $refId = random_int(1,8);
             $appointment = new Appointment($this->getReference(TherapistFixtures::THERAPIST_USER_REFERENCE."_$refId"));
             $appointment->setLocation($faker->countryCode);
-            $appointment->setBookingDate($faker->dateTimeBetween('now', '+2 months'));
             $randomDate = $this->getRandomDate();
-            $appointment->setBookingStart(new \DateTime($randomDate['start']));
-            $appointment->setBookingEnd(new \DateTime($randomDate['end']));
+            $date = $randomDate['start'];
+            $start = new \DateTime($date);
+            $interval = new \DateInterval('PT1H');
+            $end = $start->add($interval);
+            $appointment->setBookingDate($start);
+            $appointment->setBookingStart($start);
+            $appointment->setBookingEnd($end);
             $manager->persist($appointment);
         }
         $manager->flush();
@@ -39,15 +43,19 @@ class AppointmentFixtures extends Fixture implements DependentFixtureInterface
     private function getRandomDate(): array
     {
         $day = random_int(1,31);
-        $month = random_int(4,12);
         $hour = random_int(9,20);
-        $endHour = $hour+1;
         $minute = random_int(0,59);
-        $second = random_int(0,59);
+        if ($day < 10) {
+            $day = "0$day";
+        }
+        if ($hour < 10) {
+            $hour = "0$hour";
+        }
+        if ($minute < 10) {
+            $minute = "0$minute";
+        }
         return [
-            'date' => "$day/04/2020",
-            'start' => "$hour:$minute:$second",
-            'end' => "$endHour:$minute:$second"
+            'start' => "$day-04-2020 $hour:$minute:00",
         ];
     }
 }

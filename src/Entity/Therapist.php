@@ -55,11 +55,6 @@ class Therapist extends User implements TherapistInterface
      */
     private $appointments;
 
-    /**
-     * @ORM\Column(type="time", nullable=true)
-     */
-    private $waitBeforeBooking;
-
     public function __construct()
     {
         parent::__construct();
@@ -164,18 +159,6 @@ class Therapist extends User implements TherapistInterface
                 $appointment->setTherapist(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getWaitBeforeBooking(): ?\DateTimeInterface
-    {
-        return $this->waitBeforeBooking;
-    }
-
-    public function setWaitBeforeBooking(?\DateTimeInterface $waitBeforeBooking): self
-    {
-        $this->waitBeforeBooking = $waitBeforeBooking;
 
         return $this;
     }
