@@ -24,6 +24,7 @@ class PatientFixtures extends Fixture
             $patient = new Patient();
             $patient->setEmail("patient$i@gmail.com");
             $patient->setPassword($this->encoder->encodePassword($patient, "password"));
+            $patient->setEmailToken('');
             $patient->setIsActive(true);
             $patient->setFirstName($faker->firstName);
             $patient->setLastName($faker->lastName);

@@ -20,15 +20,6 @@ class TherapistSettingsType extends TherapistRegisterType
             ->remove('hasCertification')
             ->remove('isSupervised')
             ->remove('isRespectingEthicalFrameWork')
-            ->add(
-                'waitBeforeBooking',
-                TimeType::class,
-                [
-                    'input'  => 'datetime',
-                    'widget' => 'choice',
-                    'required' => false
-                ]
-            )
         ;
     }
 

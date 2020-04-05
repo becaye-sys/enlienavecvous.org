@@ -88,6 +88,11 @@ class User implements UserInterface
      */
     protected $hasAcceptedTermsAndPolicies;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $displayName;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime('now');
@@ -277,6 +282,18 @@ class User implements UserInterface
     public function setUniqueEmailToken(): self
     {
         $this->emailToken = uniqid("", true);
+        return $this;
+    }
+
+    public function getDisplayName(): ?string
+    {
+        return $this->displayName;
+    }
+
+    public function setDisplayName(?string $displayName): self
+    {
+        $this->displayName = $displayName ?? $this->getFirstName() . " " . $this->getLastName();
+
         return $this;
     }
 }

@@ -65,6 +65,11 @@ class Appointment
      */
     private $cancelled;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $cancelMessage;
+
     public function __construct(Therapist $therapist)
     {
         $this->booked = false;
@@ -169,6 +174,18 @@ class Appointment
     public function setCancelled(bool $cancelled): self
     {
         $this->cancelled = $cancelled;
+
+        return $this;
+    }
+
+    public function getCancelMessage(): ?string
+    {
+        return $this->cancelMessage;
+    }
+
+    public function setCancelMessage(?string $cancelMessage): self
+    {
+        $this->cancelMessage = $cancelMessage;
 
         return $this;
     }

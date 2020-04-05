@@ -1,0 +1,64 @@
+{% extends "account_layout.html.twig" %}
+
+{% block body %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Créneaux réservés</h1>
+    </div>
+    <div class="container-fluid">
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Début</th>
+                    <th>Fin</th>
+                    <th>Lieu</th>
+                    <th>Réservé</th>
+                    <th>Annulé</th>
+                    <th>Annulation</th>
+                </tr>
+                </thead>
+                {% if bookings|length %}
+                    <tbody>
+                    {% for a in bookings %}
+                        <tr>
+                            <td>{{ a.id }}</td>
+                            <td>{{ a.bookingDate|date('d/m/Y') }}</td>
+                            <td>{{ a.bookingStart|date('H:i') }}</td>
+                            <td>{{ a.bookingEnd|date('H:i') }}</td>
+                            <td>{{ a.location }}</td>
+                            <td>
+                                {% if a.booked == true %}
+                                    Oui
+                                {% else %}
+                                    Non
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if a.cancelled == true %}
+                                    Oui
+                                {% else %}
+                                    Non
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if a.patient %}
+                                    <a href="{{ path('therapist_booking_cancel', {'id': a.id}) }}" class="btn btn-danger">
+                                        Annuler
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                {% else %}
+                    <p>Vous n'avez pas encore de rendez-vous</p>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{% endblock %}

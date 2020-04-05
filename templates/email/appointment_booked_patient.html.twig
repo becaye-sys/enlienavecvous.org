@@ -1,0 +1,18 @@
+{% extends "email_layout.html.twig" %}
+
+{% block body %}
+    <p>Bonjour,</p>
+    <p>Votre rendez-vous est confirmé :</p>
+    <p>Le {{ appointment.bookingDate|date('dd/MM/YYYY') }}</p>
+    <p>À {{ appointment.bookingStart|date('H:i') }}</p>
+    <p>Avec {{ appointment.therapist.displayName }}</p>
+    <p>Tel: {{ appointment.therapist.phoneNumber }}, email: {{ appointment.therapist.email }}</p>
+
+    <p>Veuillez contacter le/la thérapeute par téléphone au moment du rendez-vous. En fonction de chacun.e, vous aurez la
+        possibilité de basculer sur d’autres interfaces tels skype, zoom, etc.</p>
+
+    <p>En cas d’annulation ou de report, nous vous demandons d’annuler en ligne au moins 24h à l’avance.</p>
+
+    <p>Cordialement,</p>
+    <p>L'équipe de Onestlapourvous.org</p>
+{% endblock %}

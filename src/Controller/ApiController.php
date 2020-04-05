@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Appointment;
 use App\Repository\AppointmentRepository;
 use App\Repository\PatientRepository;
+use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -109,11 +110,26 @@ class ApiController extends AbstractController
         Request $request,
         Appointment $appointment,
         EntityManagerInterface $entityManager,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        MailerFactory $mailer
     ): JsonResponse
     {
         $appointment->setBooked(true);
         $entityManager->flush();
+
+        $mailer->createAndSend(
+            "Confirmation de rendez-vous",
+            $appointment->getPatient()->getEmail(),
+            'no-reply@onestlapourvous.org',
+            $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment])
+        );
+
+        $mailer->createAndSend(
+            "Confirmation de rendez-vous",
+            $appointment->getTherapist()->getEmail(),
+            'no-reply@onestlapourvous.org',
+            $this->renderView('email/appointment_booked_therapist.html.twig', ['appointment' => $appointment])
+        );
 
         $data = $serializer->serialize(
             "Rendez-vous confirmé !",

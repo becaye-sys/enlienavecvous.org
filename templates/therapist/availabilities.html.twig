@@ -76,7 +76,10 @@
                         </td>
                         <td>
                             <a href="{{ path('therapist_availability_edit', {'id': a.id}) }}" class="btn btn-outline-primary">
-                                Modifier
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            <a href="{{ path('therapist_availability_delete', {'id': a.id}) }}" class="btn btn-outline-danger">
+                                <i class="fa fa-times"></i>
                             </a>
                         </td>
                     </tr>

@@ -10,15 +10,12 @@ use App\Form\PatientRegisterType;
 use App\Form\TherapistRegisterType;
 use App\Repository\TherapistRepository;
 use App\Repository\UserRepository;
+use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\Exception\TransportException;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -39,7 +36,12 @@ class PublicController extends AbstractController
     /**
      * @Route(path="/demander-de-l-aide", name="ask_for_help")
      */
-    public function askForHelpRegister(Request $request, UserPasswordEncoderInterface $encoder, MailerInterface $mailer, EntityManagerInterface $entityManager)
+    public function askForHelpRegister(
+        Request $request,
+        UserPasswordEncoderInterface $encoder,
+        MailerFactory $mailerFactory,
+        EntityManagerInterface $entityManager
+    )
     {
         $patient = new Patient();
         $patientForm = $this->createForm(PatientRegisterType::class, $patient);
@@ -52,17 +54,15 @@ class PublicController extends AbstractController
                 $user = $user->setUniqueEmailToken();
                 $user = $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
                 $emailToken = $user->getEmailToken();
-                // send email
-                $email = (new Email())
-                    ->from('hello@onestlapourvous.org')
-                    ->to('louisthomas76750@gmail.com')
-                    ->subject("Inscription sur la plateforme Onestlapourvous.org")
-                    ->html('<a href=\'https://onestlapourvous.herokuapp.com/email/confirmation/'.$emailToken.'\'>Confirmer mon compte<a>', 'utf-8');
-                try {
-                    $mailer->send($email);
-                } catch (TransportExceptionInterface $e) {
-                    throw new TransportException($e->getMessage(), $e->getCode());
-                }
+                $mailerFactory->createAndSend(
+                    "Validation de votre inscription",
+                    $user->getEmail(),
+                    'no-reply@onestlapourvous.org',
+                    $this->renderView(
+                        'email/patient_registration.html.twig',
+                        ['email_token' => $emailToken, 'project_url' => $_ENV['PROJECT_URL']]
+                    )
+                );
                 $entityManager->persist($user);
                 $entityManager->flush();
                 $this->addFlash("success","Votre compte a été créé avec succès !");
@@ -81,7 +81,13 @@ class PublicController extends AbstractController
     /**
      * @Route(path="/proposer-mon-aide", name="therapist_register")
      */
-    public function therapistRegister(Request $request, UserPasswordEncoderInterface $encoder, MailerInterface $mailer, EntityManagerInterface $entityManager, RequestContext $requestContext)
+    public function therapistRegister(
+        Request $request,
+        UserPasswordEncoderInterface $encoder,
+        MailerFactory $mailer,
+        EntityManagerInterface $entityManager,
+        RequestContext $requestContext
+    )
     {
         $therapist = new Therapist();
         $therapistForm = $this->createForm(TherapistRegisterType::class, $therapist);
@@ -94,18 +100,15 @@ class PublicController extends AbstractController
                 $user = $user->setUniqueEmailToken();
                 $user = $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
                 $emailToken = $user->getEmailToken();
-                // send email
-                $email = (new Email())
-                    ->from('hello@onestlapourvous.org')
-                    ->to($user->getEmail())
-                    ->addTo('hapinow@mailo.com')
-                    ->subject("Inscription sur la plateforme Onestlapourvous.org")
-                    ->html('<a href=\'https://onestlapourvous.herokuapp.com/email/confirmation/'.$emailToken.'\'>Confirmer mon compte<a>', 'utf-8');
-                try {
-                    $mailer->send($email);
-                } catch (TransportExceptionInterface $e) {
-                    throw new TransportException($e->getMessage(), $e->getCode());
-                }
+                $mailer->createAndSend(
+                    "Validation de votre inscription",
+                    $user->getEmail(),
+                    'no-reply@onestlapourvous.org',
+                    $this->renderView(
+                        'email/therapist_registration.html.twig',
+                        ['email_token' => $emailToken, 'project_url' => $_ENV['PROJECT_URL']]
+                    )
+                );
                 $entityManager->persist($user);
                 $entityManager->flush();
                 $this->addFlash("success","Votre compte a été créé avec succès !");

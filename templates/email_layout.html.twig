@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}On est là pour vous !{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    {% block stylesheets %}
+    {% endblock %}
+</head>
+<body>
+{% block body %}{% endblock %}
+<footer class="container">
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+        <nav class="my-2 my-md-0 mr-md-3">
+            <a class="p-2 text-dark" href="{{ url('the_project') }}">Le projet</a>
+            <a class="p-2 text-dark" href="{{ url('who_are_we') }}">Qui sommes-nous ?</a>
+            <a class="p-2 text-dark" href="{{ url('data_privacy_policy') }}">Politique de Protection des données</a>
+            <a class="p-2 text-dark" href="{{ url('terms_of_use') }}">Conditions d'utilisation</a>
+            <a class="p-2 text-dark" href="{{ url('legal_notices') }}">Mentions légales</a>
+        </nav>
+    </div>
+</footer>
+</body>
+</html>

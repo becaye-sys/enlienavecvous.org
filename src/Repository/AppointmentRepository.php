@@ -63,6 +63,8 @@ class AppointmentRepository extends ServiceEntityRepository
             ->orderBy('a.bookingDate', 'asc')
             ->where('a.booked = :booked')
             ->setParameter('booked', false)
+            //->andWhere('a.bookingStart > :now')
+            //->setParameter('now', new \DateTime('now'))
             ->getQuery()
             ->getResult();
     }
