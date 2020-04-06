@@ -11,6 +11,7 @@ use App\Repository\TownRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -49,6 +50,18 @@ class RegisterType extends AbstractType
                 TextType::class
             )
             ->add(
+                'country',
+                ChoiceType::class,
+                [
+                    'choices' => [
+                        "France" => "fr",
+                        "Belgique" => "be",
+                        "Luxembourg" => "lu",
+                        "Suisse" => "ch"
+                    ]
+                ]
+            )
+            ->add(
                 'department',
                 EntityType::class,
                 [
@@ -57,20 +70,7 @@ class RegisterType extends AbstractType
                     'choice_value' => 'code'
                 ]
             )
-            ->add(
-                'town',
-                EntityType::class,
-                [
-                    'class' => Town::class,
-                    'choice_label' => 'name',
-                    'label' => "Votre ville",
-                    'query_builder' => function (TownRepository $townRepository) {
-                        return $townRepository->createQueryBuilder('t')
-                            ->where('t.department = :code')
-                            ->setParameter('code', '01');
-                    }
-                ]
-            )
+            ->add('town', TextType::class)
             ->add(
                 'hasAcceptedTermsAndPolicies',
                 CheckboxType::class
@@ -79,6 +79,25 @@ class RegisterType extends AbstractType
                 'phoneNumber',
                 TelType::class
             );
+    }
+
+    public function addTown($builder)
+    {
+        $builder->add(
+            'town',
+            EntityType::class,
+            [
+                'class' => Town::class,
+                'choice_label' => 'name',
+                'label' => "Votre ville",
+                'query_builder' => function (TownRepository $townRepository) {
+                    return $townRepository->createQueryBuilder('t')
+                        ->where('t.department = :code')
+                        ->setParameter('code', '01');
+                },
+                'required' => false
+            ]
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver)

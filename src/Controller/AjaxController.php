@@ -11,14 +11,20 @@ use App\Repository\DepartmentRepository;
 use App\Repository\TownRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class AjaxController
+ * @package App\Controller
+ * @Route(path="/ajax")
+ */
 class AjaxController extends AbstractController
 {
     /**
-     * @Route(path="/ajax/department-select/{id}", name="ajax_department_select", defaults={"id"=1})
+     * @Route(path="/department-select/{id}", name="ajax_department_select", defaults={"id"=1})
      * @ParamConverter(name="id", class="App\Entity\Region")
      * @param Request $request
      */
@@ -42,7 +48,7 @@ class AjaxController extends AbstractController
     }
 
     /**
-     * @Route(path="/ajax/town-select/", name="ajax_town_select")
+     * @Route(path="/town-select/", name="ajax_town_select")
      * @param Request $request
      */
     public function getTownSelect(Request $request, TownRepository $townRepository, DepartmentRepository $departmentRepository)
@@ -63,5 +69,19 @@ class AjaxController extends AbstractController
                 'therapist_register_form' => $form->createView()
             ]
         );
+    }
+
+    /**
+     * @Route(path="/town-confirmation/", name="ajax_town_confirmation")
+     * @param Request $request
+     */
+    public function getTownConfirmation(Request $request, TownRepository $townRepository)
+    {
+        $user = new Therapist();
+        $id = $request->query->get('id');
+        $town = $townRepository->find($id);
+        $user->setTown($town);
+
+        return new JsonResponse($user, 200, [], 'json');
     }
 }

@@ -8,6 +8,7 @@ use App\Repository\DepartmentRepository;
 use App\Repository\TownRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -17,10 +18,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class TherapistRegisterType extends RegisterType
 {
     private $departmentRepository;
+    private $townRepository;
 
-    public function __construct(DepartmentRepository $departmentRepository)
+    public function __construct(DepartmentRepository $departmentRepository, TownRepository $townRepository)
     {
         $this->departmentRepository = $departmentRepository;
+        $this->townRepository = $townRepository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -66,20 +69,34 @@ class TherapistRegisterType extends RegisterType
                 $form->remove('town');
                 $form->add(
                     'town',
-                    EntityType::class,
+                    ChoiceType::class,
                     [
-                        'class' => Town::class,
-                        'choice_label' => 'name',
                         'label' => "Votre ville",
-                        'query_builder' => function (TownRepository $townRepository) use ($departCode) {
-                        return $townRepository->createQueryBuilder('t')
-                            ->where('t.department = :code')
-                            ->setParameter('code', $departCode);
-                        }
+                        'choices' => $this->townRepository->findBy(['department' => $departCode]),
+                        'choice_label' => 'name',
+                        'choice_value' => 'code'
                     ]
                 );
-            }
 
+            }
+        });
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            $form = $event->getForm();
+            /** @var Therapist $data */
+            $data = $event->getData();
+            $town_code = $data["town"];
+            $department_code = $data["department"];
+            dump($data);
+            if (null !== $town_code && null !== $department_code) {
+                /** @var Town $town */
+                $town = $this->townRepository->findOneBy(['code' => $town_code]);
+                $data["town"] = $town;
+                $department = $this->departmentRepository->findOneBy(['code' => $department_code]);
+                $data["department"] = $department;
+                dump($data);
+            } else {
+                dump($data->getTown());
+            }
         });
     }
 

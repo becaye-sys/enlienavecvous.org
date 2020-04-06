@@ -1,5 +1,9 @@
 {% extends "public_layout.html.twig" %}
 
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
 {% set form = therapist_register_form %}
 
 {% block body %}
@@ -61,17 +65,24 @@
             {{ form_widget(form.lastName, {'attr': {'placeholder': "Votre nom"}}) }}
         </fieldset>
         <fieldset>
+            {{ form_widget(form.country) }}
             {{ form_widget(form.department, {
                 'attr': {
                     'placeholder': "Votre département",
                     'data-town-url': path('ajax_town_select'),
-                    'class': 'js-therapist-form-department'
+                    'class': 'js-therapist-form-department selectpicker',
+                    'data-live-search': true
                 }
             }) }}
 
             <div class="js-town-target">
                 {% if form.town is defined %}
-                    {{ form_row(form.town) }}
+                    {{ form_row(form.town, {
+                        'attr': {
+                            'class': 'selectpicker',
+                            'data-live-search': true
+                        }
+                    }) }}
                 {% endif %}
             </div>
         </fieldset>

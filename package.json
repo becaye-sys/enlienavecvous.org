@@ -16,13 +16,15 @@
     },
     "dependencies": {
         "@babel/preset-react": "^7.9.4",
+        "@popperjs/core": "^2.2.1",
         "axios": "^0.19.2",
-        "gijgo": "^1.9.13",
+        "bootstrap": "^4.4.1",
+        "bootstrap-select": "^1.13.12",
         "jquery": "^3.4.1",
         "moment": "^2.24.0",
+        "popper.js": "^1.16.1",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
-        "react-toastify": "^5.5.0",
-        "tui-calendar": "^1.12.12"
+        "react-toastify": "^5.5.0"
     }
 }
