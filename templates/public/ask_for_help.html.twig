@@ -39,8 +39,19 @@
             {{ form_widget(form.lastName, {'attr': {'placeholder': "Votre nom"}}) }}
         </fieldset>
         <fieldset>
-            {{ form_widget(form.country) }}
-            {{ form_widget(form.zipCode, {'attr': {'placeholder': "Votre code postal"}}) }}
+            {{ form_widget(form.department, {
+                'attr': {
+                    'placeholder': "Votre département",
+                    'data-town-url': path('ajax_town_select'),
+                    'class': 'js-therapist-form-department'
+                }
+            }) }}
+
+            <div class="js-town-target">
+                {% if form.town is defined %}
+                    {{ form_row(form.town) }}
+                {% endif %}
+            </div>
         </fieldset>
         <fieldset>
             {{ form_widget(form.phoneNumber, {'attr': {'placeholder': "Votre numéro de téléphone"}}) }}
@@ -73,4 +84,9 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('register_script') }}
 {% endblock %}

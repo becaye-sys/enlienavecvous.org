@@ -8,6 +8,7 @@ use App\Entity\Patient;
 use App\Entity\Therapist;
 use App\Form\PatientRegisterType;
 use App\Form\TherapistRegisterType;
+use App\Repository\DepartmentRepository;
 use App\Repository\TherapistRepository;
 use App\Repository\UserRepository;
 use App\Services\MailerFactory;
@@ -97,6 +98,7 @@ class PublicController extends AbstractController
             if ($therapistForm->getData() instanceof Therapist) {
                 /** @var Therapist $user */
                 $user = $therapistForm->getData();
+                dd($user);
                 $user = $user->setUniqueEmailToken();
                 $user = $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
                 $emailToken = $user->getEmailToken();
@@ -113,13 +115,6 @@ class PublicController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash("success","Votre compte a été créé avec succès !");
                 return $this->redirectToRoute('registration_waiting_for_email_validation', [], Response::HTTP_CREATED);
-            }
-        }
-
-        if ($requestContext->getQueryString()) {
-            $queryString = $requestContext->getQueryString();
-            if (strpos($queryString, '=')) {
-                $message = substr($queryString, strpos($queryString, "=")+1);
             }
         }
 

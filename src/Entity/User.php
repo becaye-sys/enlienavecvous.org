@@ -93,6 +93,21 @@ class User implements UserInterface
      */
     private $displayName;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Region", inversedBy="users")
+     */
+    private $region;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="users")
+     */
+    private $department;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Town", inversedBy="users")
+     */
+    private $town;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime('now');
@@ -293,6 +308,42 @@ class User implements UserInterface
     public function setDisplayName(?string $displayName): self
     {
         $this->displayName = $displayName ?? $this->getFirstName() . " " . $this->getLastName();
+
+        return $this;
+    }
+
+    public function getRegion(): ?Region
+    {
+        return $this->region;
+    }
+
+    public function setRegion(?Region $region): self
+    {
+        $this->region = $region;
+
+        return $this;
+    }
+
+    public function getDepartment(): ?Department
+    {
+        return $this->department;
+    }
+
+    public function setDepartment(?Department $department): self
+    {
+        $this->department = $department;
+
+        return $this;
+    }
+
+    public function getTown(): ?Town
+    {
+        return $this->town;
+    }
+
+    public function setTown(?Town $town): self
+    {
+        $this->town = $town;
 
         return $this;
     }

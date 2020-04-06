@@ -3,69 +3,47 @@
 namespace App\Form;
 
 use App\Entity\Therapist;
-use Symfony\Component\Form\AbstractType;
+use App\Entity\Town;
+use App\Repository\DepartmentRepository;
+use App\Repository\TownRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\CountryType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TherapistRegisterType extends AbstractType
+class TherapistRegisterType extends RegisterType
 {
+    private $departmentRepository;
+
+    public function __construct(DepartmentRepository $departmentRepository)
+    {
+        $this->departmentRepository = $departmentRepository;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        parent::buildForm($builder, $options);
         $builder
             ->add(
-                'email',
-                EmailType::class
-            )
-            ->add(
-                'password',
-                RepeatedType::class,
+                'ethicEntityCodeLabel',
+                TextType::class,
                 [
-                    'type' => PasswordType::class,
-                    'invalid_message' => 'Les mots de passe ne correspondent pas.',
-                    'options' => ['attr' => ['class' => 'password-field']],
-                    'required' => true,
-                    'first_options'  => ['label' => 'Mot de passe'],
-                    'second_options' => ['label' => 'Confirmez votre mot de passe'],
+                    'attr' => [
+                        'placeholder' => "Votre code de déontologie"
+                    ]
                 ]
             )
             ->add(
-                'firstName',
-                TextType::class
-            )
-            ->add(
-                'lastName',
-                TextType::class
-            )
-            ->add(
-                'country',
-                CountryType::class
-            )
-            ->add(
-                'zipCode',
-                TextType::class
-            )
-            ->add(
-                'phoneNumber',
-                TelType::class
-            )
-            ->add(
-                'ethicEntityCodeLabel',
-                TextType::class
-            )
-            ->add(
                 'schoolEntityLabel',
-                TextType::class
-            )
-            ->add(
-                'hasAcceptedTermsAndPolicies',
-                CheckboxType::class
+                TextType::class,
+                [
+                    'attr' => [
+                        'placeholder' => "Votre école de formation"
+                    ]
+                ]
             )
             ->add(
                 'hasCertification',
@@ -80,6 +58,29 @@ class TherapistRegisterType extends AbstractType
                 CheckboxType::class
             )
         ;
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $form = $event->getForm();
+            $data = $event->getData();
+            if ($data->getDepartment() !== null) {
+                $departCode = $data->getDepartment()->getCode();
+                $form->remove('town');
+                $form->add(
+                    'town',
+                    EntityType::class,
+                    [
+                        'class' => Town::class,
+                        'choice_label' => 'name',
+                        'label' => "Votre ville",
+                        'query_builder' => function (TownRepository $townRepository) use ($departCode) {
+                        return $townRepository->createQueryBuilder('t')
+                            ->where('t.department = :code')
+                            ->setParameter('code', $departCode);
+                        }
+                    ]
+                );
+            }
+
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver)
