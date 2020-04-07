@@ -44,17 +44,25 @@ class AppointmentRepository extends ServiceEntityRepository
 
     public function findAvailableAppointmentsByParams(array $params)
     {
-        return $this->createQueryBuilder('a')
+        $query = $this->createQueryBuilder('a')
             ->where('a.booked = :booked')
             ->setParameter('booked', false)
-            ->andWhere("a.bookingDate = :bookingDate")
-            ->setParameter('bookingDate', $params['bookingDate'])
-            ->andWhere('a.location = :location')
-            ->setParameter('location', $params['location'])
             ->orderBy('a.bookingDate', 'desc')
+        ;
+
+        if (isset($params['date_filter'])) {
+            $query->andWhere("a.bookingDate = :bookingDate")
+                ->setParameter('bookingDate', $params['date_filter']);
+        }
+
+        if (isset($params['location_filter'])) {
+            $query->andWhere('a.location LIKE :location')
+                ->setParameter('location', $params['location_filter']);
+        }
+
+        return $query
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 
     public function findAvailableAppointments()
