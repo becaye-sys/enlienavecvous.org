@@ -14,15 +14,21 @@ use App\Form\TherapistAppointmentCancellationMessageType;
 use App\Form\TherapistSettingsType;
 use App\Repository\AppointmentRepository;
 use App\Repository\TherapistRepository;
+use App\Services\CustomSerializer;
 use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Class TherapistController
@@ -132,7 +138,12 @@ class TherapistController extends AbstractController
      * @Route(path="/availabilities", name="therapist_availabilites")
      * @return Response
      */
-    public function availabilities(AppointmentRepository $appointmentRepository, Request $request, EntityManagerInterface $manager)
+    public function availabilities(
+        AppointmentRepository $appointmentRepository,
+        Request $request,
+        EntityManagerInterface $manager,
+        CustomSerializer $customSerializer
+    )
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         /** @var Therapist $currentUser */
@@ -140,18 +151,42 @@ class TherapistController extends AbstractController
         $appointment = new Appointment($currentUser);
         $appointmentForm = $this->createForm(AppointmentType::class, $appointment);
         $appointmentForm->handleRequest($request);
-        if ($request->isMethod('POST') && $appointmentForm->isSubmitted() && $appointmentForm->isValid()) {
+        if ($appointmentForm->isSubmitted() && $appointmentForm->isValid()) {
             $manager->persist($appointment);
             $manager->flush();
             $this->addFlash('success',"Créneau ajouté !");
             return $this->redirectToRoute('therapist_availabilites');
         }
 
+        dump('query', $request->query);
+
+        $params = [];
+        foreach ($request->query as $key => $value) {
+            dump('key', $key);
+            dump('value', $value);
+            if ($value !== "") {
+                $params[$key] = $value;
+            }
+        }
+
+        dump($params);
+
+        if (array_count_values($params) === 0) {
+            dump('there is empty query');
+            $appointments = $appointmentRepository->findBy(['therapist' => $currentUser]);
+        } else {
+            dump('there is query');
+            $appointments = $appointmentRepository->findAvailableAppointmentsByDate($params);
+        }
+
+        dump($params);
+
         return $this->render(
             'therapist/availabilities.html.twig',
             [
                 'appointment_form' => $appointmentForm->createView(),
-                'availabilities' => $appointmentRepository->findBy(['therapist' => $currentUser]),
+                'availabilities' => $appointments ?? [],
+                'filters' => $params
             ]
         );
     }
@@ -265,11 +300,11 @@ class TherapistController extends AbstractController
      * @Route(path="/security", name="therapist_security")
      * @return Response
      */
-    public function security(Request $request, UserPasswordEncoderInterface $encoder, EntityManagerInterface $manager)
+    public function security(Request $request, UserPasswordEncoderInterface $encoder, AppointmentRepository $appointmentRepository, EntityManagerInterface $manager)
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
-        /** @var User $user */
-        $user = $this->getUser();
+        /** @var Therapist $user */
+        $user = $this->getCurrentTherapist();
         $changePasswordForm = $this->createForm(ChangePasswordType::class, $user);
         $changePasswordForm->handleRequest($request);
         if ($request->isMethod('POST') && $changePasswordForm->isSubmitted() && $changePasswordForm->isValid()) {
@@ -283,9 +318,38 @@ class TherapistController extends AbstractController
         return $this->render(
             'therapist/security.html.twig',
             [
-                'change_password_form' => $changePasswordForm->createView()
+                'change_password_form' => $changePasswordForm->createView(),
+                'appointments' => $appointmentRepository->findBy(['therapist' => $user, 'booked' => true])
             ]
         );
+    }
+
+    /**
+     * @Route(path="/account/delete", name="therapist_account_delete")
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     */
+    public function deleteAccount(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder)
+    {
+        $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette fonctionnalité.");
+        /** @var Therapist $user */
+        $user = $this->getCurrentTherapist();
+        if ($user instanceof Therapist) {
+            $userPassword = $request->request->get('password');
+            if ($encoder->isPasswordValid($user, $userPassword)) {
+                // delete therapist availabilities
+                // send email account deletion
+                // delete user
+                // redirect
+                $this->addFlash('success', "Votre mot de passe est valide.");
+                return $this->redirectToRoute('therapist_security');
+            } else {
+                $this->addFlash('error', "Votre mot de passe est invalide.");
+                return $this->redirectToRoute('therapist_security');
+            }
+        } else {
+            $this->addFlash('error', "Vous n'êtes pas thérapeute...");
+        }
     }
 
     private function getCurrentTherapist(): Therapist
