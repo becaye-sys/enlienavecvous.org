@@ -17,6 +17,7 @@ use App\Repository\TherapistRepository;
 use App\Services\CustomSerializer;
 use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -135,14 +136,14 @@ class TherapistController extends AbstractController
     }
 
     /**
-     * @Route(path="/availabilities", name="therapist_availabilites")
+     * @Route(path="/availabilities/", name="therapist_availabilities")
      * @return Response
      */
     public function availabilities(
         AppointmentRepository $appointmentRepository,
         Request $request,
         EntityManagerInterface $manager,
-        CustomSerializer $customSerializer
+        CustomSerializer $customSerializer, PaginatorInterface $paginator
     )
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
@@ -169,24 +170,32 @@ class TherapistController extends AbstractController
             }
         }
 
-        dump($params);
-
-        if (array_count_values($params) === 0) {
+        if (count($params) === 0) {
             dump('there is empty query');
-            $appointments = $appointmentRepository->findBy(['therapist' => $currentUser]);
+            $appointments = $appointmentRepository->findBy(
+                ['therapist' => $currentUser],
+                []
+            );
         } else {
-            dump('there is query');
-            $appointments = $appointmentRepository->findAvailableAppointmentsByDate($params);
+            dump('there is query',count($params));
+            $appointments = $appointmentRepository->findAvailableAppointmentsByParams($params);
         }
 
+        $paginated = $paginator->paginate(
+            $appointments,
+            $request->query->getInt('page', 1),
+            10
+        );
+
         dump($params);
+        dump(count($appointments));
 
         return $this->render(
             'therapist/availabilities.html.twig',
             [
                 'appointment_form' => $appointmentForm->createView(),
-                'availabilities' => $appointments ?? [],
-                'filters' => $params
+                'availabilities' => $paginated ?? [],
+                'filters' => $params,
             ]
         );
     }

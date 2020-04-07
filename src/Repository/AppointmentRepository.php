@@ -42,7 +42,7 @@ class AppointmentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findAvailableAppointmentsByDate(array $params)
+    public function findAvailableAppointmentsByParams(array $params)
     {
         $query = $this->createQueryBuilder('a')
             ->where('a.booked = :booked')

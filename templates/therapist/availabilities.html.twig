@@ -65,7 +65,7 @@
     </div>
     <div class="container mt-5 mb-5">
         <div class="row">
-            <form class="form-inline" action="{{ path('therapist_availabilites') }}" method="get" id="table_filter_form">
+            <form class="form-inline" action="{{ path('therapist_availabilities') }}" method="get" id="table_filter_form">
                 <fieldset class="form-group">
                     <label for="date_filter">Filter par date</label>
                     <input type="date" name="date_filter" id="date_filter" class="form-control" value="{% if filters.date_filter is defined %}{{ filters.date_filter ?: filters.date_filter }}{% endif %}">
@@ -155,6 +155,7 @@
                 {% endif %}
             {% endif %}
         </table>
+        {{ knp_pagination_render(availabilities) }}
     </div>
 {% endblock %}
 
