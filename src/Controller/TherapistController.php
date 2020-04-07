@@ -143,7 +143,7 @@ class TherapistController extends AbstractController
         AppointmentRepository $appointmentRepository,
         Request $request,
         EntityManagerInterface $manager,
-        CustomSerializer $customSerializer, PaginatorInterface $paginator
+        PaginatorInterface $paginator
     )
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
@@ -159,25 +159,19 @@ class TherapistController extends AbstractController
             return $this->redirectToRoute('therapist_availabilites');
         }
 
-        dump('query', $request->query);
-
         $params = [];
         foreach ($request->query as $key => $value) {
-            dump('key', $key);
-            dump('value', $value);
             if ($value !== "") {
                 $params[$key] = $value;
             }
         }
 
         if (count($params) === 0) {
-            dump('there is empty query');
             $appointments = $appointmentRepository->findBy(
                 ['therapist' => $currentUser],
                 []
             );
         } else {
-            dump('there is query',count($params));
             $appointments = $appointmentRepository->findAvailableAppointmentsByParams($params);
         }
 
@@ -186,9 +180,6 @@ class TherapistController extends AbstractController
             $request->query->getInt('page', 1),
             10
         );
-
-        dump($params);
-        dump(count($appointments));
 
         return $this->render(
             'therapist/availabilities.html.twig',
