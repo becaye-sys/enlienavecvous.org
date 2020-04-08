@@ -68,12 +68,11 @@ class ManagerController extends AbstractController
     public function manageUsers(UserRepository $userRepository, Request $request, EntityManagerInterface $manager)
     {
         $this->denyAccessUnlessGranted("ROLE_MANAGER", null, "Vous n'avez pas accès à cette page.");
-        $users = $userRepository->findAll();
+
         if ($request->isMethod("POST")) {
             $role = $request->request->get('user_role');
             $userId = $request->request->get('user_id');
             $selectedUser = $userRepository->find($userId);
-            dump($selectedUser->getRoles());
             if ($selectedUser instanceof User && !in_array($role, $selectedUser->getRoles())) {
                 $existentRoles = $selectedUser->getRoles();
                 array_push($existentRoles, $role);
@@ -88,10 +87,43 @@ class ManagerController extends AbstractController
                 return $this->redirectToRoute('manager_manage_users');
             }
         }
+
+        $params = [];
+        dump($request->query);
+        foreach ($request->query as $key => $value) {
+            if ($value !== "") {
+                $params[$key] = $value;
+            }
+        }
+        dump($params);
+
+        if (count($params) === 0) {
+            dump('no params');
+            $users = $userRepository->findByParams();
+        } else {
+            dump('some params');
+            $users = $userRepository->findByParams($params);
+        }
+
         return $this->render(
             'manager/manage_members.html.twig',
             [
                 'users' => $users
+            ]
+        );
+    }
+
+    /**
+     * @Route(path="/en-attente", name="manager_users_waiting")
+     * @param UserRepository $userRepository
+     * @return Response
+     */
+    public function usersWaitingForActivation(UserRepository $userRepository)
+    {
+        return $this->render(
+            'manager/users_waiting_for_activation.html.twig',
+            [
+                'new_users' => $userRepository->findBy(['isActive' => false])
             ]
         );
     }

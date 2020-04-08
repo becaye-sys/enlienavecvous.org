@@ -163,4 +163,9 @@ class Therapist extends User implements TherapistInterface
 
         return $this;
     }
+
+    public function upgradeToManager()
+    {
+        $this->roles[] = self::ROLE_MANAGER;
+    }
 }

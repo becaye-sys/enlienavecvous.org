@@ -156,7 +156,7 @@ class TherapistController extends AbstractController
             $manager->persist($appointment);
             $manager->flush();
             $this->addFlash('success',"Créneau ajouté !");
-            return $this->redirectToRoute('therapist_availabilites');
+            return $this->redirectToRoute('therapist_availabilities');
         }
 
         $params = [];

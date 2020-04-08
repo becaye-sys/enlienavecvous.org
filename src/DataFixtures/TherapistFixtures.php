@@ -28,6 +28,9 @@ class TherapistFixtures extends Fixture
 
         for ($i = 1; $i <= 8; $i ++) {
             $therapist = new Therapist();
+            if ($i === 1) {
+                $therapist->upgradeToManager();
+            }
             $therapist->setEthicEntityCodeLabel("ethic label code $i");
             $therapist->setSchoolEntityLabel("school label $i");
             $therapist->setHasCertification(true);

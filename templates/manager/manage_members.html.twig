@@ -4,6 +4,34 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Membres actif</h1>
     </div>
+    <div class="container-fluid mt-5 mb-5">
+        <div class="row">
+            <form class="form-inline" action="{{ path('manager_manage_users') }}" method="get" id="table_filter_form">
+                <fieldset class="form-group">
+                    <label for="email_filter">Filter par email</label>
+                    <input type="email" name="email_filter" id="email_filter" class="form-control" placeholder="email" value="{% if filters.email_filter is defined %}{{ filters.email_filter ?: filters.email_filter }}{% endif %}">
+                </fieldset>
+                {#<fieldset class="form-group ml-1">
+                    <label for="role_filter">Filter par role</label>
+                    <select name="role_filter" id="role_filter">
+                        <option value="">Aucun role sélectionné</option>
+                        <option value="ROLE_PATIENT">Patient</option>
+                        <option value="ROLE_THERAPIST">Thérapeute</option>
+                        <option value="ROLE_MANAGER">Manager</option>
+                    </select>
+                </fieldset>#}
+                <fieldset class="form-group ml-1">
+                    <label for="lastname_filter">Filter par nom</label>
+                    <input type="text" placeholder="Nom" name="lastname_filter" id="lastname_filter" class="form-control" value="{% if filters.lastname_filter is defined %}{{ filters.lastname_filter ?: filters.lastname_filter }}{% endif %}">
+                </fieldset>
+                <fieldset class="form-group ml-1">
+                    <label for="firstname_filter">Filter par prénom</label>
+                    <input type="text" placeholder="Prénom" name="firstname_filter" id="firstname_filter" class="form-control" value="{% if filters.firstname_filter is defined %}{{ filters.firstname_filter ?? filters.firstname_filter }}{% endif %}">
+                </fieldset>
+                <a href="{{ path('manager_manage_users') }}" class="btn btn-primary ml-2">Réinitaliser les filtres</a>
+            </form>
+        </div>
+    </div>
     <div class="container-fluid">
         <div class="table-responsive">
             <table class="table table-striped table-sm">
@@ -53,7 +81,7 @@
                     {% endfor %}
                     </tbody>
                 {% else %}
-                    <p>Pas de nouvelles inscriptions cette semaine</p>
+                    <p>Aucun utilisateur trouvé pour ce-s filtre-s.</p>
                 {% endif %}
             </table>
         </div>
@@ -61,4 +89,5 @@
 {% endblock %}
 
 {% block javascripts %}
+    {{ encore_entry_script_tags('manage_members') }}
 {% endblock %}

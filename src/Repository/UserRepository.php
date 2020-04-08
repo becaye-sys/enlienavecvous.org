@@ -8,6 +8,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use function Doctrine\ORM\QueryBuilder;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -48,6 +49,27 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameter('to', $to)
             ->getQuery()->getResult()
             ;
+    }
+
+    public function findByParams(array $params = null)
+    {
+        $query = $this->createQueryBuilder('u')
+            ->where('u.isActive = :isActive')
+            ->setParameter('isActive', true);
+
+        if (isset($params['email_filter'])) {
+            $query->andWhere("u.email LIKE :email")
+                ->setParameter('email', $params['email_filter']);
+        }
+        if (isset($params['lastname_filter'])) {
+            $query->andWhere('u.lastName = :lastname')
+                ->setParameter('lastname', $params['lastname_filter']);
+        }
+        if (isset($params['firstname_filter'])) {
+            $query->andWhere('u.firstName = :firstname')
+                ->setParameter('firstname', $params['firstname_filter']);
+        }
+        return $query->getQuery()->getResult();
     }
 
     // /**
