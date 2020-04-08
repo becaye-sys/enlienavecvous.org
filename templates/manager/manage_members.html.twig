@@ -1,0 +1,64 @@
+{% extends "account_layout.html.twig" %}
+
+{% block body %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Membres actif</h1>
+    </div>
+    <div class="container-fluid">
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Email</th>
+                    <th>Date inscription</th>
+                    <th>Role</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Validé</th>
+                    <th></th>
+                </tr>
+                </thead>
+                {% if users|length %}
+                    <tbody>
+                    {% for u in users %}
+                        <tr>
+                            <td>{{ u.id }}</td>
+                            <td>{{ u.email }}</td>
+                            <td>{{ u.createdAt|date('d/m/Y') }}</td>
+                            <td>
+                                {{ u.roles|last }}
+                            </td>
+                            <td>{{ u.lastName }}</td>
+                            <td>{{ u.firstName }}</td>
+                            <td>{{ u.isActive }}</td>
+                            <td>
+                                <form action="{{ path('manager_manage_users') }}" method="post">
+                                    <label for="user_role">Changer le rôle</label>
+                                    <select name="user_role" id="user_role">
+                                        {% if u.roles|last == 'ROLE_THERAPIST' %}
+                                            <option value="ROLE_THERAPIST">Thérapeute</option>
+                                            <option value="ROLE_MANAGER">Manager</option>
+                                        {% else %}
+                                            <option value="ROLE_PATIENT">Patient</option>
+                                            <option value="ROLE_THERAPIST">Thérapeute</option>
+                                            <option value="ROLE_MANAGER">Manager</option>
+                                        {% endif %}
+                                    </select>
+                                    <input type="hidden" name="user_id" value="{{ u.id }}">
+                                    <button type="submit" class="btn btn-primary">Mettre à jour le rôle</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                {% else %}
+                    <p>Pas de nouvelles inscriptions cette semaine</p>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{% endblock %}

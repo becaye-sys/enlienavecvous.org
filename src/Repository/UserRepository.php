@@ -36,6 +36,20 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+    public function findRecentlyRegistered(string $from, string $to)
+    {
+        $dateFrom = new \DateTime($from);
+        $dateTo = new \DateTime($to);
+        $from = new \DateTime($dateFrom->format("Y-m-d")." 00:00:00");
+        $to = new \DateTime($dateTo->format("Y-m-d")." 23:59:59");
+        return $this->createQueryBuilder('u')
+            ->where('u.createdAt BETWEEN :from AND :to')
+            ->setParameter('from', $from)
+            ->setParameter('to', $to)
+            ->getQuery()->getResult()
+            ;
+    }
+
     // /**
     //  * @return User[] Returns an array of User objects
     //  */
