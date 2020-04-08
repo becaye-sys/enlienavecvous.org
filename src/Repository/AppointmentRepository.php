@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Appointment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use function Doctrine\ORM\QueryBuilder;
 
 /**
  * @method Appointment|null find($id, $lockMode = null, $lockVersion = null)
@@ -55,11 +56,6 @@ class AppointmentRepository extends ServiceEntityRepository
                 ->setParameter('bookingDate', $params['date_filter']);
         }
 
-        if (isset($params['location_filter'])) {
-            $query->andWhere('a.location LIKE :location')
-                ->setParameter('location', $params['location_filter']);
-        }
-
         return $query
             ->getQuery()
             ->getResult();
@@ -67,12 +63,27 @@ class AppointmentRepository extends ServiceEntityRepository
 
     public function findAvailableAppointments()
     {
-        return $this->createQueryBuilder('a')
+        $query = $this->createQueryBuilder('a')
             ->orderBy('a.bookingDate', 'asc')
             ->where('a.booked = :booked')
             ->setParameter('booked', false)
-            //->andWhere('a.bookingStart > :now')
-            //->setParameter('now', new \DateTime('now'))
+            ->andWhere('a.bookingDate >= :now')
+            ->setParameter('now', new \DateTime('now'));
+        return $query
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findTodayAvailableAppointments()
+    {
+        $date = new \DateTime();
+        $query = $this->createQueryBuilder('a')
+            ->orderBy('a.bookingDate', 'asc')
+            ->where('a.booked = :booked')
+            ->setParameter('booked', false)
+            ->andWhere('a.bookingDate = :now')
+            ->setParameter('now', $date->format('Y-m-d'));
+        return $query
             ->getQuery()
             ->getResult();
     }

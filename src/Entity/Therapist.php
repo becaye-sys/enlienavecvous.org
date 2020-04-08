@@ -15,6 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Therapist extends User implements TherapistInterface
 {
     private const ROLE_THERAPIST = "ROLE_THERAPIST";
+    private const ROLE_MANAGER = "ROLE_MANAGER";
 
     /**
      * @ORM\Id()
@@ -161,5 +162,10 @@ class Therapist extends User implements TherapistInterface
         }
 
         return $this;
+    }
+
+    public function upgradeToManager()
+    {
+        $this->roles[] = self::ROLE_MANAGER;
     }
 }

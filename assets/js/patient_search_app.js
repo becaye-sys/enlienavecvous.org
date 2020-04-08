@@ -4,7 +4,7 @@ import axios from "axios";
 import {API_URL, customHeaders} from "./config";
 import Pagination from "./components/Pagination";
 import { formatDate, formatDateForTable, formatTime, getArrayDate, getArrayTime } from "./utils/DateUtils";
-import  moment from "moment";
+import moment, {now} from "moment";
 
 function PatientSearch(props) {
     const [currentPage, setCurrentPage] = useState(1);
@@ -54,22 +54,26 @@ function PatientSearch(props) {
             //console.log('nowDate:',nowDate);
             if (nowDate === formatDate(a.bookingDate)) {
                 //console.log('delay param:');
-                //console.log("c'est pour aujourd'hui");
+                console.log("créneau pour aujourd'hui");
                 const arrayTime = getArrayTime(a.bookingStart);
                 //console.log('arrayTimeBooking:',arrayTime);
                 const nowTime = moment();
-                //console.log('nowTime', nowTime);
+                console.log('nowTime', nowTime);
                 const targetTime = moment().hours(arrayTime[0]).minutes(arrayTime[1]);
-                //console.log('targetTime:',targetTime);
+                console.log('targetTime:',targetTime);
                 let startTime = moment([arrayTime[0], arrayTime[1]]).format('HH:mm');
                 //console.log('start time:',startTime);
                 const delay = targetTime.diff(nowTime, 'hours');
-                //console.log('delay:',delay);
-                if (delay >= 12) {
+                console.log('delay:',delay);
+                console.log('différence:',targetTime - nowTime);
+                if ((targetTime > nowTime) && delay >= 12) {
                     return a;
                 }
-            } else {
+            } else if (nowDate < formatDate(a.bookingDate)) {
+                console.log("créneau pour plus tard");
                 return a;
+            } else {
+                console.log("créneau passé");
             }
             //return nowDate !== formatDate(a.bookingDate);
         });
