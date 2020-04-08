@@ -76,6 +76,7 @@
     "scripts": {
         "auto-scripts": {
             "doctrine:migrations:migrate --no-interaction": "symfony-cmd",
+            "doctrine:fixtures:load --no-interaction --env=prod": "symfony-cmd",
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
