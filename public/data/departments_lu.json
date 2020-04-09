@@ -1,0 +1,14 @@
+[
+  { "CANTON": "Capellen", "LAU2": "01" },
+  { "CANTON": "Esch-sur-Alzette", "LAU2": "02" },
+  { "CANTON": "Luxembourg", "LAU2": "03" },
+  { "CANTON": "Mersch", "LAU2": "04" },
+  { "CANTON": "Clervaux", "LAU2": "05" },
+  { "CANTON": "Diekirch", "LAU2": "06" },
+  { "CANTON": "Redange", "LAU2": "07" },
+  { "CANTON": "Wiltz", "LAU2": "08" },
+  { "CANTON": "Vianden", "LAU2": "09" },
+  { "CANTON": "Echternach", "LAU2": "10" },
+  { "CANTON": "Grevenmacher", "LAU2": "11" },
+  { "CANTON": "Remich", "LAU2": "12" }
+]

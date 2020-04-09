@@ -1,0 +1,884 @@
+[
+  {
+    "cp": "101",
+    "dp": "Affoltern",
+    "canton": "Zurich",
+    "idcanton": "1"
+  },
+  {
+    "cp": "102",
+    "dp": "Andelfingen",
+    "canton": "Zurich",
+    "idcanton": "1"
+  },
+  {
+    "cp": "103",
+    "dp": "Bülach",
+    "canton": "Zurich",
+    "idcanton": "1"
+  },
+  {
+    "cp": "104",
+    "dp": "Dielsdorf",
+    "canton": "Zurich",
+    "idcanton": "1"
+  },
+  {
+    "cp": "105",
+    "dp": "Hinwil",
+    "canton": "Zurich",
+    "idcanton": "1"
+  },
+  {
+    "cp": "106",
+    "dp": "Horgen",
+    "canton": "Zurich",
+    "idcanton": "1"
+  },
+  {
+    "cp": "107",
+    "dp": "Meilen",
+    "canton": "Zurich",
+    "idcanton": "1"
+  },
+  {
+    "cp": "108",
+    "dp": "Pfäffikon",
+    "canton": "Zurich",
+    "idcanton": "1"
+  },
+  {
+    "cp": "109",
+    "dp": "Uster",
+    "canton": "Zurich",
+    "idcanton": "1"
+  },
+  {
+    "cp": "110",
+    "dp": "Winterthur",
+    "canton": "Zurich",
+    "idcanton": "1"
+  },
+  {
+    "cp": "111",
+    "dp": "Dietikon",
+    "canton": "Zurich",
+    "idcanton": "1"
+  },
+  {
+    "cp": "112",
+    "dp": "Zürich",
+    "canton": "Zurich",
+    "idcanton": "1"
+  },
+  {
+    "cp": "241",
+    "dp": "Jura bernois",
+    "canton": "Berne",
+    "idcanton": "2"
+  },
+  {
+    "cp": "242",
+    "dp": "Biel/Bienne",
+    "canton": "Berne",
+    "idcanton": "2"
+  },
+  {
+    "cp": "243",
+    "dp": "Seeland",
+    "canton": "Berne",
+    "idcanton": "2"
+  },
+  {
+    "cp": "244",
+    "dp": "Oberaargau",
+    "canton": "Berne",
+    "idcanton": "2"
+  },
+  {
+    "cp": "245",
+    "dp": "Emmental",
+    "canton": "Berne",
+    "idcanton": "2"
+  },
+  {
+    "cp": "246",
+    "dp": "Bern-Mittelland",
+    "canton": "Berne",
+    "idcanton": "2"
+  },
+  {
+    "cp": "247",
+    "dp": "Thun",
+    "canton": "Berne",
+    "idcanton": "2"
+  },
+  {
+    "cp": "248",
+    "dp": "Obersimmental-Saanen",
+    "canton": "Berne",
+    "idcanton": "2"
+  },
+  {
+    "cp": "249",
+    "dp": "Frutigen-Niedersimmental",
+    "canton": "Berne",
+    "idcanton": "2"
+  },
+  {
+    "cp": "250",
+    "dp": "Interlaken-Oberhasli",
+    "canton": "Berne",
+    "idcanton": "2"
+  },
+  {
+    "cp": "301",
+    "dp": "Entlebuch",
+    "canton": "Lucerne",
+    "idcanton": "3"
+  },
+  {
+    "cp": "302",
+    "dp": "Hochdorf",
+    "canton": "Lucerne",
+    "idcanton": "3"
+  },
+  {
+    "cp": "303",
+    "dp": "Luzern",
+    "canton": "Lucerne",
+    "idcanton": "3"
+  },
+  {
+    "cp": "304",
+    "dp": "Sursee",
+    "canton": "Lucerne",
+    "idcanton": "3"
+  },
+  {
+    "cp": "305",
+    "dp": "Willisau",
+    "canton": "Lucerne",
+    "idcanton": "3"
+  },
+  {
+    "cp": "400",
+    "dp": "Kt. Uri",
+    "canton": "Uri",
+    "idcanton": "4"
+  },
+  {
+    "cp": "501",
+    "dp": "Einsiedeln",
+    "canton": "Schwyz",
+    "idcanton": "5"
+  },
+  {
+    "cp": "502",
+    "dp": "Gersau",
+    "canton": "Schwyz",
+    "idcanton": "5"
+  },
+  {
+    "cp": "503",
+    "dp": "Höfe",
+    "canton": "Schwyz",
+    "idcanton": "5"
+  },
+  {
+    "cp": "504",
+    "dp": "Küssnacht (SZ)",
+    "canton": "Schwyz",
+    "idcanton": "5"
+  },
+  {
+    "cp": "505",
+    "dp": "March",
+    "canton": "Schwyz",
+    "idcanton": "5"
+  },
+  {
+    "cp": "506",
+    "dp": "Schwyz",
+    "canton": "Schwyz",
+    "idcanton": "5"
+  },
+  {
+    "cp": "600",
+    "dp": "Kt. Obwalden",
+    "canton": "Obwald",
+    "idcanton": "6"
+  },
+  {
+    "cp": "700",
+    "dp": "Kt. Nidwalden",
+    "canton": "Nidwald",
+    "idcanton": "7"
+  },
+  {
+    "cp": "800",
+    "dp": "Kt. Glarus",
+    "canton": "Glaris",
+    "idcanton": "8"
+  },
+  {
+    "cp": "900",
+    "dp": "Kt. Zug",
+    "canton": "Zoug",
+    "idcanton": "9"
+  },
+  {
+    "cp": "1001",
+    "dp": "La Broye",
+    "canton": "Fribourg",
+    "idcanton": "10"
+  },
+  {
+    "cp": "1002",
+    "dp": "La Glâne",
+    "canton": "Fribourg",
+    "idcanton": "10"
+  },
+  {
+    "cp": "1003",
+    "dp": "La Gruyère",
+    "canton": "Fribourg",
+    "idcanton": "10"
+  },
+  {
+    "cp": "1004",
+    "dp": "La Sarine",
+    "canton": "Fribourg",
+    "idcanton": "10"
+  },
+  {
+    "cp": "1005",
+    "dp": "See / Lac",
+    "canton": "Fribourg",
+    "idcanton": "10"
+  },
+  {
+    "cp": "1006",
+    "dp": "Sense",
+    "canton": "Fribourg",
+    "idcanton": "10"
+  },
+  {
+    "cp": "1007",
+    "dp": "La Veveyse",
+    "canton": "Fribourg",
+    "idcanton": "10"
+  },
+  {
+    "cp": "1101",
+    "dp": "Gäu",
+    "canton": "Soleure",
+    "idcanton": "11"
+  },
+  {
+    "cp": "1102",
+    "dp": "Thal",
+    "canton": "Soleure",
+    "idcanton": "11"
+  },
+  {
+    "cp": "1103",
+    "dp": "Bucheggberg",
+    "canton": "Soleure",
+    "idcanton": "11"
+  },
+  {
+    "cp": "1104",
+    "dp": "Dorneck",
+    "canton": "Soleure",
+    "idcanton": "11"
+  },
+  {
+    "cp": "1105",
+    "dp": "Gösgen",
+    "canton": "Soleure",
+    "idcanton": "11"
+  },
+  {
+    "cp": "1106",
+    "dp": "Wasseramt",
+    "canton": "Soleure",
+    "idcanton": "11"
+  },
+  {
+    "cp": "1107",
+    "dp": "Lebern",
+    "canton": "Soleure",
+    "idcanton": "11"
+  },
+  {
+    "cp": "1108",
+    "dp": "Olten",
+    "canton": "Soleure",
+    "idcanton": "11"
+  },
+  {
+    "cp": "1109",
+    "dp": "Solothurn",
+    "canton": "Soleure",
+    "idcanton": "11"
+  },
+  {
+    "cp": "1110",
+    "dp": "Thierstein",
+    "canton": "Soleure",
+    "idcanton": "11"
+  },
+  {
+    "cp": "1200",
+    "dp": "Kt. Basel-Stadt",
+    "canton": "Bâle-Ville",
+    "idcanton": "12"
+  },
+  {
+    "cp": "1301",
+    "dp": "Arlesheim",
+    "canton": "Bâle-Campagne",
+    "idcanton": "13"
+  },
+  {
+    "cp": "1302",
+    "dp": "Laufen",
+    "canton": "Bâle-Campagne",
+    "idcanton": "13"
+  },
+  {
+    "cp": "1303",
+    "dp": "Liestal",
+    "canton": "Bâle-Campagne",
+    "idcanton": "13"
+  },
+  {
+    "cp": "1304",
+    "dp": "Sissach",
+    "canton": "Bâle-Campagne",
+    "idcanton": "13"
+  },
+  {
+    "cp": "1305",
+    "dp": "Waldenburg",
+    "canton": "Bâle-Campagne",
+    "idcanton": "13"
+  },
+  {
+    "cp": "1401",
+    "dp": "Oberklettgau",
+    "canton": "Schaffhouse",
+    "idcanton": "14"
+  },
+  {
+    "cp": "1402",
+    "dp": "Reiat",
+    "canton": "Schaffhouse",
+    "idcanton": "14"
+  },
+  {
+    "cp": "1403",
+    "dp": "Schaffhausen",
+    "canton": "Schaffhouse",
+    "idcanton": "14"
+  },
+  {
+    "cp": "1404",
+    "dp": "Schleitheim",
+    "canton": "Schaffhouse",
+    "idcanton": "14"
+  },
+  {
+    "cp": "1405",
+    "dp": "Stein",
+    "canton": "Schaffhouse",
+    "idcanton": "14"
+  },
+  {
+    "cp": "1406",
+    "dp": "Unterklettgau",
+    "canton": "Schaffhouse",
+    "idcanton": "14"
+  },
+  {
+    "cp": "1501",
+    "dp": "Hinterland",
+    "canton": "Appenzell Rh.-Ext.",
+    "idcanton": "15"
+  },
+  {
+    "cp": "1502",
+    "dp": "Mittelland",
+    "canton": "Appenzell Rh.-Ext.",
+    "idcanton": "15"
+  },
+  {
+    "cp": "1503",
+    "dp": "Vorderland",
+    "canton": "Appenzell Rh.-Ext.",
+    "idcanton": "15"
+  },
+  {
+    "cp": "1600",
+    "dp": "Kt. Appenzell i.Rh.",
+    "canton": "Appenzell Rh.-Int. ",
+    "idcanton": "16"
+  },
+  {
+    "cp": "1721",
+    "dp": "St. Gallen",
+    "canton": "Saint-Gall",
+    "idcanton": "17"
+  },
+  {
+    "cp": "1722",
+    "dp": "Rorschach",
+    "canton": "Saint-Gall",
+    "idcanton": "17"
+  },
+  {
+    "cp": "1723",
+    "dp": "Rheintal",
+    "canton": "Saint-Gall",
+    "idcanton": "17"
+  },
+  {
+    "cp": "1724",
+    "dp": "Werdenberg",
+    "canton": "Saint-Gall",
+    "idcanton": "17"
+  },
+  {
+    "cp": "1725",
+    "dp": "Sarganserland",
+    "canton": "Saint-Gall",
+    "idcanton": "17"
+  },
+  {
+    "cp": "1726",
+    "dp": "See-Gaster",
+    "canton": "Saint-Gall",
+    "idcanton": "17"
+  },
+  {
+    "cp": "1727",
+    "dp": "Toggenburg",
+    "canton": "Saint-Gall",
+    "idcanton": "17"
+  },
+  {
+    "cp": "1728",
+    "dp": "Wil",
+    "canton": "Saint-Gall",
+    "idcanton": "17"
+  },
+  {
+    "cp": "1821",
+    "dp": "Albula",
+    "canton": "Grisons",
+    "idcanton": "18"
+  },
+  {
+    "cp": "1822",
+    "dp": "Bernina",
+    "canton": "Grisons",
+    "idcanton": "18"
+  },
+  {
+    "cp": "1823",
+    "dp": "Hinterrhein",
+    "canton": "Grisons",
+    "idcanton": "18"
+  },
+  {
+    "cp": "1824",
+    "dp": "Imboden",
+    "canton": "Grisons",
+    "idcanton": "18"
+  },
+  {
+    "cp": "1825",
+    "dp": "Inn",
+    "canton": "Grisons",
+    "idcanton": "18"
+  },
+  {
+    "cp": "1826",
+    "dp": "Landquart",
+    "canton": "Grisons",
+    "idcanton": "18"
+  },
+  {
+    "cp": "1827",
+    "dp": "Maloja / Maloggia",
+    "canton": "Grisons",
+    "idcanton": "18"
+  },
+  {
+    "cp": "1828",
+    "dp": "Moesa",
+    "canton": "Grisons",
+    "idcanton": "18"
+  },
+  {
+    "cp": "1829",
+    "dp": "Plessur",
+    "canton": "Grisons",
+    "idcanton": "18"
+  },
+  {
+    "cp": "1830",
+    "dp": "Prättigau-Davos",
+    "canton": "Grisons",
+    "idcanton": "18"
+  },
+  {
+    "cp": "1831",
+    "dp": "Surselva",
+    "canton": "Grisons",
+    "idcanton": "18"
+  },
+  {
+    "cp": "1901",
+    "dp": "Aarau",
+    "canton": "Argovie",
+    "idcanton": "19"
+  },
+  {
+    "cp": "1902",
+    "dp": "Baden",
+    "canton": "Argovie",
+    "idcanton": "19"
+  },
+  {
+    "cp": "1903",
+    "dp": "Bremgarten",
+    "canton": "Argovie",
+    "idcanton": "19"
+  },
+  {
+    "cp": "1904",
+    "dp": "Brugg",
+    "canton": "Argovie",
+    "idcanton": "19"
+  },
+  {
+    "cp": "1905",
+    "dp": "Kulm",
+    "canton": "Argovie",
+    "idcanton": "19"
+  },
+  {
+    "cp": "1906",
+    "dp": "Laufenburg",
+    "canton": "Argovie",
+    "idcanton": "19"
+  },
+  {
+    "cp": "1907",
+    "dp": "Lenzburg",
+    "canton": "Argovie",
+    "idcanton": "19"
+  },
+  {
+    "cp": "1908",
+    "dp": "Muri",
+    "canton": "Argovie",
+    "idcanton": "19"
+  },
+  {
+    "cp": "1909",
+    "dp": "Rheinfelden",
+    "canton": "Argovie",
+    "idcanton": "19"
+  },
+  {
+    "cp": "1910",
+    "dp": "Zofingen",
+    "canton": "Argovie",
+    "idcanton": "19"
+  },
+  {
+    "cp": "1911",
+    "dp": "Zurzach",
+    "canton": "Argovie",
+    "idcanton": "19"
+  },
+  {
+    "cp": "2011",
+    "dp": "Arbon",
+    "canton": "Turgovie",
+    "idcanton": "20"
+  },
+  {
+    "cp": "2012",
+    "dp": "Frauenfeld",
+    "canton": "Turgovie",
+    "idcanton": "20"
+  },
+  {
+    "cp": "2013",
+    "dp": "Kreuzlingen",
+    "canton": "Turgovie",
+    "idcanton": "20"
+  },
+  {
+    "cp": "2014",
+    "dp": "Münchwilen",
+    "canton": "Turgovie",
+    "idcanton": "20"
+  },
+  {
+    "cp": "2015",
+    "dp": "Weinfelden",
+    "canton": "Turgovie",
+    "idcanton": "20"
+  },
+  {
+    "cp": "2101",
+    "dp": "Bellinzona",
+    "canton": "Tessin",
+    "idcanton": "21"
+  },
+  {
+    "cp": "2102",
+    "dp": "Blenio",
+    "canton": "Tessin",
+    "idcanton": "21"
+  },
+  {
+    "cp": "2103",
+    "dp": "Leventina",
+    "canton": "Tessin",
+    "idcanton": "21"
+  },
+  {
+    "cp": "2104",
+    "dp": "Locarno",
+    "canton": "Tessin",
+    "idcanton": "21"
+  },
+  {
+    "cp": "2105",
+    "dp": "Lugano",
+    "canton": "Tessin",
+    "idcanton": "21"
+  },
+  {
+    "cp": "2106",
+    "dp": "Mendrisio",
+    "canton": "Tessin",
+    "idcanton": "21"
+  },
+  {
+    "cp": "2107",
+    "dp": "Riviera",
+    "canton": "Tessin",
+    "idcanton": "21"
+  },
+  {
+    "cp": "2108",
+    "dp": "Vallemaggia",
+    "canton": "Tessin",
+    "idcanton": "21"
+  },
+  {
+    "cp": "2221",
+    "dp": "Aigle",
+    "canton": "Vaud",
+    "idcanton": "22"
+  },
+  {
+    "cp": "2222",
+    "dp": "Broye-Vully",
+    "canton": "Vaud",
+    "idcanton": "22"
+  },
+  {
+    "cp": "2223",
+    "dp": "Gros-de-Vaud",
+    "canton": "Vaud",
+    "idcanton": "22"
+  },
+  {
+    "cp": "2224",
+    "dp": "Jura-Nord vaudois",
+    "canton": "Vaud",
+    "idcanton": "22"
+  },
+  {
+    "cp": "2225",
+    "dp": "Lausanne",
+    "canton": "Vaud",
+    "idcanton": "22"
+  },
+  {
+    "cp": "2226",
+    "dp": "Lavaux-Oron",
+    "canton": "Vaud",
+    "idcanton": "22"
+  },
+  {
+    "cp": "2227",
+    "dp": "Morges",
+    "canton": "Vaud",
+    "idcanton": "22"
+  },
+  {
+    "cp": "2228",
+    "dp": "Nyon",
+    "canton": "Vaud",
+    "idcanton": "22"
+  },
+  {
+    "cp": "2229",
+    "dp": "Ouest lausannois",
+    "canton": "Vaud",
+    "idcanton": "22"
+  },
+  {
+    "cp": "2230",
+    "dp": "Riviera-Pays-d'Enhaut",
+    "canton": "Vaud",
+    "idcanton": "22"
+  },
+  {
+    "cp": "2301",
+    "dp": "Brig",
+    "canton": "Valais",
+    "idcanton": "23"
+  },
+  {
+    "cp": "2302",
+    "dp": "Conthey",
+    "canton": "Valais",
+    "idcanton": "23"
+  },
+  {
+    "cp": "2303",
+    "dp": "Entremont",
+    "canton": "Valais",
+    "idcanton": "23"
+  },
+  {
+    "cp": "2304",
+    "dp": "Goms",
+    "canton": "Valais",
+    "idcanton": "23"
+  },
+  {
+    "cp": "2305",
+    "dp": "Hérens",
+    "canton": "Valais",
+    "idcanton": "23"
+  },
+  {
+    "cp": "2306",
+    "dp": "Leuk",
+    "canton": "Valais",
+    "idcanton": "23"
+  },
+  {
+    "cp": "2307",
+    "dp": "Martigny",
+    "canton": "Valais",
+    "idcanton": "23"
+  },
+  {
+    "cp": "2308",
+    "dp": "Monthey",
+    "canton": "Valais",
+    "idcanton": "23"
+  },
+  {
+    "cp": "2309",
+    "dp": "Raron",
+    "canton": "Valais",
+    "idcanton": "23"
+  },
+  {
+    "cp": "2310",
+    "dp": "Saint-Maurice",
+    "canton": "Valais",
+    "idcanton": "23"
+  },
+  {
+    "cp": "2311",
+    "dp": "Sierre",
+    "canton": "Valais",
+    "idcanton": "23"
+  },
+  {
+    "cp": "2312",
+    "dp": "Sion",
+    "canton": "Valais",
+    "idcanton": "23"
+  },
+  {
+    "cp": "2313",
+    "dp": "Visp",
+    "canton": "Valais",
+    "idcanton": "23"
+  },
+  {
+    "cp": "2401",
+    "dp": "Boudry",
+    "canton": "Neuchâtel",
+    "idcanton": "24"
+  },
+  {
+    "cp": "2402",
+    "dp": "La Chaux-de-Fonds",
+    "canton": "Neuchâtel",
+    "idcanton": "24"
+  },
+  {
+    "cp": "2403",
+    "dp": "Le Locle",
+    "canton": "Neuchâtel",
+    "idcanton": "24"
+  },
+  {
+    "cp": "2404",
+    "dp": "Neuchâtel",
+    "canton": "Neuchâtel",
+    "idcanton": "24"
+  },
+  {
+    "cp": "2405",
+    "dp": "Val-de-Ruz",
+    "canton": "Neuchâtel",
+    "idcanton": "24"
+  },
+  {
+    "cp": "2406",
+    "dp": "Val-de-Travers",
+    "canton": "Neuchâtel",
+    "idcanton": "24"
+  },
+  {
+    "cp": "2500",
+    "dp": "Cant. de Genève",
+    "canton": "Genève",
+    "idcanton": "25"
+  },
+  {
+    "cp": "2601",
+    "dp": "Delémont",
+    "canton": "Jura",
+    "idcanton": "26"
+  },
+  {
+    "cp": "2602",
+    "dp": "Les Franches-Montagnes",
+    "canton": "Jura",
+    "idcanton": "26"
+  },
+  {
+    "cp": "2603",
+    "dp": "Porrentruy",
+    "canton": "Jura",
+    "idcanton": "26"
+  }
+]

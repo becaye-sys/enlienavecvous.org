@@ -61,8 +61,19 @@
             {{ form_widget(form.lastName, {'attr': {'placeholder': "Votre nom"}}) }}
         </fieldset>
         <fieldset>
-            {{ form_widget(form.country) }}
-            {{ form_widget(form.zipCode, {'attr': {'placeholder': "Votre code postal"}}) }}
+            {{ form_widget(form.country, {
+                'attr': {
+                    'data-department-url': path('api_get_departments_by_country')
+                }
+            }) }}
+            {{ form_widget(form.department, {
+                'attr': {
+                    'data-town-url': path('api_get_towns_by_department')
+                }
+            }) }}
+            {% if form.town is defined %}
+                {{ form_widget(form.town) }}
+            {% endif %}
         </fieldset>
         <fieldset>
             {{ form_widget(form.phoneNumber, {'attr': {'placeholder': "Votre numéro de téléphone"}}) }}
@@ -107,4 +118,8 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('register') }}
 {% endblock %}

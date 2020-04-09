@@ -14,11 +14,8 @@ class LocalisationLuType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-                'cantons',
+                'department',
                 ChoiceType::class,
-                [
-                    ''
-                ]
             )
             ->add('town');
     }

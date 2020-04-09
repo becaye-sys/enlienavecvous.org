@@ -19,7 +19,7 @@ class Town
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=100)
      */
     private $name;
 
@@ -27,11 +27,6 @@ class Town
      * @ORM\Column(type="string", length=10, nullable=true)
      */
     private $code;
-
-    /**
-     * @ORM\Column(type="string", length=10, nullable=true)
-     */
-    private $department;
 
     /**
      * @ORM\Column(type="array", nullable=true)
@@ -42,6 +37,17 @@ class Town
      * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="town")
      */
     private $users;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="towns")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $department;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $scalarDepart;
 
     public function __construct()
     {
@@ -73,18 +79,6 @@ class Town
     public function setCode(string $code): self
     {
         $this->code = $code;
-
-        return $this;
-    }
-
-    public function getDepartment(): ?string
-    {
-        return $this->department;
-    }
-
-    public function setDepartment(string $department): self
-    {
-        $this->department = $department;
 
         return $this;
     }
@@ -128,6 +122,30 @@ class Town
                 $user->setTown(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDepartment(): ?Department
+    {
+        return $this->department;
+    }
+
+    public function setDepartment(?Department $department): self
+    {
+        $this->department = $department;
+
+        return $this;
+    }
+
+    public function getScalarDepart(): ?string
+    {
+        return $this->scalarDepart;
+    }
+
+    public function setScalarDepart(string $scalarDepart): self
+    {
+        $this->scalarDepart = $scalarDepart;
 
         return $this;
     }

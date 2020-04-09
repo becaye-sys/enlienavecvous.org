@@ -12,8 +12,7 @@ class LocalisationFrType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('region')
-            ->add('department')
+        $builder->add('department')
             ->add('town');
     }
 

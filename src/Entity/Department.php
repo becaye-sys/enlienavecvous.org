@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -23,9 +24,24 @@ class Department
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=10, nullable=true)
      */
     private $code;
+
+    /**
+     * @ORM\Column(type="string", length=5)
+     */
+    private $country;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Town", mappedBy="department")
+     */
+    private $towns;
+
+    public function __construct()
+    {
+        $this->towns = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -49,38 +65,50 @@ class Department
         return $this->code;
     }
 
-    public function setCode(string $code): self
+    public function setCode(?string $code): self
     {
         $this->code = $code;
 
         return $this;
     }
 
-    /**
-     * @return Collection|User[]
-     */
-    public function getUsers(): Collection
+    public function getCountry(): ?string
     {
-        return $this->users;
+        return $this->country;
     }
 
-    public function addUser(User $user): self
+    public function setCountry(string $country): self
     {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->setDepartment($this);
+        $this->country = $country;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Town[]
+     */
+    public function getTowns(): Collection
+    {
+        return $this->towns;
+    }
+
+    public function addTown(Town $town): self
+    {
+        if (!$this->towns->contains($town)) {
+            $this->towns[] = $town;
+            $town->setDepartment($this);
         }
 
         return $this;
     }
 
-    public function removeUser(User $user): self
+    public function removeTown(Town $town): self
     {
-        if ($this->users->contains($user)) {
-            $this->users->removeElement($user);
+        if ($this->towns->contains($town)) {
+            $this->towns->removeElement($town);
             // set the owning side to null (unless already changed)
-            if ($user->getDepartment() === $this) {
-                $user->setDepartment(null);
+            if ($town->getDepartment() === $this) {
+                $town->setDepartment(null);
             }
         }
 

@@ -1,0 +1,86 @@
+{% extends "account_layout.html.twig" %}
+
+{% if app.request.query.get('country_filter') is defined %}
+    {% set country_filter = app.request.query.get('country_filter') %}
+{% endif %}
+
+{% block body %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Zones géographiques ({{departments|length}})</h1>
+    </div>
+    <div class="container-fluid mt-5 mb-5">
+        <div class="row">
+            <form class="form-inline" action="{{ path('manager_zones') }}" method="get" id="table_filter_form">
+                <fieldset class="form-group">
+                    <label for="country_filter">Filter par pays</label>
+                    <select name="country_filter" id="country_filter" class="ml-2">
+                        {% for key, c in countries %}
+                            {% if country_filter is defined and country_filter == key %}
+                                <option selected value="{{ key }}">{{ c }}</option>
+                            {% else %}
+                                <option value="{{ key }}">{{ c }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Pays</th>
+                    <th>Département</th>
+                    <th>Villes</th>
+                    <th>Chargement</th>
+                </tr>
+                </thead>
+                {% if departments|length %}
+                    <tbody>
+                    {% for d in departments %}
+                        <tr>
+                            <td>{{ d.id }}</td>
+                            <td>
+                                {% if d.country == 'fr' %}
+                                    France
+                                {% elseif d.country == 'be' %}
+                                    Belgique
+                                {% elseif d.country == 'ch' %}
+                                    Suisse
+                                {% else %}
+                                    Luxembourg
+                                {% endif %}
+                            </td>
+                            <td>{{ d.name }}</td>
+                            <td>
+                                {% if d.towns|length == 0 %}
+                                    <form action="{{ path('manager_zones', {'country_filter': country_filter}) }}" method="post">
+                                        <input type="hidden" name="code" value="{{ d.code }}">
+                                        <button type="submit" class="btn btn-primary">Charger les villes</button>
+                                    </form>
+                                {% else %}
+                                    {{ d.towns|length }}
+                                    <form action="{{ path('manager_zones', {'country_filter': country_filter}) }}" method="post">
+                                        <input type="hidden" name="code" value="{{ d.code }}">
+                                        <input type="hidden" name="action" value="delete">
+                                        <button type="submit" class="btn btn-danger">Supprimer les villes</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                {% else %}
+                    <p>Aucun département trouvé pour ce-s filtre-s.</p>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('manage_geolocalisation') }}
+{% endblock %}
