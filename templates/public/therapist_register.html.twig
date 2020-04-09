@@ -63,12 +63,13 @@
         <fieldset>
             {{ form_widget(form.country, {
                 'attr': {
-                    'data-department-url': path('api_get_departments_by_country')
+                    'data-get-departments-url': path('api_get_departments_by_country')
                 }
             }) }}
             {{ form_widget(form.department, {
                 'attr': {
-                    'data-town-url': path('api_get_towns_by_department')
+                    'data-get-towns-url': path('api_get_towns_by_department'),
+                    'data-default-value': ''
                 }
             }) }}
             {% if form.town is defined %}
