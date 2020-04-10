@@ -61,8 +61,25 @@
             {{ form_widget(form.lastName, {'attr': {'placeholder': "Votre nom"}}) }}
         </fieldset>
         <fieldset>
-            {{ form_widget(form.country) }}
-            {{ form_widget(form.zipCode, {'attr': {'placeholder': "Votre code postal"}}) }}
+            {{ form_widget(form.country, {
+                'attr': {
+                    'data-get-departments-url': path('api_get_departments_by_country')
+                }
+            }) }}
+            <select
+                    name="therapist_register_department"
+                    id="therapist_register_department"
+                    data-get-towns-url="{{ path('api_get_towns_by_department') }}"
+            >
+                {% for depart in departments %}
+                    <option value="{{ depart.id }}">{{ depart.code }} {{ depart.name }}</option>
+                {% endfor %}
+            </select>
+            <select name="therapist_register_town" id="therapist_register_town">
+                {% for town in towns %}
+                    <option value="{{ town.id }}">{{ town.code }} {{ town.name }}</option>
+                {% endfor %}
+            </select>
         </fieldset>
         <fieldset>
             {{ form_widget(form.phoneNumber, {'attr': {'placeholder': "Votre numéro de téléphone"}}) }}
@@ -107,4 +124,8 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('therapist_register') }}
 {% endblock %}

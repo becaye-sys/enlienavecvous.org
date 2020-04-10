@@ -2,20 +2,34 @@
 
 namespace App\Form;
 
+use App\Entity\Department;
 use App\Entity\Therapist;
+use App\Repository\DepartmentRepository;
+use App\Repository\TownRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\CountryType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TherapistRegisterType extends AbstractType
 {
+    protected $departmentRepository;
+    protected $townRepository;
+
+    public function __construct(DepartmentRepository $departmentRepository, TownRepository $townRepository)
+    {
+        $this->departmentRepository = $departmentRepository;
+        $this->townRepository = $townRepository;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -45,11 +59,15 @@ class TherapistRegisterType extends AbstractType
             )
             ->add(
                 'country',
-                CountryType::class
-            )
-            ->add(
-                'zipCode',
-                TextType::class
+                ChoiceType::class,
+                [
+                    'choices' => [
+                        "France" => 'fr',
+                        "Belgique" => 'be',
+                        "Luxembourg" => 'lu',
+                        "Suisse" => 'ch'
+                    ]
+                ]
             )
             ->add(
                 'phoneNumber',
@@ -80,6 +98,53 @@ class TherapistRegisterType extends AbstractType
                 CheckboxType::class
             )
         ;
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            /** @var Therapist $data */
+            $data = $event->getData();
+            $form = $event->getForm();
+            if ($data->getCountry() !== null) {
+                $country = $data->getCountry();
+                $form->remove('department');
+                $form->add(
+                    'scalarDepartment',
+                    ChoiceType::class,
+                    [
+                        'choices' => $this->getDepartmentByCountry($country)
+                    ]
+                );
+            }
+            if ($data->getScalarDepartment() !== null) {
+                $department = $data->getScalarDepartment();
+                dump('department:',$department);
+                $form->remove('town');
+                $form->add(
+                    'scalarTown',
+                    ChoiceType::class,
+                    [
+                        'choices' => $this->getTownsByDepartment()
+                    ]
+                );
+            }
+        });
+    }
+
+    protected function getDepartmentByCountry(?string $country = null): array
+    {
+        return $this->departmentRepository->findBy(
+            ['country' => $country ?? 'fr'],
+            ['code' => 'ASC']
+        );
+    }
+
+    protected function getTownsByDepartment(?Department $department = null): array
+    {
+        if ($department) {
+            return $this->townRepository->findBy(['department' => $department]);
+        } else {
+            $department = $this->getDepartmentByCountry("fr");
+            return $this->townRepository->findBy(['department' => $department[0]]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)

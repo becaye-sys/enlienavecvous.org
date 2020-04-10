@@ -4,11 +4,15 @@
 namespace App\Controller;
 
 
+use App\Entity\Department;
 use App\Entity\Patient;
 use App\Entity\Therapist;
+use App\Entity\Town;
 use App\Form\PatientRegisterType;
 use App\Form\TherapistRegisterType;
+use App\Repository\DepartmentRepository;
 use App\Repository\TherapistRepository;
+use App\Repository\TownRepository;
 use App\Repository\UserRepository;
 use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,7 +44,9 @@ class PublicController extends AbstractController
         Request $request,
         UserPasswordEncoderInterface $encoder,
         MailerFactory $mailerFactory,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        DepartmentRepository $departmentRepository,
+        TownRepository $townRepository
     )
     {
         $patient = new Patient();
@@ -70,10 +76,15 @@ class PublicController extends AbstractController
             }
         }
 
+        $departments = $departmentRepository->findBy(['country' => $request->request->get('country') ?? 'fr']);
+        $towns = $townRepository->findBy(['department' => $departments[0]]);
+
         return $this->render(
             'public/ask_for_help.html.twig',
             [
-                'patient_register_form' => $patientForm->createView()
+                'patient_register_form' => $patientForm->createView(),
+                'departments' => $departments,
+                'towns' => $towns
             ]
         );
     }
@@ -86,7 +97,8 @@ class PublicController extends AbstractController
         UserPasswordEncoderInterface $encoder,
         MailerFactory $mailer,
         EntityManagerInterface $entityManager,
-        RequestContext $requestContext
+        DepartmentRepository $departmentRepository,
+        TownRepository $townRepository
     )
     {
         $therapist = new Therapist();
@@ -94,9 +106,16 @@ class PublicController extends AbstractController
         $therapistForm->handleRequest($request);
 
         if ($request->isMethod('POST') && $therapistForm->isSubmitted() && $therapistForm->isValid()) {
+            $townId = $request->request->get('therapist_register_town');
+            $departmentId = $request->request->get('therapist_register_department');
+            $town = $townRepository->find($townId);
             if ($therapistForm->getData() instanceof Therapist) {
                 /** @var Therapist $user */
                 $user = $therapistForm->getData();
+                if ($town instanceof Town) {
+                    $user->setTown($town);
+                    $user->setScalarDepartment($departmentId);
+                }
                 $user = $user->setUniqueEmailToken();
                 $user = $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
                 $emailToken = $user->getEmailToken();
@@ -116,18 +135,15 @@ class PublicController extends AbstractController
             }
         }
 
-        if ($requestContext->getQueryString()) {
-            $queryString = $requestContext->getQueryString();
-            if (strpos($queryString, '=')) {
-                $message = substr($queryString, strpos($queryString, "=")+1);
-            }
-        }
+        $departments = $departmentRepository->findBy(['country' => $request->request->get('country') ?? 'fr']);
+        $towns = $townRepository->findBy(['department' => $departments[0]]);
 
         return $this->render(
             'public/therapist_register.html.twig',
             [
                 'therapist_register_form' => $therapistForm->createView(),
-                'message' => $message ?? null
+                'departments' => $departments,
+                'towns' => $towns
             ]
         );
     }
@@ -143,6 +159,9 @@ class PublicController extends AbstractController
         if ($user && false === $user->isActive()) {
             $user->setEmailToken('')->setIsActive(true);
             $entityManager->flush();
+            return $this->redirectToRoute('app_login');
+        } else if ($user && true === $user->isActive()) {
+            $this->addFlash('error', "Votre nouvelle adresse email vient d'être confirmée.");
             return $this->redirectToRoute('app_login');
         } else {
             $this->addFlash('error', "Votre code de confirmation n'est pas valide, veuillez contacter le support de la plateforme ou créer votre compte.");

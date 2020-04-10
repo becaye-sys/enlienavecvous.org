@@ -6,7 +6,10 @@ namespace App\Controller;
 
 use App\Entity\Appointment;
 use App\Repository\AppointmentRepository;
+use App\Repository\DepartmentRepository;
 use App\Repository\PatientRepository;
+use App\Repository\TownRepository;
+use App\Services\CustomSerializer;
 use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -135,6 +138,38 @@ class ApiController extends AbstractController
             "Rendez-vous confirmé !",
             'json'
         );
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
+    }
+
+    /**
+     * @Route(path="/departments-by-country", name="api_get_departments_by_country", methods={"POST"})
+     * @return JsonResponse
+     */
+    public function getDepartmentsByCountry(DepartmentRepository $departmentRepository, Request $request, CustomSerializer $serializer)
+    {
+        $departments = $departmentRepository->findBy(
+            ['country' => $request->request->get('country')],
+            ['code' => 'ASC']
+        );
+        dump($departments);
+        $data = $serializer->serialize($departments, ['towns']);
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
+    }
+
+    /**
+     * @Route(path="/towns-by-departments", name="api_get_towns_by_department", methods={"POST"})
+     * @return JsonResponse
+     */
+    public function getTownsByDepartments(TownRepository $townRepository, DepartmentRepository $departmentRepository, Request $request, CustomSerializer $serializer)
+    {
+        $department = $departmentRepository->find($request->request->get('department'));
+        dump($department);
+        $towns = $townRepository->findBy(
+            ['department' => $department],
+            ['code' => 'ASC']
+        );
+        dump($towns);
+        $data = $serializer->serialize($towns, ['users','department']);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 }

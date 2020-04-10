@@ -4,11 +4,16 @@
 namespace App\Controller;
 
 
+use App\Entity\Department;
+use App\Entity\Town;
 use App\Entity\User;
+use App\Repository\DepartmentRepository;
+use App\Repository\TownRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -124,6 +129,123 @@ class ManagerController extends AbstractController
             'manager/users_waiting_for_activation.html.twig',
             [
                 'new_users' => $userRepository->findBy(['isActive' => false])
+            ]
+        );
+    }
+
+    /**
+     * @Route(path="/zones", name="manager_zones")
+     * @param DepartmentRepository $departmentRepository
+     * @return Response
+     */
+    public function geolocalisation(
+        Request $request,
+        DepartmentRepository $departmentRepository,
+        TownRepository $townRepository,
+        EntityManagerInterface $entityManager
+    )
+    {
+        $params = [];
+        foreach ($request->query as $key => $value) {
+            if ($value !== "") {
+                $params[$key] = $value;
+            }
+        }
+
+        $countries = [
+            'fr' => "France",
+            'be' => "Belgique",
+            'lu' => "Luxembourg",
+            'ch' => "Suisse"
+        ];
+
+        if ($request->isMethod("POST")) {
+            if ($request->request->get('action')) {
+                $action = $request->request->get('action');
+                // convert in switch case
+                if ($action === 'delete') {
+                    $code = $request->request->get('code');
+                    $deparment = $departmentRepository->findOneBy(['code' => $code]);
+                    $departName = $deparment->getName();
+                    $cities = $townRepository->findBy(['department' => $deparment]);
+                    foreach ($cities as $city) {
+                        $entityManager->remove($city);
+                    }
+                    $entityManager->flush();
+                    $this->addFlash('success', "Les villes du département $departName ont été correctement supprimées.");
+                    if (count($request->query) > 0) {
+                        return $this->redirectToRoute('manager_zones', ['country_filter' => $request->query->get("country_filter")]);
+                    } else {
+                        return $this->redirectToRoute('manager_zones');
+                    }
+                }
+            }
+            $subcode = substr($request->request->get('code'), 0, 2);
+            $code = $request->request->get('code');
+            $country = $request->request->get('country');
+            $deparment = $departmentRepository->findOneBy(['code' => $code]);
+            $departName = $deparment->getName();
+            $client = HttpClient::create();
+            $url = "http://www.citysearch-api.com/$country/city?login=onestlapourvous&apikey=so4c0d00de65b6aae5842f3e6f4a32040c0f5f7058&dp=$code";
+            $response = $client->request('GET', $url);
+            $statusCode = $response->getStatusCode();
+            if ($statusCode === 200) {
+                $cities = $response->toArray();
+                dump($cities);
+                if ($cities["results"]) {
+                    foreach ($cities["results"] as $city) {
+                        $town = new Town();
+                        $town->setDepartment($deparment);
+                        $town->setScalarDepart($code);
+                        $town->setCode($city["cp"]);
+                        $town->setName($city["ville"]);
+                        $town->setZipCodes([$city["cp"]]);
+                        $entityManager->persist($town);
+                    }
+                    $entityManager->flush();
+                    $this->addFlash('success', "Villes chargées pour le département $departName.");
+                    if (count($request->query) > 0) {
+                        return $this->redirectToRoute('manager_zones', ['country_filter' => $request->query->get("country_filter")]);
+                    } else {
+                        return $this->redirectToRoute('manager_zones');
+                    }
+                } else {
+                    $this->addFlash('success', "Le département $code constitue une ville en lui-meme");
+                    return $this->redirectToRoute('manager_zones');
+                }
+
+            } else {
+                $this->addFlash('success', "La récupération des villes pour le département $departName a échoué.");
+            }
+        }
+
+        if (count($params) === 0) {
+            $departments = $departmentRepository->findBy(['country' => 'fr']);
+        } else {
+            $departments = $departmentRepository->findByParams($params);
+        }
+
+        return $this->render(
+            'manager/geolocalisation.html.twig',
+            [
+                'departments' => $departments,
+                'countries' => $countries
+            ]
+        );
+    }
+
+    /**
+     * @Route(path="/zones/department/{id}", name="manager_zones_by_department")
+     * @ParamConverter(name="id", class="App\Entity\Department")
+     * @param Department $department
+     * @return Response
+     */
+    public function geolocTownsByDepartment(Department $department)
+    {
+        return $this->render(
+            'manager/geoloc_towns_by_department.html.twig',
+            [
+                'department' => $department
             ]
         );
     }
