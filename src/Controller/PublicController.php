@@ -4,11 +4,15 @@
 namespace App\Controller;
 
 
+use App\Entity\Department;
 use App\Entity\Patient;
 use App\Entity\Therapist;
+use App\Entity\Town;
 use App\Form\PatientRegisterType;
 use App\Form\TherapistRegisterType;
+use App\Repository\DepartmentRepository;
 use App\Repository\TherapistRepository;
+use App\Repository\TownRepository;
 use App\Repository\UserRepository;
 use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
@@ -86,7 +90,8 @@ class PublicController extends AbstractController
         UserPasswordEncoderInterface $encoder,
         MailerFactory $mailer,
         EntityManagerInterface $entityManager,
-        RequestContext $requestContext
+        DepartmentRepository $departmentRepository,
+        TownRepository $townRepository
     )
     {
         $therapist = new Therapist();
@@ -94,9 +99,14 @@ class PublicController extends AbstractController
         $therapistForm->handleRequest($request);
 
         if ($request->isMethod('POST') && $therapistForm->isSubmitted() && $therapistForm->isValid()) {
+            $townId = $request->request->get('therapist_register_town');
+            $town = $townRepository->find($townId);
             if ($therapistForm->getData() instanceof Therapist) {
                 /** @var Therapist $user */
                 $user = $therapistForm->getData();
+                if ($town instanceof Town) {
+                    $user->setTown($town);
+                }
                 $user = $user->setUniqueEmailToken();
                 $user = $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
                 $emailToken = $user->getEmailToken();
@@ -116,18 +126,15 @@ class PublicController extends AbstractController
             }
         }
 
-        if ($requestContext->getQueryString()) {
-            $queryString = $requestContext->getQueryString();
-            if (strpos($queryString, '=')) {
-                $message = substr($queryString, strpos($queryString, "=")+1);
-            }
-        }
+        $departments = $departmentRepository->findBy(['country' => $request->request->get('country') ?? 'fr']);
+        $towns = $townRepository->findBy(['department' => $departments[0]]);
 
         return $this->render(
             'public/therapist_register.html.twig',
             [
                 'therapist_register_form' => $therapistForm->createView(),
-                'message' => $message ?? null
+                'departments' => $departments,
+                'towns' => $towns
             ]
         );
     }

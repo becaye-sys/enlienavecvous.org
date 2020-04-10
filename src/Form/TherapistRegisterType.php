@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Department;
 use App\Entity\Therapist;
 use App\Entity\Town;
 use App\Form\Localisation\LocalisationBeType;
@@ -71,27 +72,7 @@ class TherapistRegisterType extends AbstractType
                         "Belgique" => 'be',
                         "Luxembourg" => 'lu',
                         "Suisse" => 'ch'
-                    ],
-                    'preferred_choices' => ['fr']
-                ]
-            )
-            ->add(
-                'department',
-                ChoiceType::class,
-                [
-                    'choices' => $this->departmentRepository->findBy(['country' => 'fr']),
-                    'choice_label' => 'name',
-                    'choice_value' => 'id'
-                ]
-            )
-            ->add(
-                'town',
-                EntityType::class,
-                [
-                    'class' => Town::class,
-                    'choices' => $this->getDefaultTowns(),
-                    'choice_label' => 'name',
-                    'choice_value' => 'id'
+                    ]
                 ]
             )
             ->add(
@@ -132,45 +113,48 @@ class TherapistRegisterType extends AbstractType
                 $country = $data->getCountry();
                 $form->remove('department');
                 $form->add(
-                    'department',
+                    'scalarDepartment',
                     ChoiceType::class,
                     [
                         'choices' => $this->getDepartmentByCountry($country)
                     ]
                 );
             }
-            if ($data->getDepartment() !== null) {
-                $department = $data->getDepartment();
+            if ($data->getScalarDepartment() !== null) {
+                $department = $data->getScalarDepartment();
+                dump('department:',$department);
                 $form->remove('town');
                 $form->add(
-                    'town',
-                    EntityType::class,
+                    'scalarTown',
+                    ChoiceType::class,
                     [
-                        'query_builder' => function (TownRepository $townRepository) use ($department) {
-                        return $townRepository->findBy(
-                            ['department' => $department],
-                            ['code' => 'ASC']
-                        );
-                        }
+                        'choices' => $this->getTownsByDepartment()
                     ]
                 );
             }
         });
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            $data = $event->getData();
+            dump($data);
+        });
     }
 
-    private function getDepartmentByCountry(string $country): array
+    private function getDepartmentByCountry(?string $country = null): array
     {
         return $this->departmentRepository->findBy(
-            ['country' => $country],
+            ['country' => $country ?? 'fr'],
             ['code' => 'ASC']
         );
     }
 
-    private function getDefaultTowns(): array
+    private function getTownsByDepartment(?Department $department = null): array
     {
-        $depart = $this->getDepartmentByCountry("fr");
-        $towns = $this->townRepository->findBy(['department' => $depart[0]]);
-        return $towns;
+        if ($department) {
+            return $this->townRepository->findBy(['department' => $department]);
+        } else {
+            $department = $this->getDepartmentByCountry("fr");
+            return $this->townRepository->findBy(['department' => $department[0]]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -34,11 +34,6 @@ class Town
     private $zipCodes = [];
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="town")
-     */
-    private $users;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="towns")
      * @ORM\JoinColumn(nullable=true)
      */
@@ -48,6 +43,11 @@ class Town
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $scalarDepart;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="town")
+     */
+    private $users;
 
     public function __construct()
     {
@@ -95,6 +95,30 @@ class Town
         return $this;
     }
 
+    public function getDepartment(): ?Department
+    {
+        return $this->department;
+    }
+
+    public function setDepartment(?Department $department): self
+    {
+        $this->department = $department;
+
+        return $this;
+    }
+
+    public function getScalarDepart(): ?string
+    {
+        return $this->scalarDepart;
+    }
+
+    public function setScalarDepart(string $scalarDepart): self
+    {
+        $this->scalarDepart = $scalarDepart;
+
+        return $this;
+    }
+
     /**
      * @return Collection|User[]
      */
@@ -122,30 +146,6 @@ class Town
                 $user->setTown(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getDepartment(): ?Department
-    {
-        return $this->department;
-    }
-
-    public function setDepartment(?Department $department): self
-    {
-        $this->department = $department;
-
-        return $this;
-    }
-
-    public function getScalarDepart(): ?string
-    {
-        return $this->scalarDepart;
-    }
-
-    public function setScalarDepart(string $scalarDepart): self
-    {
-        $this->scalarDepart = $scalarDepart;
 
         return $this;
     }

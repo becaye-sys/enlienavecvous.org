@@ -73,7 +73,7 @@ class User implements UserInterface
     protected $country;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * @Groups({"create_booking"})
      */
     protected $zipCode;
@@ -94,14 +94,19 @@ class User implements UserInterface
     private $displayName;
 
     /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $scalarTown;
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $scalarDepartment;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Town", inversedBy="users")
      */
     private $town;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $department;
 
     public function __construct()
     {
@@ -307,6 +312,30 @@ class User implements UserInterface
         return $this;
     }
 
+    public function getScalarTown(): ?string
+    {
+        return $this->scalarTown;
+    }
+
+    public function setScalarTown(?string $scalarTown): self
+    {
+        $this->scalarTown = $scalarTown;
+
+        return $this;
+    }
+
+    public function getScalarDepartment(): ?string
+    {
+        return $this->scalarDepartment;
+    }
+
+    public function setScalarDepartment(?string $scalarDepartment): self
+    {
+        $this->scalarDepartment = $scalarDepartment;
+
+        return $this;
+    }
+
     public function getTown(): ?Town
     {
         return $this->town;
@@ -315,18 +344,6 @@ class User implements UserInterface
     public function setTown(?Town $town): self
     {
         $this->town = $town;
-
-        return $this;
-    }
-
-    public function getDepartment(): ?string
-    {
-        return $this->department;
-    }
-
-    public function setDepartment(?string $department): self
-    {
-        $this->department = $department;
 
         return $this;
     }

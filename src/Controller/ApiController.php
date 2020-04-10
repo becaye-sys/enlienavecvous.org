@@ -169,7 +169,7 @@ class ApiController extends AbstractController
             ['code' => 'ASC']
         );
         dump($towns);
-        $data = $serializer->serialize($towns, ['users','departments']);
+        $data = $serializer->serialize($towns, ['users','department']);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 }

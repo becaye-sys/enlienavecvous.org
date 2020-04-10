@@ -28,6 +28,20 @@ class DepartmentRepository extends ServiceEntityRepository
         return $query->getQuery()->getResult();
     }
 
+    public function findByCountryWithNativeSql(?string $country)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+        SELECT id, name, code FROM department d
+        WHERE d.country = :country
+        ORDER BY d.code ASC 
+        ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['country' => $country ?? 'fr']);
+        return $stmt->fetchAll();
+    }
+
     // /**
     //  * @return Department[] Returns an array of Department objects
     //  */

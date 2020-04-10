@@ -66,15 +66,20 @@
                     'data-get-departments-url': path('api_get_departments_by_country')
                 }
             }) }}
-            {{ form_widget(form.department, {
-                'attr': {
-                    'data-get-towns-url': path('api_get_towns_by_department'),
-                    'data-default-value': ''
-                }
-            }) }}
-            {% if form.town is defined %}
-                {{ form_widget(form.town) }}
-            {% endif %}
+            <select
+                    name="therapist_register_department"
+                    id="therapist_register_department"
+                    data-get-towns-url="{{ path('api_get_towns_by_department') }}"
+            >
+                {% for depart in departments %}
+                    <option value="{{ depart.id }}">{{ depart.code }} {{ depart.name }}</option>
+                {% endfor %}
+            </select>
+            <select name="therapist_register_town" id="therapist_register_town">
+                {% for town in towns %}
+                    <option value="{{ town.id }}">{{ town.code }} {{ town.name }}</option>
+                {% endfor %}
+            </select>
         </fieldset>
         <fieldset>
             {{ form_widget(form.phoneNumber, {'attr': {'placeholder': "Votre numéro de téléphone"}}) }}
