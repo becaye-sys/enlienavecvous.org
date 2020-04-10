@@ -13,6 +13,7 @@ use App\Form\ChangePasswordType;
 use App\Form\TherapistAppointmentCancellationMessageType;
 use App\Form\TherapistSettingsType;
 use App\Repository\AppointmentRepository;
+use App\Repository\DepartmentRepository;
 use App\Repository\TherapistRepository;
 use App\Services\CustomSerializer;
 use App\Services\MailerFactory;
@@ -275,14 +276,32 @@ class TherapistController extends AbstractController
      * @Route(path="/settings", name="therapist_settings")
      * @return Response
      */
-    public function settings(Request $request, EntityManagerInterface $manager)
+    public function settings(Request $request, EntityManagerInterface $manager, DepartmentRepository $departmentRepository, MailerFactory $mailerFactory)
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         /** @var Therapist $currentUser */
         $currentUser = $this->getCurrentTherapist();
+        $prevEmail = $currentUser->getEmail();
         $settingsType = $this->createForm(TherapistSettingsType::class, $currentUser);
         $settingsType->handleRequest($request);
         if ($request->isMethod('POST') && $settingsType->isSubmitted() && $settingsType->isValid()) {
+            /** @var Therapist $user */
+            $user = $settingsType->getData();
+            if ($user->getEmail() !== $prevEmail) {
+                $user->setUniqueEmailToken();
+                $mailerFactory->createAndSend(
+                    "Validation de votre inscription",
+                    $user->getEmail(),
+                    'no-reply@onestlapourvous.org',
+                    $this->renderView(
+                        'email/therapist_registration.html.twig',
+                        ['email_token' => $user->getEmailToken(), 'project_url' => $_ENV['PROJECT_URL']]
+                    )
+                );
+                $manager->flush();
+                $this->addFlash('success', "Vous allez recevoir un mail pour confirmer votre nouvelle adresse email.");
+                return $this->redirectToRoute('therapist_settings');
+            }
             $manager->flush();
             $this->addFlash('success',"Informations mises à jour !");
             return $this->redirectToRoute('therapist_settings');

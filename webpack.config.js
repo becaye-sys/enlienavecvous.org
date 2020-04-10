@@ -28,7 +28,8 @@ Encore
     .addEntry('patient_search_app', './assets/js/patient_search_app.js')
     .addEntry('therapist_availabilities', './assets/js/therapist_availabilities.js')
     .addEntry('manage_members', './assets/js/manage_members.js')
-    .addEntry('register', './assets/js/register.js')
+    .addEntry('therapist_register', './assets/js/therapist_register.js')
+    .addEntry('patient_register', './assets/js/patient_register.js')
     .addEntry('manage_geolocalisation', './assets/js/manage_geolocalisation.js')
     //.addEntry('page2', './assets/js/page2.js')
 

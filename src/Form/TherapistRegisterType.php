@@ -4,14 +4,8 @@ namespace App\Form;
 
 use App\Entity\Department;
 use App\Entity\Therapist;
-use App\Entity\Town;
-use App\Form\Localisation\LocalisationBeType;
-use App\Form\Localisation\LocalisationChType;
-use App\Form\Localisation\LocalisationFrType;
-use App\Form\Localisation\LocalisationLuType;
 use App\Repository\DepartmentRepository;
 use App\Repository\TownRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -27,8 +21,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TherapistRegisterType extends AbstractType
 {
-    private $departmentRepository;
-    private $townRepository;
+    protected $departmentRepository;
+    protected $townRepository;
 
     public function __construct(DepartmentRepository $departmentRepository, TownRepository $townRepository)
     {
@@ -133,13 +127,9 @@ class TherapistRegisterType extends AbstractType
                 );
             }
         });
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-            $data = $event->getData();
-            dump($data);
-        });
     }
 
-    private function getDepartmentByCountry(?string $country = null): array
+    protected function getDepartmentByCountry(?string $country = null): array
     {
         return $this->departmentRepository->findBy(
             ['country' => $country ?? 'fr'],
@@ -147,7 +137,7 @@ class TherapistRegisterType extends AbstractType
         );
     }
 
-    private function getTownsByDepartment(?Department $department = null): array
+    protected function getTownsByDepartment(?Department $department = null): array
     {
         if ($department) {
             return $this->townRepository->findBy(['department' => $department]);

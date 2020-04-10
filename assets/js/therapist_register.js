@@ -15,7 +15,7 @@ $(document).ready( function () {
             function ($data) {
                 const option = doWithHtml($data, $selectDepartment);
                 console.log('option:',option);
-                $selectDepartment[0].dataset.defaultValue = option.text.slice(0,4);
+                $selectDepartment[0].dataset.defaultValue = option.value;
 
                 ajaxCallback(
                     $selectDepartment[0].dataset.getTownsUrl,
@@ -73,8 +73,8 @@ function doWithHtml($data, $targetSelect) {
         .end();
     $data.forEach((item, key) => {
         let option = document.createElement("option");
-        option.text = item.code + " " + item.name;
-        option.value = item.code;
+        option.text = item.code ? item.code + " " + item.name : item.name;
+        option.value = item.id;
         $targetSelect[0].add(option);
     });
     return $targetSelect.find('option')[0];

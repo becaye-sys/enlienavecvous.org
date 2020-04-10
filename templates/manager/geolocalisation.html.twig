@@ -36,6 +36,7 @@
                     <th>Département</th>
                     <th>Villes</th>
                     <th>Chargement</th>
+                    <th>Voir</th>
                 </tr>
                 </thead>
                 {% if departments|length %}
@@ -59,16 +60,23 @@
                                 {% if d.towns|length == 0 %}
                                     <form action="{{ path('manager_zones', {'country_filter': country_filter}) }}" method="post">
                                         <input type="hidden" name="code" value="{{ d.code }}">
+                                        <input type="hidden" name="country" value="{{ d.country }}">
                                         <button type="submit" class="btn btn-primary">Charger les villes</button>
                                     </form>
                                 {% else %}
                                     {{ d.towns|length }}
                                     <form action="{{ path('manager_zones', {'country_filter': country_filter}) }}" method="post">
                                         <input type="hidden" name="code" value="{{ d.code }}">
+                                        <input type="hidden" name="country" value="{{ d.country }}">
                                         <input type="hidden" name="action" value="delete">
                                         <button type="submit" class="btn btn-danger">Supprimer les villes</button>
                                     </form>
                                 {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ path('manager_zones_by_department', {'id': d.id}) }}" class="btn btn-info">
+                                    Voir les villes
+                                </a>
                             </td>
                         </tr>
                     {% endfor %}

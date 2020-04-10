@@ -162,7 +162,7 @@ class ApiController extends AbstractController
      */
     public function getTownsByDepartments(TownRepository $townRepository, DepartmentRepository $departmentRepository, Request $request, CustomSerializer $serializer)
     {
-        $department = $departmentRepository->findOneBy(['code' => $request->request->get('department')]);
+        $department = $departmentRepository->find($request->request->get('department'));
         dump($department);
         $towns = $townRepository->findBy(
             ['department' => $department],

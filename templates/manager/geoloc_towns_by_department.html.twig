@@ -1,0 +1,49 @@
+{% extends "account_layout.html.twig" %}
+
+{% if app.request.query.get('country_filter') is defined %}
+    {% set country_filter = app.request.query.get('country_filter') %}
+{% endif %}
+
+{% block body %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Villes du département {{ department.name }} - {{ department.code }} - {{ department.towns|length }} villes</h1>
+    </div>
+    <div class="container-fluid">
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Ville</th>
+                    <th>Code</th>
+                    <th>Codes postaux</th>
+                    <th>Chargement</th>
+                </tr>
+                </thead>
+                {% set towns = department.towns %}
+                {% if towns|length %}
+                    <tbody>
+                    {% for t in towns %}
+                        <tr>
+                            <td>{{ t.id }}</td>
+                            <td>{{ t.name }}</td>
+                            <td>{{ t.code }}</td>
+                            <td>
+                                {% for c in t.zipCodes %}
+                                    {{ c }}
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                {% else %}
+                    <p>Aucune ville trouvée pour ce-s filtre-s.</p>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('manage_geolocalisation') }}
+{% endblock %}

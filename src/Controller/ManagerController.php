@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Entity\Department;
 use App\Entity\Town;
 use App\Entity\User;
 use App\Repository\DepartmentRepository;
@@ -181,11 +182,11 @@ class ManagerController extends AbstractController
             }
             $subcode = substr($request->request->get('code'), 0, 2);
             $code = $request->request->get('code');
+            $country = $request->request->get('country');
             $deparment = $departmentRepository->findOneBy(['code' => $code]);
             $departName = $deparment->getName();
             $client = HttpClient::create();
-            $url = "http://www.citysearch-api.com/be/city?login=onestlapourvous&apikey=so4c0d00de65b6aae5842f3e6f4a32040c0f5f7058&dp=$code";
-            dump($url);
+            $url = "http://www.citysearch-api.com/$country/city?login=onestlapourvous&apikey=so4c0d00de65b6aae5842f3e6f4a32040c0f5f7058&dp=$code";
             $response = $client->request('GET', $url);
             $statusCode = $response->getStatusCode();
             if ($statusCode === 200) {
@@ -229,6 +230,22 @@ class ManagerController extends AbstractController
             [
                 'departments' => $departments,
                 'countries' => $countries
+            ]
+        );
+    }
+
+    /**
+     * @Route(path="/zones/department/{id}", name="manager_zones_by_department")
+     * @ParamConverter(name="id", class="App\Entity\Department")
+     * @param Department $department
+     * @return Response
+     */
+    public function geolocTownsByDepartment(Department $department)
+    {
+        return $this->render(
+            'manager/geoloc_towns_by_department.html.twig',
+            [
+                'department' => $department
             ]
         );
     }

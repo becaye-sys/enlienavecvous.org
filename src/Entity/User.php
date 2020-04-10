@@ -91,22 +91,22 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $displayName;
+    protected $displayName;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
      */
-    private $scalarTown;
+    protected $scalarTown;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
      */
-    private $scalarDepartment;
+    protected $scalarDepartment;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Town", inversedBy="users")
      */
-    private $town;
+    protected $town;
 
     public function __construct()
     {
