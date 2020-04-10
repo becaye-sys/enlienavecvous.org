@@ -116,7 +116,6 @@ class TherapistRegisterType extends AbstractType
             }
             if ($data->getScalarDepartment() !== null) {
                 $department = $data->getScalarDepartment();
-                dump('department:',$department);
                 $form->remove('town');
                 $form->add(
                     'scalarTown',

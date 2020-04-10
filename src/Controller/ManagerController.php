@@ -62,7 +62,6 @@ class ManagerController extends AbstractController
     public function resendEmailValidation(User $user)
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette fonctionnalité.");
-        dump($user);
         return $this->redirectToRoute('manager_new_users');
     }
     /**
@@ -94,19 +93,15 @@ class ManagerController extends AbstractController
         }
 
         $params = [];
-        dump($request->query);
         foreach ($request->query as $key => $value) {
             if ($value !== "") {
                 $params[$key] = $value;
             }
         }
-        dump($params);
 
         if (count($params) === 0) {
-            dump('no params');
             $users = $userRepository->findByParams();
         } else {
-            dump('some params');
             $users = $userRepository->findByParams($params);
         }
 
@@ -191,7 +186,6 @@ class ManagerController extends AbstractController
             $statusCode = $response->getStatusCode();
             if ($statusCode === 200) {
                 $cities = $response->toArray();
-                dump($cities);
                 if ($cities["results"]) {
                     foreach ($cities["results"] as $city) {
                         $town = new Town();

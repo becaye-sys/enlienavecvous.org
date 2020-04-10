@@ -151,7 +151,6 @@ class ApiController extends AbstractController
             ['country' => $request->request->get('country')],
             ['code' => 'ASC']
         );
-        dump($departments);
         $data = $serializer->serialize($departments, ['towns']);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
@@ -163,12 +162,10 @@ class ApiController extends AbstractController
     public function getTownsByDepartments(TownRepository $townRepository, DepartmentRepository $departmentRepository, Request $request, CustomSerializer $serializer)
     {
         $department = $departmentRepository->find($request->request->get('department'));
-        dump($department);
         $towns = $townRepository->findBy(
             ['department' => $department],
             ['code' => 'ASC']
         );
-        dump($towns);
         $data = $serializer->serialize($towns, ['users','department']);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
