@@ -1,0 +1,57 @@
+[
+  {
+    "cp": "610",
+    "dp": "Bruxelles",
+    "dpv": "Bruxelles"
+  },
+  {
+    "cp": "1300",
+    "dp": "Brabant Wallon",
+    "dpv": "Wavre"
+  },
+  {
+    "cp": "2000",
+    "dp": "Anvers",
+    "dpv": "Anvers"
+  },
+  {
+    "cp": "3000",
+    "dp": "Brabant Flamand",
+    "dpv": "Louvain"
+  },
+  {
+    "cp": "3500",
+    "dp": "Limbourg",
+    "dpv": "Hasselt"
+  },
+  {
+    "cp": "4000",
+    "dp": "Liège",
+    "dpv": "Liège"
+  },
+  {
+    "cp": "5000",
+    "dp": "Namur",
+    "dpv": "Namur"
+  },
+  {
+    "cp": "6000",
+    "dp": "Luxembourg",
+    "dpv": "Arlon"
+  },
+  {
+    "cp": "7000",
+    "dp": "Hainaut",
+    "dpv": "Mons"
+  },
+  {
+    "cp": "8000",
+    "dp": "Flandre-Occidentale",
+    "dpv": "Bruges"
+  },
+  {
+    "cp": "9000",
+    "dp": "Flandre-Orientale",
+    "dpv": "Gand"
+  }
+]

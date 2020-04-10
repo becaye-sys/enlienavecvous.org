@@ -11,15 +11,6 @@
                     <label for="email_filter">Filter par email</label>
                     <input type="email" name="email_filter" id="email_filter" class="form-control" placeholder="email" value="{% if filters.email_filter is defined %}{{ filters.email_filter ?: filters.email_filter }}{% endif %}">
                 </fieldset>
-                {#<fieldset class="form-group ml-1">
-                    <label for="role_filter">Filter par role</label>
-                    <select name="role_filter" id="role_filter">
-                        <option value="">Aucun role sélectionné</option>
-                        <option value="ROLE_PATIENT">Patient</option>
-                        <option value="ROLE_THERAPIST">Thérapeute</option>
-                        <option value="ROLE_MANAGER">Manager</option>
-                    </select>
-                </fieldset>#}
                 <fieldset class="form-group ml-1">
                     <label for="lastname_filter">Filter par nom</label>
                     <input type="text" placeholder="Nom" name="lastname_filter" id="lastname_filter" class="form-control" value="{% if filters.lastname_filter is defined %}{{ filters.lastname_filter ?: filters.lastname_filter }}{% endif %}">

@@ -44,23 +44,6 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-5 mb-3">
-                    <label for="country">Pays</label>
-                    {{ form_widget(form.country, {'attr': {'class': 'form-control'}}) }}
-                    <div class="invalid-feedback">
-                        Please select a valid country.
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="zip">Code postal</label>
-                    {{ form_widget(form.zipCode, {'attr': {'class': 'form-control'}}) }}
-                    <div class="invalid-feedback">
-                        Zip code required.
-                    </div>
-                </div>
-            </div>
-
             <button class="btn btn-primary btn-lg btn-block" type="submit">Valider mes modifications</button>
             {{ form_end(form) }}
         </div>

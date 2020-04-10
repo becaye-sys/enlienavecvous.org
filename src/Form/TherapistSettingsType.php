@@ -5,21 +5,47 @@ namespace App\Form;
 
 
 use App\Entity\User;
-use Symfony\Component\Form\Extension\Core\Type\TimeType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TherapistSettingsType extends TherapistRegisterType
+class TherapistSettingsType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::buildForm($builder, $options);
         $builder
-            ->remove('password')
-            ->remove('hasAcceptedTermsAndPolicies')
-            ->remove('hasCertification')
-            ->remove('isSupervised')
-            ->remove('isRespectingEthicalFrameWork')
+            ->add(
+                'email',
+                EmailType::class
+            )
+            ->add(
+                'firstName',
+                TextType::class
+            )
+            ->add(
+                'lastName',
+                TextType::class
+            )
+            ->add(
+                'phoneNumber',
+                TelType::class
+            )
+            ->add(
+                'ethicEntityCodeLabel',
+                TextType::class
+            )
+            ->add(
+                'schoolEntityLabel',
+                TextType::class
+            )
+            ->add(
+                'phoneNumber',
+                TelType::class
+            )
         ;
     }
 

@@ -73,7 +73,7 @@ class User implements UserInterface
     protected $country;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * @Groups({"create_booking"})
      */
     protected $zipCode;
@@ -91,7 +91,22 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $displayName;
+    protected $displayName;
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    protected $scalarTown;
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    protected $scalarDepartment;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Town", inversedBy="users")
+     */
+    protected $town;
 
     public function __construct()
     {
@@ -293,6 +308,42 @@ class User implements UserInterface
     public function setDisplayName(?string $displayName): self
     {
         $this->displayName = $displayName ?? $this->getFirstName() . " " . $this->getLastName();
+
+        return $this;
+    }
+
+    public function getScalarTown(): ?string
+    {
+        return $this->scalarTown;
+    }
+
+    public function setScalarTown(?string $scalarTown): self
+    {
+        $this->scalarTown = $scalarTown;
+
+        return $this;
+    }
+
+    public function getScalarDepartment(): ?string
+    {
+        return $this->scalarDepartment;
+    }
+
+    public function setScalarDepartment(?string $scalarDepartment): self
+    {
+        $this->scalarDepartment = $scalarDepartment;
+
+        return $this;
+    }
+
+    public function getTown(): ?Town
+    {
+        return $this->town;
+    }
+
+    public function setTown(?Town $town): self
+    {
+        $this->town = $town;
 
         return $this;
     }

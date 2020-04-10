@@ -1,0 +1,106 @@
+[
+  {
+    "dp": "Vaud",
+    "cp": "1"
+  },
+  {
+    "dp": "Genève",
+    "cp": "2"
+  },
+  {
+    "dp": "Neuchâtel",
+    "cp": "3"
+  },
+  {
+    "dp": "Fribourg",
+    "cp": "4"
+  },
+  {
+    "dp": "Jura",
+    "cp": "5"
+  },
+  {
+    "dp": "Valais",
+    "cp": "6"
+  },
+  {
+    "dp": "Tessin",
+    "cp": "7"
+  },
+  {
+    "dp": "Grisons",
+    "cp": "8"
+  },
+  {
+    "dp": "Berne",
+    "cp": "9"
+  },
+  {
+    "dp": "Appenzell Rhodes-Extérieures",
+    "cp": "10"
+  },
+  {
+    "dp": "Appenzell Rhodes-Intérieures",
+    "cp": "11"
+  },
+  {
+    "dp": "Argovie",
+    "cp": "12"
+  },
+  {
+    "dp": "Bâle-Campagne",
+    "cp": "13"
+  },
+  {
+    "dp": "Bâle-Ville",
+    "cp": "14"
+  },
+  {
+    "dp": "Glaris",
+    "cp": "15"
+  },
+  {
+    "dp": "Lucerne",
+    "cp": "16"
+  },
+  {
+    "dp": "Nidwald",
+    "cp": "17"
+  },
+  {
+    "dp": "Obwald",
+    "cp": "18"
+  },
+  {
+    "dp": "Saint-Gall",
+    "cp": "19"
+  },
+  {
+    "dp": "Schaffhouse",
+    "cp": "20"
+  },
+  {
+    "dp": "Schwytz",
+    "cp": "21"
+  },
+  {
+    "dp": "Soleure",
+    "cp": "22"
+  },
+  {
+    "dp": "Thurgovie",
+    "cp": "23"
+  },
+  {
+    "dp": "Uri",
+    "cp": "24"
+  },
+  {
+    "dp": "Zoug",
+    "cp": "25"
+  },
+  {
+    "dp": "Zurich",
+    "cp": "26"
+  }
+]

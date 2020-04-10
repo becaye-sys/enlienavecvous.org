@@ -1,0 +1,12 @@
+{% extends "email_layout.html.twig" %}
+
+{% block body %}
+    <h1>Votre changement d'adresse email a bien été enregistrée.</h1>
+
+    <p>Confirmez votre nouvelle adresse en cliquant sur le lien ci-dessous :</p>
+    <a href="{{ project_url }}/email/confirmation/{{ email_token }}">https://onestlapourvous.herokuapp.com/email/confirmation/{{ email_token }}</a>
+
+    <p>Nous avons créé un groupe Facebook d'échange entre thérapeutes de la plateforme. Nous vous invitons à rejoindre cet espace pour partager votre expérience et chercher du soutien si besoin.</p>
+    <p>Pour toutes questions d'utilisation de la plateforme vous pouvez nous contacter à :</p>
+    <a href="mailto:contact-therapeutes@onestlapourvous.org">contact-therapeutes@onestlapourvous.org</a>
+{% endblock %}

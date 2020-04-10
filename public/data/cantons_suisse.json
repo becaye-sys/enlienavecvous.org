@@ -1,0 +1,158 @@
+[
+  {
+    "cantonId": "1",
+    "cantonAbbreviation": "ZH",
+    "cantonLongName": "Zürich",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "2",
+    "cantonAbbreviation": "BE",
+    "cantonLongName": "Bern / Berne",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "3",
+    "cantonAbbreviation": "LU",
+    "cantonLongName": "Luzern",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "4",
+    "cantonAbbreviation": "UR",
+    "cantonLongName": "Uri",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "5",
+    "cantonAbbreviation": "SZ",
+    "cantonLongName": "Schwyz",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "6",
+    "cantonAbbreviation": "OW",
+    "cantonLongName": "Obwalden",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "7",
+    "cantonAbbreviation": "NW",
+    "cantonLongName": "Nidwalden",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "8",
+    "cantonAbbreviation": "GL",
+    "cantonLongName": "Glarus",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "9",
+    "cantonAbbreviation": "ZG",
+    "cantonLongName": "Zug",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "10",
+    "cantonAbbreviation": "FR",
+    "cantonLongName": "Fribourg / Freiburg",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "11",
+    "cantonAbbreviation": "SO",
+    "cantonLongName": "Solothurn",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "12",
+    "cantonAbbreviation": "BS",
+    "cantonLongName": "Basel-Stadt",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "13",
+    "cantonAbbreviation": "BL",
+    "cantonLongName": "Basel-Landschaft",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "14",
+    "cantonAbbreviation": "SH",
+    "cantonLongName": "Schaffhausen",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "15",
+    "cantonAbbreviation": "AR",
+    "cantonLongName": "Appenzell Ausserrhoden",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "16",
+    "cantonAbbreviation": "AI",
+    "cantonLongName": "Appenzell Innerrhoden",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "17",
+    "cantonAbbreviation": "SG",
+    "cantonLongName": "St. Gallen",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "18",
+    "cantonAbbreviation": "GR",
+    "cantonLongName": "Graubünden / Grigioni / Grischun",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "19",
+    "cantonAbbreviation": "AG",
+    "cantonLongName": "Aargau",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "20",
+    "cantonAbbreviation": "TG",
+    "cantonLongName": "Thurgau",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "21",
+    "cantonAbbreviation": "TI",
+    "cantonLongName": "Ticino",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "22",
+    "cantonAbbreviation": "VD",
+    "cantonLongName": "Vaud",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "23",
+    "cantonAbbreviation": "VS",
+    "cantonLongName": "Valais / Wallis",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "24",
+    "cantonAbbreviation": "NE",
+    "cantonLongName": "Neuchâtel",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "25",
+    "cantonAbbreviation": "GE",
+    "cantonLongName": "Genève",
+    "cantonDateOfChange": "1960-01-01"
+  },
+  {
+    "cantonId": "26",
+    "cantonAbbreviation": "JU",
+    "cantonLongName": "Jura",
+    "cantonDateOfChange": "1979-01-01"
+  }
+]

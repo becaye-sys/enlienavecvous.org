@@ -74,20 +74,6 @@ class AppointmentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findTodayAvailableAppointments()
-    {
-        $date = new \DateTime();
-        $query = $this->createQueryBuilder('a')
-            ->orderBy('a.bookingDate', 'asc')
-            ->where('a.booked = :booked')
-            ->setParameter('booked', false)
-            ->andWhere('a.bookingDate = :now')
-            ->setParameter('now', $date->format('Y-m-d'));
-        return $query
-            ->getQuery()
-            ->getResult();
-    }
-
     // /**
     //  * @return Appointment[] Returns an array of Appointment objects
     //  */
