@@ -17,63 +17,62 @@ class Appointment
      * @ORM\Column(type="integer")
      * @Groups({"create_booking"})
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="boolean")
      * @Groups({"create_booking"})
      */
-    private $booked;
+    protected $booked;
 
     /**
      * @ORM\Column(type="date")
      * @Groups({"create_booking"})
      */
-    private $bookingDate;
+    protected $bookingDate;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Therapist", inversedBy="appointments")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"create_booking"})
      */
-    private $therapist;
+    protected $therapist;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Patient", inversedBy="appointments")
      */
-    private $patient;
+    protected $patient;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"create_booking"})
      */
-    private $location;
+    protected $location;
 
     /**
      * @ORM\Column(type="time")
      * @Groups({"create_booking"})
      */
-    private $bookingStart;
+    protected $bookingStart;
 
     /**
      * @ORM\Column(type="time")
      */
-    private $bookingEnd;
+    protected $bookingEnd;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $cancelled;
+    protected $cancelled;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $cancelMessage;
+    protected $cancelMessage;
 
-    public function __construct(Therapist $therapist)
+    public function __construct()
     {
         $this->booked = false;
-        $this->therapist = $therapist;
         $this->cancelled = false;
     }
 

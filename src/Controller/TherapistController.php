@@ -150,7 +150,8 @@ class TherapistController extends AbstractController
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         /** @var Therapist $currentUser */
         $currentUser = $this->getCurrentTherapist();
-        $appointment = new Appointment($currentUser);
+        $appointment = new Appointment();
+        $appointment->setTherapist($currentUser);
         $appointmentForm = $this->createForm(AppointmentType::class, $appointment);
         $appointmentForm->handleRequest($request);
         if ($appointmentForm->isSubmitted() && $appointmentForm->isValid()) {
