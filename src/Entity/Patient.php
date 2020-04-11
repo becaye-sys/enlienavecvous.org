@@ -30,11 +30,17 @@ class Patient extends User
      */
     private $appointments;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $malus;
+
     public function __construct()
     {
         parent::__construct();
         $this->roles = ["ROLE_USER", self::ROLE_PATIENT];
         $this->appointments = new ArrayCollection();
+        $this->malus = 0;
     }
 
     public function getId(): ?int
@@ -81,6 +87,18 @@ class Patient extends User
                 $appointment->setPatient(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getMalus(): ?int
+    {
+        return $this->malus;
+    }
+
+    public function setMalus(?int $malus): self
+    {
+        $this->malus = $malus;
 
         return $this;
     }

@@ -51,7 +51,7 @@ class Therapist extends User implements TherapistInterface
     protected $isRespectingEthicalFrameWork;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Appointment", mappedBy="therapist")
+     * @ORM\OneToMany(targetEntity="App\Entity\Appointment", mappedBy="therapist", cascade={"persist","remove"})
      * @Groups({"get_bookings"})
      */
     private $appointments;

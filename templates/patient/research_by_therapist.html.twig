@@ -2,7 +2,7 @@
 
 {% block body %}
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Historique</h1>
+        <h1 class="h2">Disponibilités</h1>
     </div>
     <div class="table-responsive">
         <table class="table table-striped table-sm">
@@ -11,34 +11,31 @@
                 <th>#</th>
                 <th>Date</th>
                 <th>Début</th>
-                <th>Thérapeute</th>
-                <th>Statut</th>
-                <th>Dispo</th>
+                <th>Fin</th>
+                <th>Lieu</th>
+                <th></th>
             </tr>
             </thead>
-            {% if history|length %}
+            {% if appoints|length %}
                 <tbody>
-                {% for a in history %}
+                {% for a in appoints %}
                     <tr>
                         <td>{{ a.id }}</td>
                         <td>{{ a.bookingDate|date('d/m/Y') }}</td>
                         <td>{{ a.bookingStart|date('H:i') }}</td>
-                        <td>{{ a.therapist.firstName }} {{ a.therapist.lastName }}</td>
+                        <td>{{ a.bookingEnd|date('H:i') }}</td>
+                        <td>{{ a.location }}</td>
                         <td>
-                            {% if a.booked == true %}
-                                Réservé
-                            {% else %}
-                                Annulé
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="{{ path('patient_research_by_therapist', {'id': a.therapist.id}) }}" class="btn btn-primary">Disponibilités</a>
+                            <form action="{{ path('patient_research_by_therapist', {'id': a.therapist.id}) }}" method="post">
+                                <input type="hidden" name="booking_id" value="{{ a.id }}">
+                                <button type="submit" class="btn btn-primary">Réserver</button>
+                            </form>
                         </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             {% else %}
-                <p>Votre historique est vide pour l'instant !</p>
+                <p>Aucune disponibilité pour ce thérapeute !</p>
             {% endif %}
         </table>
     </div>
