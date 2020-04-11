@@ -80,6 +80,7 @@ class ApiController extends AbstractController
         $userId = (int)$request->attributes->get('user');
         $patient = $patientRepository->find($userId);
         $appointment = $appointmentRepository->find($appointId);
+        $appointment->setStatus(Appointment::STATUS_WAITING);
         $patient->addAppointment($appointment);
         $entityManager->flush();
         $data = $serializer->serializeByGroups($appointment, ['create_booking']);
@@ -101,7 +102,7 @@ class ApiController extends AbstractController
     {
         $appointment->setBooked(true);
         // add booking history
-        $historyHelper->addHistoryItem($appointment, History::ACTION_BOOKED);
+        $historyHelper->addHistoryItem($appointment, History::ACTIONS[History::ACTION_BOOKED]);
         $entityManager->flush();
 
         $mailer->createAndSend(

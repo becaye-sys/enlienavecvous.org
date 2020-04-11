@@ -14,6 +14,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class Appointment
 {
+    public const STATUS_WAITING = 'waiting';
+    public const STATUS_HONORED = 'honored';
+    public const STATUS_DISHONORED = 'dishonored';
+
+    public const STATUS = [
+        self::STATUS_WAITING => "En attente",
+        self::STATUS_HONORED => "Honoré",
+        self::STATUS_DISHONORED => "Non honoré"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -72,6 +82,11 @@ class Appointment
      * @ORM\Column(type="text", nullable=true)
      */
     protected $cancelMessage;
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    protected $status;
 
     public function __construct()
     {
@@ -188,6 +203,18 @@ class Appointment
     public function setCancelMessage(?string $cancelMessage): self
     {
         $this->cancelMessage = $cancelMessage;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

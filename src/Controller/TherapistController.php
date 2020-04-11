@@ -76,9 +76,45 @@ class TherapistController extends AbstractController
         return $this->render(
             'therapist/bookings.html.twig',
             [
-                'bookings' => $appointmentRepository->findBy(['therapist' => $currentUser, 'booked' => true]),
+                'bookings' => $appointmentRepository->findBy(
+                    [
+                        'therapist' => $currentUser,
+                        'booked' => true,
+                        'status' => Appointment::STATUS_WAITING
+                    ]
+                ),
             ]
         );
+    }
+
+    /**
+     * @Route(path="/booking/{id}", name="therapist_booking_status")
+     * @ParamConverter(name="id", class="App\Entity\Appointment")
+     */
+    public function bookingStatus(
+        Appointment $appointment,
+        Request $request,
+        EntityManagerInterface $entityManager
+    )
+    {
+        $status = $request->query->get('status');
+        $patient = $appointment->getPatient();
+        if ($status === Appointment::STATUS_DISHONORED) {
+            if (null === $patient->getMalus()) {
+                $malus = 1;
+                $patient->setMalus($malus);
+            } else {
+                $malus = $patient->getMalus() + 1;
+                $patient->setMalus($malus);
+            }
+        }
+        if ($patient->getMalus() >= 3) {
+            $patient->setIsActive(false);
+        }
+        $appointment->setStatus($status);
+        $entityManager->flush();
+        $this->addFlash('success', "Statut de la réservation mis à jour, disponible dans l'historique !");
+        return $this->redirectToRoute('therapist_bookings');
     }
 
     /**
@@ -117,7 +153,7 @@ class TherapistController extends AbstractController
             $appointment->setBooked(false);
             $patientEmail = $appointment->getPatient()->getEmail();
             $appointment->setCancelled(true);
-            $historyHelper->addHistoryItem($appointment, History::ACTION_CANCELLED_BY_THERAPIST);
+            $historyHelper->addHistoryItem($appointment, History::ACTIONS[History::ACTION_CANCELLED_BY_THERAPIST]);
             $appointment->setPatient(null);
             $entityManager->flush();
             $mailer->createAndSend(

@@ -14,6 +14,13 @@ class History extends Appointment
     public const ACTION_CANCELLED_BY_THERAPIST = 'cancelled_by_therapist';
     public const ACTION_CANCELLED_BY_PATIENT = 'cancelled_by_patient';
 
+    public const ACTIONS = [
+        self::ACTION_BOOKED => "Réservé",
+        self::ACTION_NEVER_BOOKED => "Jamais réservé",
+        self::ACTION_CANCELLED_BY_THERAPIST => "Annulée par le praticien",
+        self::ACTION_CANCELLED_BY_PATIENT => "Annulée par le demandeur"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

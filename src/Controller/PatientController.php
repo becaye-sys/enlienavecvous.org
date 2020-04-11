@@ -87,7 +87,7 @@ class PatientController extends AbstractController
             $appointment->setBooked(false);
             $appointment->setCancelled(true);
             // add booking cancel history
-            $historyHelper->addHistoryItem($appointment, History::ACTION_CANCELLED_BY_PATIENT);
+            $historyHelper->addHistoryItem($appointment, History::ACTIONS[History::ACTION_CANCELLED_BY_PATIENT]);
             $appointment->setPatient(null);
             $entityManager->flush();
             $mailerFactory->createAndSend(
@@ -140,6 +140,7 @@ class PatientController extends AbstractController
             $appoint = $appointmentRepository->find($request->request->get('booking_id'));
             if ($appoint instanceof Appointment) {
                 $appoint->setPatient($patient);
+                $appoint->setStatus(Appointment::STATUS_WAITING);
                 $entityManager->flush();
                 return $this->redirectToRoute('patient_confirm_booking', ['id' => $appoint->getId()]);
             } else {
@@ -166,7 +167,8 @@ class PatientController extends AbstractController
         Request $request,
         HistoryHelper $historyHelper,
         EntityManagerInterface $entityManager,
-        MailerFactory $mailerFactory, AppointmentRepository $appointmentRepository
+        MailerFactory $mailerFactory,
+        AppointmentRepository $appointmentRepository
     )
     {
         if ($request->isMethod("POST")) {
