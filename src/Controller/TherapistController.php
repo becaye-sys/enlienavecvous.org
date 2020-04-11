@@ -28,8 +28,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -385,8 +387,10 @@ class TherapistController extends AbstractController
                 $manager->remove($user);
                 $manager->flush();
                 // redirect
+                $session = new Session();
+                $session->invalidate();
                 $this->addFlash('success', "Votre compte a été correctement supprimé.");
-                return $this->redirectToRoute('therapist_security');
+                return $this->redirectToRoute('app_logout');
             } else {
                 $this->addFlash('error', "Votre mot de passe est invalide.");
                 return $this->redirectToRoute('therapist_security');
