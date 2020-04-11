@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 
 
 use App\Entity\Appointment;
+use App\Entity\Therapist;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -18,7 +19,10 @@ class AppointmentFixtures extends Fixture implements DependentFixtureInterface
 
         for ($i = 1; $i <= 80; $i++) {
             $refId = random_int(1,8);
-            $appointment = new Appointment($this->getReference(TherapistFixtures::THERAPIST_USER_REFERENCE."_$refId"));
+            /** @var Therapist $therapist */
+            $therapist = $this->getReference(TherapistFixtures::THERAPIST_USER_REFERENCE."_$refId");
+            $appointment = new Appointment();
+            $appointment->setTherapist($therapist);
             $appointment->setLocation($faker->countryCode);
             $randomDate = $this->getRandomDate();
             $date = $randomDate['start'];

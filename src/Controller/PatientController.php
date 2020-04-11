@@ -5,18 +5,23 @@ namespace App\Controller;
 
 
 use App\Entity\Appointment;
+use App\Entity\History;
 use App\Entity\Patient;
+use App\Entity\Therapist;
 use App\Entity\User;
 use App\Form\ChangePasswordType;
 use App\Form\PatientSettingsType;
 use App\Repository\AppointmentRepository;
+use App\Repository\HistoryRepository;
 use App\Repository\PatientRepository;
+use App\Services\HistoryHelper;
 use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
@@ -73,13 +78,16 @@ class PatientController extends AbstractController
     public function appointmentCancel(
         Appointment $appointment,
         EntityManagerInterface $entityManager,
-        MailerFactory $mailerFactory
+        MailerFactory $mailerFactory,
+        HistoryHelper $historyHelper
     )
     {
         $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
         if ($appointment instanceof Appointment && $appointment->getBooked() === true) {
             $appointment->setBooked(false);
             $appointment->setCancelled(true);
+            // add booking cancel history
+            $historyHelper->addHistoryItem($appointment, History::ACTIONS[History::ACTION_CANCELLED_BY_PATIENT]);
             $appointment->setPatient(null);
             $entityManager->flush();
             $mailerFactory->createAndSend(
@@ -112,14 +120,96 @@ class PatientController extends AbstractController
     }
 
     /**
+     * @Route(path="/recherche/therapeute/{id}", name="patient_research_by_therapist")
+     * @ParamConverter(name="id", class="App\Entity\Therapist")
+     * @return Response
+     */
+    public function researchByTherapist(
+        Therapist $therapist,
+        AppointmentRepository $appointmentRepository,
+        Request $request,
+        EntityManagerInterface $entityManager
+    )
+    {
+        $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
+        $patient = $this->getCurrentPatient();
+        $patientId = $patient->getId();
+        $appoints = $therapist->getAppointments();
+
+        if ($request->isMethod("POST")) {
+            $appoint = $appointmentRepository->find($request->request->get('booking_id'));
+            if ($appoint instanceof Appointment) {
+                $appoint->setPatient($patient);
+                $appoint->setStatus(Appointment::STATUS_WAITING);
+                $entityManager->flush();
+                return $this->redirectToRoute('patient_confirm_booking', ['id' => $appoint->getId()]);
+            } else {
+                $this->addFlash('error', "Un problème est survenu");
+                return $this->redirectToRoute('patient_research_by_therapist', ['id' => $therapist->getId()]);
+            }
+        }
+        return $this->render(
+            'patient/research_by_therapist.html.twig',
+            [
+                'appoints' => $appoints,
+                'patient_id' => $patientId
+            ]
+        );
+    }
+
+    /**
+     * @Route(path="/patient/confirm-booking/{id}", name="patient_confirm_booking")
+     * @ParamConverter(name="id", class="App\Entity\Appointment")
+     * @param Appointment $appointment
+     */
+    public function confirmBookingWithTherapist(
+        Appointment $appointment,
+        Request $request,
+        HistoryHelper $historyHelper,
+        EntityManagerInterface $entityManager,
+        MailerFactory $mailerFactory,
+        AppointmentRepository $appointmentRepository
+    )
+    {
+        if ($request->isMethod("POST")) {
+            $appointment = $appointmentRepository->find($request->request->get('booking_id'));
+            $appointment->setBooked(true);
+            $historyHelper->addHistoryItem($appointment, History::ACTION_BOOKED);
+            $entityManager->flush();
+
+            $mailerFactory->createAndSend(
+                "Confirmation de rendez-vous",
+                $appointment->getPatient()->getEmail(),
+                'no-reply@onestlapourvous.org',
+                $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment])
+            );
+
+            $mailerFactory->createAndSend(
+                "Confirmation de rendez-vous",
+                $appointment->getTherapist()->getEmail(),
+                'no-reply@onestlapourvous.org',
+                $this->renderView('email/appointment_booked_therapist.html.twig', ['appointment' => $appointment])
+            );
+            $this->addFlash('success', "Votre rendez-vous est confirmé, un mail de confirmation vous a été envoyé !");
+            return $this->redirectToRoute('patient_appointments');
+        }
+        return $this->render(
+            'patient/appointment_by_therapist_confirm.html.twig',
+            [
+                'booking' => $appointment
+            ]
+        );
+    }
+
+    /**
      * @Route(path="/historique", name="patient_history")
      * @return Response
      */
-    public function history(AppointmentRepository $appointmentRepository)
+    public function history(HistoryRepository $historyRepository)
     {
         $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
         $currentUser = $this->getCurrentPatient();
-        $history = $appointmentRepository->findBy(['patient' => $currentUser]);
+        $history = $historyRepository->findBy(['patient' => $currentUser]);
         return $this->render(
             'patient/history.html.twig',
             [
@@ -132,14 +222,36 @@ class PatientController extends AbstractController
      * @Route(path="/parametres", name="patient_settings")
      * @return Response
      */
-    public function settings(Request $request, EntityManagerInterface $manager)
+    public function settings(
+        Request $request,
+        EntityManagerInterface $manager,
+        MailerFactory $mailerFactory
+    )
     {
         $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
         /** @var Patient $currentUser */
         $currentUser = $this->getCurrentPatient();
+        $prevEmail = $currentUser->getEmail();
         $settingsType = $this->createForm(PatientSettingsType::class, $currentUser);
         $settingsType->handleRequest($request);
         if ($request->isMethod('POST') && $settingsType->isSubmitted() && $settingsType->isValid()) {
+            /** @var Patient $user */
+            $user = $settingsType->getData();
+            if ($user->getEmail() !== $prevEmail) {
+                $user->setUniqueEmailToken();
+                $mailerFactory->createAndSend(
+                    "Changement de votre adresse email",
+                    $user->getEmail(),
+                    'no-reply@onestlapourvous.org',
+                    $this->renderView(
+                        'email/user_change_email.html.twig',
+                        ['email_token' => $user->getEmailToken(), 'project_url' => $_ENV['PROJECT_URL']]
+                    )
+                );
+                $manager->flush();
+                $this->addFlash('success', "Vous allez recevoir un mail pour confirmer votre nouvelle adresse email.");
+                return $this->redirectToRoute('therapist_settings');
+            }
             $manager->flush();
             $this->addFlash('success',"Informations mises à jour !");
             return $this->redirectToRoute('patient_settings');
@@ -156,11 +268,15 @@ class PatientController extends AbstractController
      * @Route(path="/securite", name="patient_security")
      * @return Response
      */
-    public function security(Request $request, UserPasswordEncoderInterface $encoder, EntityManagerInterface $manager)
+    public function security(
+        Request $request,
+        UserPasswordEncoderInterface $encoder,
+        EntityManagerInterface $manager
+    )
     {
         $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
-        /** @var User $user */
-        $user = $this->getUser();
+        /** @var Patient $user */
+        $user = $this->getCurrentPatient();
         $changePasswordForm = $this->createForm(ChangePasswordType::class, $user);
         $changePasswordForm->handleRequest($request);
         if ($request->isMethod('POST') && $changePasswordForm->isSubmitted() && $changePasswordForm->isValid()) {
@@ -174,9 +290,48 @@ class PatientController extends AbstractController
         return $this->render(
             'patient/security.html.twig',
             [
-                'change_password_form' => $changePasswordForm->createView()
+                'change_password_form' => $changePasswordForm->createView(),
+                'appointments' => $user->getAppointments()
             ]
         );
+    }
+
+    /**
+     * @Route(path="/account/delete", name="patient_account_delete")
+     */
+    public function deleteAccount(
+        Request $request,
+        EntityManagerInterface $manager,
+        UserPasswordEncoderInterface $encoder,
+        MailerFactory $mailerFactory
+    )
+    {
+        $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette fonctionnalité.");
+        /** @var Patient $user */
+        $user = $this->getCurrentPatient();
+        if ($user instanceof Patient) {
+            $userPassword = $request->request->get('password');
+            if ($encoder->isPasswordValid($user, $userPassword)) {
+                // send email account deletion
+                $mailerFactory->createAndSend(
+                    "Suppression de votre compte",
+                    $user->getEmail(),
+                    'no-reply@onestlapourvous.org',
+                    $this->renderView('email/user_delete_account.html.twig')
+                );
+                // delete user
+                $manager->remove($user);
+                $manager->flush();
+                $session = new Session();
+                $session->invalidate();
+                $this->addFlash('success', "Votre compte a été correctement supprimé.");
+                return $this->redirectToRoute('app_logout');
+            } else {
+                $this->addFlash('error', "Votre mot de passe est invalide.");
+                return $this->redirectToRoute('patient_security');
+            }
+        }
+        return $this->redirectToRoute('patient_security');
     }
 
     private function getCurrentPatient(): Patient

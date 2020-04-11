@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\Entity\Appointment;
+use App\Entity\History;
 use App\Entity\Patient;
 use App\Entity\Therapist;
 use App\Entity\User;
@@ -14,8 +15,10 @@ use App\Form\TherapistAppointmentCancellationMessageType;
 use App\Form\TherapistSettingsType;
 use App\Repository\AppointmentRepository;
 use App\Repository\DepartmentRepository;
+use App\Repository\HistoryRepository;
 use App\Repository\TherapistRepository;
 use App\Services\CustomSerializer;
+use App\Services\HistoryHelper;
 use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -25,8 +28,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -71,9 +76,45 @@ class TherapistController extends AbstractController
         return $this->render(
             'therapist/bookings.html.twig',
             [
-                'bookings' => $appointmentRepository->findBy(['therapist' => $currentUser, 'booked' => true]),
+                'bookings' => $appointmentRepository->findBy(
+                    [
+                        'therapist' => $currentUser,
+                        'booked' => true,
+                        'status' => Appointment::STATUS_WAITING
+                    ]
+                ),
             ]
         );
+    }
+
+    /**
+     * @Route(path="/booking/{id}", name="therapist_booking_status")
+     * @ParamConverter(name="id", class="App\Entity\Appointment")
+     */
+    public function bookingStatus(
+        Appointment $appointment,
+        Request $request,
+        EntityManagerInterface $entityManager
+    )
+    {
+        $status = $request->query->get('status');
+        $patient = $appointment->getPatient();
+        if ($status === Appointment::STATUS_DISHONORED) {
+            if (null === $patient->getMalus()) {
+                $malus = 1;
+                $patient->setMalus($malus);
+            } else {
+                $malus = $patient->getMalus() + 1;
+                $patient->setMalus($malus);
+            }
+        }
+        if ($patient->getMalus() >= 3) {
+            $patient->setIsActive(false);
+        }
+        $appointment->setStatus($status);
+        $entityManager->flush();
+        $this->addFlash('success', "Statut de la réservation mis à jour, disponible dans l'historique !");
+        return $this->redirectToRoute('therapist_bookings');
     }
 
     /**
@@ -86,7 +127,8 @@ class TherapistController extends AbstractController
         Appointment $appointment,
         Request $request,
         EntityManagerInterface $entityManager,
-        MailerFactory $mailer
+        MailerFactory $mailer,
+        HistoryHelper $historyHelper
     )
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
@@ -111,6 +153,7 @@ class TherapistController extends AbstractController
             $appointment->setBooked(false);
             $patientEmail = $appointment->getPatient()->getEmail();
             $appointment->setCancelled(true);
+            $historyHelper->addHistoryItem($appointment, History::ACTIONS[History::ACTION_CANCELLED_BY_THERAPIST]);
             $appointment->setPatient(null);
             $entityManager->flush();
             $mailer->createAndSend(
@@ -137,7 +180,7 @@ class TherapistController extends AbstractController
     }
 
     /**
-     * @Route(path="/availabilities/", name="therapist_availabilities")
+     * @Route(path="/availabilities", name="therapist_availabilities", defaults={"page"=1})
      * @return Response
      */
     public function availabilities(
@@ -150,7 +193,8 @@ class TherapistController extends AbstractController
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         /** @var Therapist $currentUser */
         $currentUser = $this->getCurrentTherapist();
-        $appointment = new Appointment($currentUser);
+        $appointment = new Appointment();
+        $appointment->setTherapist($currentUser);
         $appointmentForm = $this->createForm(AppointmentType::class, $appointment);
         $appointmentForm->handleRequest($request);
         if ($appointmentForm->isSubmitted() && $appointmentForm->isValid()) {
@@ -170,7 +214,7 @@ class TherapistController extends AbstractController
         if (count($params) === 0) {
             $appointments = $appointmentRepository->findBy(
                 ['therapist' => $currentUser],
-                []
+                ['bookingDate' => 'ASC']
             );
         } else {
             $appointments = $appointmentRepository->findAvailableAppointmentsByParams($params);
@@ -202,14 +246,14 @@ class TherapistController extends AbstractController
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         if ($appointment->getPatient() instanceof Patient) {
             $this->addFlash('error',"Ce créneau a été réservé, impossible de le modifier.");
-            return $this->redirectToRoute('therapist_availabilites');
+            return $this->redirectToRoute('therapist_availabilities');
         }
         $appointmentForm = $this->createForm(AppointmentType::class, $appointment);
         $appointmentForm->handleRequest($request);
         if ($request->isMethod('POST') && $appointmentForm->isSubmitted() && $appointmentForm->isValid()) {
             $manager->flush();
             $this->addFlash('success',"Créneau modifié !");
-            return $this->redirectToRoute('therapist_availabilites');
+            return $this->redirectToRoute('therapist_availabilities');
         }
 
         return $this->render(
@@ -230,16 +274,16 @@ class TherapistController extends AbstractController
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         if (!$appointment || !$appointment instanceof Appointment) {
             $this->addFlash('error', "Créneau introuvable...");
-            return $this->redirectToRoute('therapist_availabilites');
+            return $this->redirectToRoute('therapist_availabilities');
         }
         if ($appointment->getPatient() instanceof Patient) {
             $this->addFlash('error',"Ce créneau a été réservé... veuillez l'annuler avant de le supprimer.");
-            return $this->redirectToRoute('therapist_availabilites');
+            return $this->redirectToRoute('therapist_availabilities');
         } else {
             $manager->remove($appointment);
             $manager->flush();
             $this->addFlash('success',"Créneau supprimé avec succès !");
-            return $this->redirectToRoute('therapist_availabilites');
+            return $this->redirectToRoute('therapist_availabilities');
         }
     }
 
@@ -247,7 +291,7 @@ class TherapistController extends AbstractController
      * @Route(path="/history", name="therapist_history")
      * @return Response
      */
-    public function history(AppointmentRepository $appointmentRepository)
+    public function history(HistoryRepository $historyRepository)
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         /** @var Therapist $currentUser */
@@ -255,7 +299,7 @@ class TherapistController extends AbstractController
         return $this->render(
             'therapist/history.html.twig',
             [
-                'history' => $appointmentRepository->findBy(['therapist' => $currentUser, 'booked' => true])
+                'history' => $historyRepository->findBy(['therapist' => $currentUser])
             ]
         );
     }
@@ -276,7 +320,11 @@ class TherapistController extends AbstractController
      * @Route(path="/settings", name="therapist_settings")
      * @return Response
      */
-    public function settings(Request $request, EntityManagerInterface $manager, DepartmentRepository $departmentRepository, MailerFactory $mailerFactory)
+    public function settings(
+        Request $request,
+        EntityManagerInterface $manager,
+        MailerFactory $mailerFactory
+    )
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         /** @var Therapist $currentUser */
@@ -290,11 +338,11 @@ class TherapistController extends AbstractController
             if ($user->getEmail() !== $prevEmail) {
                 $user->setUniqueEmailToken();
                 $mailerFactory->createAndSend(
-                    "Validation de votre inscription",
+                    "Changement de votre adresse email",
                     $user->getEmail(),
                     'no-reply@onestlapourvous.org',
                     $this->renderView(
-                        'email/therapist_registration.html.twig',
+                        'email/user_change_email.html.twig',
                         ['email_token' => $user->getEmailToken(), 'project_url' => $_ENV['PROJECT_URL']]
                     )
                 );
@@ -319,7 +367,12 @@ class TherapistController extends AbstractController
      * @Route(path="/security", name="therapist_security")
      * @return Response
      */
-    public function security(Request $request, UserPasswordEncoderInterface $encoder, AppointmentRepository $appointmentRepository, EntityManagerInterface $manager)
+    public function security(
+        Request $request,
+        UserPasswordEncoderInterface $encoder,
+        AppointmentRepository $appointmentRepository,
+        EntityManagerInterface $manager
+    )
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         /** @var Therapist $user */
@@ -345,10 +398,13 @@ class TherapistController extends AbstractController
 
     /**
      * @Route(path="/account/delete", name="therapist_account_delete")
-     * @param Request $request
-     * @param EntityManagerInterface $manager
      */
-    public function deleteAccount(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder)
+    public function deleteAccount(
+        Request $request,
+        EntityManagerInterface $manager,
+        UserPasswordEncoderInterface $encoder,
+        MailerFactory $mailerFactory
+    )
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette fonctionnalité.");
         /** @var Therapist $user */
@@ -356,19 +412,27 @@ class TherapistController extends AbstractController
         if ($user instanceof Therapist) {
             $userPassword = $request->request->get('password');
             if ($encoder->isPasswordValid($user, $userPassword)) {
-                // delete therapist availabilities
                 // send email account deletion
+                $mailerFactory->createAndSend(
+                    "Suppression de votre compte",
+                    $user->getEmail(),
+                    'no-reply@onestlapourvous.org',
+                    $this->renderView('email/user_delete_account.html.twig')
+                );
                 // delete user
+                $manager->remove($user);
+                $manager->flush();
                 // redirect
-                $this->addFlash('success', "Votre mot de passe est valide.");
-                return $this->redirectToRoute('therapist_security');
+                $session = new Session();
+                $session->invalidate();
+                $this->addFlash('success', "Votre compte a été correctement supprimé.");
+                return $this->redirectToRoute('app_logout');
             } else {
                 $this->addFlash('error', "Votre mot de passe est invalide.");
                 return $this->redirectToRoute('therapist_security');
             }
-        } else {
-            $this->addFlash('error', "Vous n'êtes pas thérapeute...");
         }
+        return $this->redirectToRoute('therapist_security');
     }
 
     private function getCurrentTherapist(): Therapist

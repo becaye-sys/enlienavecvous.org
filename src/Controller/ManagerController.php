@@ -11,6 +11,7 @@ use App\Repository\DepartmentRepository;
 use App\Repository\TownRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
@@ -27,11 +28,15 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class ManagerController extends AbstractController
 {
     /**
-     * @Route(path="/new-users", name="manager_new_users")
+     * @Route(path="/new-users", name="manager_new_users", defaults={"page"=1})
      * @param UserRepository $userRepository
      * @return Response
      */
-    public function newUsers(UserRepository $userRepository, Request $request)
+    public function newUsers(
+        UserRepository $userRepository,
+        Request $request,
+        PaginatorInterface $paginator
+    )
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         if ($request->isMethod("POST")) {
@@ -46,10 +51,15 @@ class ManagerController extends AbstractController
             );
         }
         $newUsers = $userRepository->findAll();
+        $paginated = $paginator->paginate(
+            $newUsers,
+            $request->query->getInt('page', 1),
+            10
+        );
         return $this->render(
             'manager/new_users.html.twig',
             [
-                'new_users' => $newUsers
+                'new_users' => $paginated
             ]
         );
     }
@@ -65,11 +75,16 @@ class ManagerController extends AbstractController
         return $this->redirectToRoute('manager_new_users');
     }
     /**
-     * @Route(path="/manage-users", name="manager_manage_users")
+     * @Route(path="/manage-users", name="manager_manage_users", defaults={"page"=1})
      * @param UserRepository $userRepository
      * @return Response
      */
-    public function manageUsers(UserRepository $userRepository, Request $request, EntityManagerInterface $manager)
+    public function manageUsers(
+        UserRepository $userRepository,
+        Request $request,
+        EntityManagerInterface $manager,
+        PaginatorInterface $paginator
+    )
     {
         $this->denyAccessUnlessGranted("ROLE_MANAGER", null, "Vous n'avez pas accès à cette page.");
 
@@ -105,39 +120,51 @@ class ManagerController extends AbstractController
             $users = $userRepository->findByParams($params);
         }
 
+        $paginated = $paginator->paginate(
+            $users,
+            $request->query->getInt('page', 1),
+            10
+        );
+
         return $this->render(
             'manager/manage_members.html.twig',
             [
-                'users' => $users
+                'users' => $paginated
             ]
         );
     }
 
     /**
-     * @Route(path="/en-attente", name="manager_users_waiting")
+     * @Route(path="/en-attente", name="manager_users_waiting", defaults={"page"=1})
      * @param UserRepository $userRepository
      * @return Response
      */
-    public function usersWaitingForActivation(UserRepository $userRepository)
+    public function usersWaitingForActivation(UserRepository $userRepository, Request $request, PaginatorInterface $paginator)
     {
+        $waitingUsers = $userRepository->findBy(['isActive' => false]);
+        $paginated = $paginator->paginate(
+            $waitingUsers,
+            $request->query->getInt('page', 1),
+            10
+        );
         return $this->render(
             'manager/users_waiting_for_activation.html.twig',
             [
-                'new_users' => $userRepository->findBy(['isActive' => false])
+                'waiting_users' => $paginated
             ]
         );
     }
 
     /**
-     * @Route(path="/zones", name="manager_zones")
-     * @param DepartmentRepository $departmentRepository
+     * @Route(path="/zones", name="manager_zones", defaults={"page"=1})
      * @return Response
      */
     public function geolocalisation(
         Request $request,
         DepartmentRepository $departmentRepository,
         TownRepository $townRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        PaginatorInterface $paginator
     )
     {
         $params = [];
@@ -219,27 +246,41 @@ class ManagerController extends AbstractController
             $departments = $departmentRepository->findByParams($params);
         }
 
+        $paginated = $paginator->paginate(
+            $departments,
+            $request->query->getInt('page', 1),
+            10
+        );
+
         return $this->render(
             'manager/geolocalisation.html.twig',
             [
-                'departments' => $departments,
+                'departments' => $paginated,
                 'countries' => $countries
             ]
         );
     }
 
     /**
-     * @Route(path="/zones/department/{id}", name="manager_zones_by_department")
+     * @Route(path="/zones/department/{id}", name="manager_zones_by_department", defaults={"page"=1})
      * @ParamConverter(name="id", class="App\Entity\Department")
-     * @param Department $department
      * @return Response
      */
-    public function geolocTownsByDepartment(Department $department)
+    public function geolocTownsByDepartment(Department $department, PaginatorInterface $paginator, Request $request)
     {
+        $towns = $department->getTowns();
+
+        $paginated = $paginator->paginate(
+            $towns,
+            $request->query->getInt('page', 1),
+            15
+        );
+
         return $this->render(
             'manager/geoloc_towns_by_department.html.twig',
             [
-                'department' => $department
+                'department' => $department,
+                'towns' => $paginated
             ]
         );
     }

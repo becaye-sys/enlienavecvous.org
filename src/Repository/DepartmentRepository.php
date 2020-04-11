@@ -23,7 +23,7 @@ class DepartmentRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('d')
             ->where('d.country = :country')
-            ->setParameter('country', $params["country_filter"]);
+            ->setParameter('country', $params["country_filter"] ?? 'fr');
 
         return $query->getQuery()->getResult();
     }

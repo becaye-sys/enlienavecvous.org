@@ -8,72 +8,89 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AppointmentRepository")
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="discriminator", type="string")
+ * @ORM\DiscriminatorMap({"appointment" = "Appointment", "history" = "History"})
  */
 class Appointment
 {
+    public const STATUS_WAITING = 'waiting';
+    public const STATUS_HONORED = 'honored';
+    public const STATUS_DISHONORED = 'dishonored';
+
+    public const STATUS = [
+        self::STATUS_WAITING => "En attente",
+        self::STATUS_HONORED => "Honoré",
+        self::STATUS_DISHONORED => "Non honoré"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      * @Groups({"create_booking"})
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="boolean")
      * @Groups({"create_booking"})
      */
-    private $booked;
+    protected $booked;
 
     /**
      * @ORM\Column(type="date")
      * @Groups({"create_booking"})
      */
-    private $bookingDate;
+    protected $bookingDate;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Therapist", inversedBy="appointments")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"create_booking"})
      */
-    private $therapist;
+    protected $therapist;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Patient", inversedBy="appointments")
      */
-    private $patient;
+    protected $patient;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"create_booking"})
      */
-    private $location;
+    protected $location;
 
     /**
      * @ORM\Column(type="time")
      * @Groups({"create_booking"})
      */
-    private $bookingStart;
+    protected $bookingStart;
 
     /**
      * @ORM\Column(type="time")
      */
-    private $bookingEnd;
+    protected $bookingEnd;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $cancelled;
+    protected $cancelled;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $cancelMessage;
+    protected $cancelMessage;
 
-    public function __construct(Therapist $therapist)
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    protected $status;
+
+    public function __construct()
     {
         $this->booked = false;
-        $this->therapist = $therapist;
         $this->cancelled = false;
     }
 
@@ -186,6 +203,18 @@ class Appointment
     public function setCancelMessage(?string $cancelMessage): self
     {
         $this->cancelMessage = $cancelMessage;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

@@ -19,9 +19,9 @@
                     <th></th>
                 </tr>
                 </thead>
-                {% if new_users|length %}
+                {% if waiting_users|length %}
                     <tbody>
-                    {% for u in new_users %}
+                    {% for u in waiting_users %}
                         <tr>
                             <td>{{ u.id }}</td>
                             <td>{{ u.email }}</td>
@@ -46,6 +46,7 @@
                     <p>Tous les utilisateurs sont activés.</p>
                 {% endif %}
             </table>
+            {{ knp_pagination_render(waiting_users) }}
         </div>
     </div>
 {% endblock %}

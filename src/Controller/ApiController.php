@@ -5,11 +5,13 @@ namespace App\Controller;
 
 
 use App\Entity\Appointment;
+use App\Entity\History;
 use App\Repository\AppointmentRepository;
 use App\Repository\DepartmentRepository;
 use App\Repository\PatientRepository;
 use App\Repository\TownRepository;
 use App\Services\CustomSerializer;
+use App\Services\HistoryHelper;
 use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -33,91 +35,74 @@ class ApiController extends AbstractController
 {
     /**
      * @Route(path="/appointments", name="api_appointments", methods={"GET"})
-     * @param Request $request
-     * @param AppointmentRepository $appointmentRepository
      * @return JsonResponse
      */
-    public function getAvailableAppointments(Request $request, AppointmentRepository $appointmentRepository, SerializerInterface $serializer): JsonResponse
+    public function getAvailableAppointments(
+        AppointmentRepository $appointmentRepository,
+        CustomSerializer $serializer
+    ): JsonResponse
     {
         $appoints = $appointmentRepository->findAvailableAppointments();
-        $normalizer = new ObjectNormalizer();
-        $encoder = new JsonEncoder();
-
-        $serializer = new Serializer([$normalizer], [$encoder]);
-        $data = $serializer->serialize($appoints, 'json', ['ignored_attributes' => ['therapist', 'patient']]);
+        $data = $serializer->serialize($appoints, ['therapist', 'patient']);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
     /**
      * @Route(path="/appointments/filter", name="api_appointments_filter", methods={"POST"})
-     * @param Request $request
-     * @param AppointmentRepository $appointmentRepository
      * @return JsonResponse
      * // Not used but keep it
      */
-    public function getAvailableAppointmentsFilter(Request $request, AppointmentRepository $appointmentRepository, SerializerInterface $serializer): JsonResponse
+    public function getAvailableAppointmentsFilter(
+        Request $request,
+        AppointmentRepository $appointmentRepository,
+        CustomSerializer $serializer
+    ): JsonResponse
     {
         $params = get_object_vars(json_decode($request->getContent()));
         $appoints = $appointmentRepository->findAvailableAppointmentsByParamsSplited($params);
-        $normalizer = new ObjectNormalizer();
-        $encoder = new JsonEncoder();
-
-        $serializer = new Serializer([$normalizer], [$encoder]);
-        $data = $serializer->serialize($appoints, 'json', ['ignored_attributes' => ['therapist', 'patient']]);
+        $data = $serializer->serialize($appoints, ['therapist', 'patient']);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
     /**
      * @Route(path="/create/booking/{appointment}/{user}", name="api_create_booking", methods={"POST"})
-     * @param Request $request
      * @return JsonResponse
      */
     public function createBooking(
         Request $request,
         AppointmentRepository $appointmentRepository,
         PatientRepository $patientRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        CustomSerializer $serializer
     ): JsonResponse
     {
         $appointId = (int)$request->attributes->get('appointment');
         $userId = (int)$request->attributes->get('user');
         $patient = $patientRepository->find($userId);
         $appointment = $appointmentRepository->find($appointId);
+        $appointment->setStatus(Appointment::STATUS_WAITING);
         $patient->addAppointment($appointment);
         $entityManager->flush();
-        $normalizer = new ObjectNormalizer();
-        $encoder = new JsonEncoder();
-        $defaultContext = [
-            AbstractObjectNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object, $format, $context) {
-                return $object->getId();
-            },
-            'groups' => ['create_booking']
-        ];
-
-        $serializer = new Serializer([$normalizer], [$encoder]);
-        $data = $serializer->serialize(
-            $appointment,
-            'json',
-            $defaultContext
-        );
+        $data = $serializer->serializeByGroups($appointment, ['create_booking']);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
     /**
      * @Route(path="/confirm/booking/{id}", name="api_confirm_booking", methods={"POST"})
-     * @param Request $request
      * @ParamConverter(name="id", class="App\Entity\Appointment")
      * @return JsonResponse
      */
     public function confirmBooking(
-        Request $request,
         Appointment $appointment,
         EntityManagerInterface $entityManager,
         SerializerInterface $serializer,
-        MailerFactory $mailer
+        MailerFactory $mailer,
+        HistoryHelper $historyHelper
     ): JsonResponse
     {
         $appointment->setBooked(true);
+        // add booking history
+        $historyHelper->addHistoryItem($appointment, History::ACTIONS[History::ACTION_BOOKED]);
         $entityManager->flush();
 
         $mailer->createAndSend(
@@ -145,7 +130,11 @@ class ApiController extends AbstractController
      * @Route(path="/departments-by-country", name="api_get_departments_by_country", methods={"POST"})
      * @return JsonResponse
      */
-    public function getDepartmentsByCountry(DepartmentRepository $departmentRepository, Request $request, CustomSerializer $serializer)
+    public function getDepartmentsByCountry(
+        DepartmentRepository $departmentRepository,
+        Request $request,
+        CustomSerializer $serializer
+    )
     {
         $departments = $departmentRepository->findBy(
             ['country' => $request->request->get('country')],
@@ -159,7 +148,12 @@ class ApiController extends AbstractController
      * @Route(path="/towns-by-departments", name="api_get_towns_by_department", methods={"POST"})
      * @return JsonResponse
      */
-    public function getTownsByDepartments(TownRepository $townRepository, DepartmentRepository $departmentRepository, Request $request, CustomSerializer $serializer)
+    public function getTownsByDepartments(
+        TownRepository $townRepository,
+        DepartmentRepository $departmentRepository,
+        Request $request,
+        CustomSerializer $serializer
+    )
     {
         $department = $departmentRepository->find($request->request->get('department'));
         $towns = $townRepository->findBy(
