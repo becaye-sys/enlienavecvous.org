@@ -20,7 +20,6 @@
                     <th>Chargement</th>
                 </tr>
                 </thead>
-                {% set towns = department.towns %}
                 {% if towns|length %}
                     <tbody>
                     {% for t in towns %}
@@ -40,6 +39,7 @@
                     <p>Aucune ville trouvée pour ce-s filtre-s.</p>
                 {% endif %}
             </table>
+            {{ knp_pagination_render(towns) }}
         </div>
     </div>
 {% endblock %}

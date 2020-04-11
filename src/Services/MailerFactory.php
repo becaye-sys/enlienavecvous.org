@@ -17,7 +17,7 @@ class MailerFactory
     {
         $message = (new \Swift_Message($subject))
             ->setTo($to)
-            ->setFrom($from)
+            ->setFrom($from ?? 'no-reply@onestlapourvous.org')
             ->setBody($body, 'text/html');
         $this->mailer->send($message);
     }

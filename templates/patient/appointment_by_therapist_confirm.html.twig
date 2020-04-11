@@ -1,0 +1,19 @@
+{% extends "account_layout.html.twig" %}
+
+{% block body %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Confirmation du rendez-vous</h1>
+    </div>
+    <div>
+        <h2>Demande de rendez-vous</h2>
+        {{ booking.bookingDate|date('d/m/Y H:i') }} avec {{ booking.therapist.firstName }} {{ booking.therapist.lastName }}
+        {{ booking.therapist.zipCode }}
+        <div class="alert alert-warning">
+            En cas d'annulation, merci de prévenir votre thérapeute au plus vite en cliquant sur le bouton d'annulation disponible dans vos rendez-vous.
+        </div>
+        <form action="{{ path('patient_confirm_booking', {'id': booking.id}) }}" method="post">
+            <input type="hidden" name="booking_id" value="{{ booking.id }}">
+            <button class="btn btn-primary" type="submit">Confirmer mon rendez-vous</button>
+        </form>
+    </div>
+{% endblock %}

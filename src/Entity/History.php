@@ -9,17 +9,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class History extends Appointment
 {
-    public const HISTORY_ACTIONS = [
-        'SET_BOOKED' => "booked",
-        'SET_CANCELLED' => "cancelled"
-    ];
+    public const ACTION_BOOKED = 'booked';
+    public const ACTION_NEVER_BOOKED = 'never_booked';
+    public const ACTION_CANCELLED_BY_THERAPIST = 'cancelled_by_therapist';
+    public const ACTION_CANCELLED_BY_PATIENT = 'cancelled_by_patient';
 
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
