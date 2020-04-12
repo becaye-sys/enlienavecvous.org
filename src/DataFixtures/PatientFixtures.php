@@ -4,11 +4,12 @@ namespace App\DataFixtures;
 
 use App\Entity\Patient;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class PatientFixtures extends Fixture
+class PatientFixtures extends Fixture implements DependentFixtureInterface
 {
     private $encoder;
 
@@ -37,5 +38,12 @@ class PatientFixtures extends Fixture
         }
 
         $manager->flush();
+    }
+
+    public function getDependencies()
+    {
+        return array(
+            TownFixtures::class,
+        );
     }
 }

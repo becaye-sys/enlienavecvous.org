@@ -8,11 +8,12 @@ use App\Entity\Department;
 use App\Entity\Town;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use App\Services\FixturesTrait;
 
-class TownFixtures extends Fixture implements FixtureGroupInterface
+class TownFixtures extends Fixture implements FixtureGroupInterface, DependentFixtureInterface
 {
     use FixturesTrait;
 
@@ -119,5 +120,12 @@ class TownFixtures extends Fixture implements FixtureGroupInterface
     public static function getGroups(): array
     {
         return ['towns'];
+    }
+
+    public function getDependencies()
+    {
+        return array(
+            DepartmentFixtures::class,
+        );
     }
 }
