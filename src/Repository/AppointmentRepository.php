@@ -88,6 +88,23 @@ class AppointmentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function cleanDailyPastAppointments()
+    {
+        return $this->createQueryBuilder('a')
+            ->delete()
+            ->where('a.bookingDate < :now')
+            ->setParameter('now', new \DateTime())
+            ->getQuery()->getResult();
+    }
+
+    public function getDailyPastAppointments()
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.bookingDate < :now')
+            ->setParameter('now', new \DateTime())
+            ->getQuery()->getResult();
+    }
+
     // /**
     //  * @return Appointment[] Returns an array of Appointment objects
     //  */
