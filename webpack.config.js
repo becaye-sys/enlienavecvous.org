@@ -28,9 +28,10 @@ Encore
     .addEntry('patient_search_app', './assets/js/patient_search_app.js')
     .addEntry('therapist_availabilities', './assets/js/therapist_availabilities.js')
     .addEntry('manage_members', './assets/js/manage_members.js')
-    .addEntry('therapist_register', './assets/js/therapist_register.js')
-    .addEntry('patient_register', './assets/js/patient_register.js')
+    .addEntry('therapist_geoloc', './assets/js/therapist_geoloc.js')
+    .addEntry('patient_geoloc', './assets/js/patient_geoloc.js')
     .addEntry('manage_geolocalisation', './assets/js/manage_geolocalisation.js')
+    .addEntry('city_register', './assets/js/city_register.js')
     //.addEntry('page2', './assets/js/page2.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
@@ -63,7 +64,8 @@ Encore
     //.enableSassLoader()
 
     // uncomment if you use TypeScript
-    //.enableTypeScriptLoader()
+    .enableTypeScriptLoader()
+    .enableForkedTypeScriptTypesChecking()
 
     // uncomment to get integrity="..." attributes on your script & link tags
     // requires WebpackEncoreBundle 1.4 or higher

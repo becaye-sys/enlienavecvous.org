@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
+use App\Interfaces\AppointmentInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -12,7 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\DiscriminatorColumn(name="discriminator", type="string")
  * @ORM\DiscriminatorMap({"appointment" = "Appointment", "history" = "History"})
  */
-class Appointment
+class Appointment implements AppointmentInterface
 {
     public const STATUS_WAITING = 'waiting';
     public const STATUS_HONORED = 'honored';

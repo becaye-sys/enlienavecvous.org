@@ -41,7 +41,7 @@ function PatientSearch(props) {
     const getAppointments = async () => {
         const res = await axios.get(`${API_URL}appointments`).then(response => {return response.data});
         if (res.length > 0) {
-            //console.log('res:',res);
+            console.log('res:',res);
             const appoints = filterWithTherapistDelay(res);
             setAppoints(appoints);
             setLoading(false);
@@ -180,7 +180,7 @@ function PatientSearch(props) {
                                 <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>id</th>
+                                    <th>Thérapeute</th>
                                     <th>Date</th>
                                     <th>Début</th>
                                     <th>Fin</th>
@@ -200,7 +200,7 @@ function PatientSearch(props) {
                                                         Réserver
                                                     </button>
                                                 </td>
-                                                <td>{a.id}</td>
+                                                <td>{a.therapist?.displayName ?? a.therapist?.firstName + " " + a.therapist?.lastName} - {a.therapist?.email}</td>
                                                 <td>{formatDateForTable(a.bookingDate)}</td>
                                                 <td>{formatTime(a.bookingStart)}</td>
                                                 <td>{formatTime(a.bookingEnd)}</td>

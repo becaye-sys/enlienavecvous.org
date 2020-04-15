@@ -61,7 +61,12 @@ class PatientController extends AbstractController
         $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
         /** @var Patient $currentPatient */
         $currentPatient = $this->getCurrentPatient();
-        $appoints = $appointmentRepository->findBy(['patient' => $currentPatient, 'booked' => true]);
+        $appointsAndHistory = $appointmentRepository->findBy(
+            ['patient' => $currentPatient, 'booked' => true, 'status' => Appointment::STATUS_WAITING]
+        );
+        $appoints = array_filter($appointsAndHistory, function ($a, $k) {
+            return !$a instanceof History;
+        }, ARRAY_FILTER_USE_BOTH);
         return $this->render(
             'patient/appointments.html.twig',
             [

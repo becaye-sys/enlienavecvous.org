@@ -9,6 +9,8 @@
             <thead>
             <tr>
                 <th>#</th>
+                <th>Action</th>
+                <th>Date action</th>
                 <th>Date</th>
                 <th>Début</th>
                 <th>Thérapeute</th>
@@ -21,6 +23,8 @@
                 {% for a in history %}
                     <tr>
                         <td>{{ a.id }}</td>
+                        <td>{{ a.action }}</td>
+                        <td>{{ a.actionedAt|date('d/m/Y H:i') }}</td>
                         <td>{{ a.bookingDate|date('d/m/Y') }}</td>
                         <td>{{ a.bookingStart|date('H:i') }}</td>
                         <td>{{ a.therapist.firstName }} {{ a.therapist.lastName }}</td>

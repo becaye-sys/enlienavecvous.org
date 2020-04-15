@@ -28,6 +28,14 @@ class DepartmentRepository extends ServiceEntityRepository
         return $query->getQuery()->getResult();
     }
 
+    public function findByCodeLike(string $code)
+    {
+        return $this->createQueryBuilder('d')
+            ->where('d.code LIKE :code')
+            ->setParameter('code', $code)
+            ->getQuery()->getResult();
+    }
+
     public function findByCountryWithNativeSql(?string $country)
     {
         $conn = $this->getEntityManager()->getConnection();

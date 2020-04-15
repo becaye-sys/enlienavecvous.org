@@ -111,13 +111,15 @@
                             {% endif %}
                         </td>
                         <td>
-                            <a href="{{ path('therapist_availability_edit', {'id': a.id}) }}" class="btn btn-outline-primary">
-                                <i class="fa fa-edit"></i>
-                            </a>
                             <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ a.id }}">
-                                <i class="fa fa-times"></i>
-                            </button>
+                            {% if a.booked == false %}
+                                <a href="{{ path('therapist_availability_edit', {'id': a.id}) }}" class="btn btn-outline-primary">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ a.id }}">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            {% endif %}
 
                             <!-- Modal -->
                             <div class="modal fade" id="deleteModal{{ a.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel{{ a.id }}" aria-hidden="true">

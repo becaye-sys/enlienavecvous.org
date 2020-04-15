@@ -94,7 +94,9 @@ class TherapistController extends AbstractController
     public function bookingStatus(
         Appointment $appointment,
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        HistoryHelper $historyHelper,
+        MailerFactory $mailerFactory
     )
     {
         $status = $request->query->get('status');
@@ -107,9 +109,17 @@ class TherapistController extends AbstractController
                 $malus = $patient->getMalus() + 1;
                 $patient->setMalus($malus);
             }
+            $historyHelper->addHistoryItem($appointment, History::ACTIONS[History::ACTION_DISHONORED]);
+        } else {
+            $historyHelper->addHistoryItem($appointment, History::ACTIONS[History::ACTION_HONORED]);
         }
         if ($patient->getMalus() >= 3) {
-            $patient->setIsActive(false);
+            $mailerFactory->createAndSend(
+                "3 rdv non honorés...",
+                '$to',
+                null,
+                $this->renderView('email/patient_malus.html.twig', ['patient' => $patient])
+            );
         }
         $appointment->setStatus($status);
         $entityManager->flush();
@@ -154,8 +164,8 @@ class TherapistController extends AbstractController
             $patientEmail = $appointment->getPatient()->getEmail();
             $appointment->setCancelled(true);
             $historyHelper->addHistoryItem($appointment, History::ACTIONS[History::ACTION_CANCELLED_BY_THERAPIST]);
+            $historyHelper->addHistoryItem($appointment, History::ACTIONS[History::ACTION_DELETED_BY_THERAPIST]);
             $appointment->setPatient(null);
-            $entityManager->flush();
             $mailer->createAndSend(
                 "Annulation du rendez-vous",
                 $patientEmail,
@@ -167,7 +177,9 @@ class TherapistController extends AbstractController
                     ]
                 )
             );
-            $this->addFlash('info', "Rendez-vous annulé et message envoyé.");
+            $entityManager->remove($appointment);
+            $entityManager->flush();
+            $this->addFlash('info', "Rendez-vous annulé, créneau supprimé et message envoyé.");
             return $this->redirectToRoute('therapist_bookings');
         }
 

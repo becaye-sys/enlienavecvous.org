@@ -39,25 +39,9 @@
             {{ form_widget(form.lastName, {'attr': {'placeholder': "Votre nom"}}) }}
         </fieldset>
         <fieldset>
-            {{ form_widget(form.country, {
-                'attr': {
-                    'data-get-departments-url': path('api_get_departments_by_country')
-                }
-            }) }}
-            <select
-                    name="patient_register_department"
-                    id="patient_register_department"
-                    data-get-towns-url="{{ path('api_get_towns_by_department') }}"
-            >
-                {% for depart in departments %}
-                    <option value="{{ depart.id }}">{{ depart.code }} {{ depart.name }}</option>
-                {% endfor %}
-            </select>
-            <select name="patient_register_town" id="patient_register_town">
-                {% for town in towns %}
-                    <option value="{{ town.id }}">{{ town.code }} {{ town.name }}</option>
-                {% endfor %}
-            </select>
+            {{ form_widget(form.country) }}
+            {{ form_widget(form.scalarDepartment) }}
+            {{ form_widget(form.scalarTown) }}
         </fieldset>
         <fieldset>
             {{ form_widget(form.phoneNumber, {'attr': {'placeholder': "Votre numéro de téléphone"}}) }}
@@ -93,5 +77,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('patient_register') }}
+    {{ encore_entry_script_tags('patient_geoloc') }}
 {% endblock %}

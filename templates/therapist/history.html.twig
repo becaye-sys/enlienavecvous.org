@@ -14,7 +14,7 @@
                 <th>Date</th>
                 <th>Début</th>
                 <th>Fin</th>
-                <th>Lieu</th>
+                <th>Malus</th>
                 <th>Réservé</th>
                 <th>Annulé</th>
             </tr>
@@ -29,7 +29,7 @@
                         <td>{{ a.bookingDate|date('d/m/Y') }}</td>
                         <td>{{ a.bookingStart|date('H:i') }}</td>
                         <td>{{ a.bookingEnd|date('H:i') }}</td>
-                        <td>{{ a.location }}</td>
+                        <td>{{ a.patient.malus }}</td>
                         <td>
                             {% if a.booked == true %}
                                 Oui

@@ -4,7 +4,6 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">-->
 {% endblock %}
 
 {% block body %}
@@ -66,28 +65,9 @@
             {{ form_widget(form.lastName, {'attr': {'placeholder': "Votre nom"}}) }}
         </fieldset>
         <fieldset>
-            {{ form_widget(form.country, {
-                'attr': {
-                    'data-get-departments-url': path('api_get_departments_by_country')
-                }
-            }) }}
-            <select
-                    name="therapist_register_department"
-                    id="therapist_register_department"
-                    data-get-towns-url="{{ path('api_get_towns_by_department') }}"
-            >
-                {% for depart in departments %}
-                    <option value="{{ depart.id }}">{{ depart.code }} {{ depart.name }}</option>
-                {% endfor %}
-            </select>
-            <select
-                    name="therapist_register_town"
-                    id="therapist_register_town"
-            >
-                {% for town in towns %}
-                    <option value="{{ town.id }}">{{ town.code }} {{ town.name }}</option>
-                {% endfor %}
-            </select>
+            {{ form_widget(form.country) }}
+            {{ form_widget(form.scalarDepartment) }}
+            {{ form_widget(form.scalarTown) }}
         </fieldset>
         <fieldset>
             {{ form_widget(form.phoneNumber, {'attr': {'placeholder': "Votre numéro de téléphone"}}) }}
@@ -136,7 +116,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <!-- Latest compiled and minified JavaScript -->
-    <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>-->
-    {{ encore_entry_script_tags('therapist_register') }}
+    {{ encore_entry_script_tags('therapist_geoloc') }}
 {% endblock %}

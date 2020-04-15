@@ -59,15 +59,15 @@ class TherapistRegisterType extends AbstractType
             )
             ->add(
                 'country',
-                ChoiceType::class,
-                [
-                    'choices' => [
-                        "France" => 'fr',
-                        "Belgique" => 'be',
-                        "Luxembourg" => 'lu',
-                        "Suisse" => 'ch'
-                    ]
-                ]
+                TextType::class
+            )
+            ->add(
+                'scalarDepartment',
+                TextType::class
+            )
+            ->add(
+                'scalarTown',
+                TextType::class
             )
             ->add(
                 'phoneNumber',
@@ -98,35 +98,6 @@ class TherapistRegisterType extends AbstractType
                 CheckboxType::class
             )
         ;
-
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            /** @var Therapist $data */
-            $data = $event->getData();
-            $form = $event->getForm();
-            if ($data->getCountry() !== null) {
-                $country = $data->getCountry();
-                $form->remove('department');
-                $form->add(
-                    'scalarDepartment',
-                    ChoiceType::class,
-                    [
-                        'choices' => $this->getDepartmentByCountry($country)
-                    ]
-                );
-            }
-            if ($data->getScalarDepartment() !== null) {
-                $department = $data->getScalarDepartment();
-                dump('department:',$department);
-                $form->remove('town');
-                $form->add(
-                    'scalarTown',
-                    ChoiceType::class,
-                    [
-                        'choices' => $this->getTownsByDepartment()
-                    ]
-                );
-            }
-        });
     }
 
     protected function getDepartmentByCountry(?string $country = null): array

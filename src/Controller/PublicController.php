@@ -77,15 +77,10 @@ class PublicController extends AbstractController
             }
         }
 
-        $departments = $departmentRepository->findBy(['country' => $request->request->get('country') ?? 'fr']);
-        $towns = $townRepository->findBy(['department' => $departments[0]]);
-
         return $this->render(
             'public/ask_for_help.html.twig',
             [
                 'patient_register_form' => $patientForm->createView(),
-                'departments' => $departments,
-                'towns' => $towns
             ]
         );
     }
@@ -136,15 +131,10 @@ class PublicController extends AbstractController
             }
         }
 
-        $departments = $departmentRepository->findBy(['country' => $request->request->get('country') ?? 'fr']);
-        $towns = $townRepository->findBy(['department' => $departments[0]]);
-
         return $this->render(
             'public/therapist_register.html.twig',
             [
                 'therapist_register_form' => $therapistForm->createView(),
-                'departments' => $departments,
-                'towns' => $towns
             ]
         );
     }

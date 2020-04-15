@@ -10,14 +10,20 @@ use Doctrine\ORM\Mapping as ORM;
 class History extends Appointment
 {
     public const ACTION_BOOKED = 'booked';
+    public const ACTION_HONORED = 'honored';
+    public const ACTION_DISHONORED = 'dishonored';
     public const ACTION_NEVER_BOOKED = 'never_booked';
     public const ACTION_CANCELLED_BY_THERAPIST = 'cancelled_by_therapist';
+    public const ACTION_DELETED_BY_THERAPIST = 'deleted_by_therapist';
     public const ACTION_CANCELLED_BY_PATIENT = 'cancelled_by_patient';
 
     public const ACTIONS = [
         self::ACTION_BOOKED => "Réservé",
+        self::ACTION_HONORED => "Honoré",
+        self::ACTION_DISHONORED => "Non honoré",
         self::ACTION_NEVER_BOOKED => "Jamais réservé",
         self::ACTION_CANCELLED_BY_THERAPIST => "Annulée par le praticien",
+        self::ACTION_DELETED_BY_THERAPIST => "Supprimé par le praticien",
         self::ACTION_CANCELLED_BY_PATIENT => "Annulée par le demandeur"
     ];
 
