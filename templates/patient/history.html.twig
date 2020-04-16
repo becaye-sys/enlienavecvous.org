@@ -25,15 +25,11 @@
                         <td>{{ a.id }}</td>
                         <td>{{ a.action }}</td>
                         <td>{{ a.actionedAt|date('d/m/Y H:i') }}</td>
-                        <td>{{ a.bookingDate|date('d/m/Y') }}</td>
-                        <td>{{ a.bookingStart|date('H:i') }}</td>
+                        <td>{{ a.appointment.bookingDate|date('d/m/Y') }}</td>
+                        <td>{{ a.appointment.bookingStart|date('H:i') }}</td>
                         <td>{{ a.therapist.firstName }} {{ a.therapist.lastName }}</td>
                         <td>
-                            {% if a.booked == true %}
-                                Réservé
-                            {% else %}
-                                Annulé
-                            {% endif %}
+                            {{ constant('App\\Entity\\Appointment::STATUS')[a.appointment.status] }}
                         </td>
                         <td>
                             <a href="{{ path('patient_research_by_therapist', {'id': a.therapist.id}) }}" class="btn btn-primary">Disponibilités</a>

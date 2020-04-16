@@ -8,34 +8,25 @@ use App\Entity\Appointment;
 use App\Entity\History;
 use App\Entity\Patient;
 use App\Entity\Therapist;
-use App\Entity\User;
 use App\Form\AppointmentType;
 use App\Form\ChangePasswordType;
 use App\Form\TherapistAppointmentCancellationMessageType;
 use App\Form\TherapistSettingsType;
 use App\Repository\AppointmentRepository;
-use App\Repository\DepartmentRepository;
 use App\Repository\HistoryRepository;
 use App\Repository\TherapistRepository;
-use App\Services\CustomSerializer;
 use App\Services\HistoryHelper;
 use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Class TherapistController
@@ -79,8 +70,7 @@ class TherapistController extends AbstractController
                 'bookings' => $appointmentRepository->findBy(
                     [
                         'therapist' => $currentUser,
-                        'booked' => true,
-                        'status' => Appointment::STATUS_WAITING
+                        'status' => Appointment::STATUS_BOOKED
                     ]
                 ),
             ]
@@ -142,16 +132,17 @@ class TherapistController extends AbstractController
     )
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
-
+        /** @var Therapist $currentUser */
+        $currentUser = $this->getCurrentTherapist();
         if (!$appointment instanceof Appointment) {
             $this->addFlash('error',"Réservation introuvable...");
             return $this->redirectToRoute('therapist_bookings');
         }
-        if ($appointment->getBooked() === false && !$appointment->getPatient() instanceof Patient) {
+        if ($appointment->getStatus() !== Appointment::STATUS_BOOKED && !$appointment->getPatient() instanceof Patient) {
             $this->addFlash('error', "Ce créneau n'est pas réservé...");
             return $this->redirectToRoute('therapist_bookings');
         }
-        if ($appointment->getBooked() === false || !$appointment->getPatient() instanceof Patient) {
+        if ($appointment->getStatus() !== Appointment::STATUS_BOOKED || !$appointment->getPatient() instanceof Patient) {
             $this->addFlash('error', "Ce créneau n'a pas été réservé correctement...");
             return $this->redirectToRoute('therapist_bookings');
         }
@@ -162,10 +153,10 @@ class TherapistController extends AbstractController
         if ($request->isMethod("POST") && $form->isSubmitted() && $form->isValid()) {
             $appointment->setBooked(false);
             $patientEmail = $appointment->getPatient()->getEmail();
-            $appointment->setCancelled(true);
-            $historyHelper->addHistoryItem($appointment, History::ACTIONS[History::ACTION_CANCELLED_BY_THERAPIST]);
-            $historyHelper->addHistoryItem($appointment, History::ACTIONS[History::ACTION_DELETED_BY_THERAPIST]);
+            $appointment->setStatus(Appointment::STATUS[Appointment::STATUS_CANCELLED]);
+            $history = $historyHelper->addHistoryItem(History::ACTIONS[History::ACTION_CANCELLED_BY_THERAPIST], $appointment);
             $appointment->setPatient(null);
+            $appointment->setStatus(Appointment::STATUS[Appointment::STATUS_TO_DELETE]);
             $mailer->createAndSend(
                 "Annulation du rendez-vous",
                 $patientEmail,
@@ -177,6 +168,8 @@ class TherapistController extends AbstractController
                     ]
                 )
             );
+            $currentUser->removeAppointment($appointment);
+            //dd($currentUser, $appointment, $history);
             $entityManager->remove($appointment);
             $entityManager->flush();
             $this->addFlash('info', "Rendez-vous annulé, créneau supprimé et message envoyé.");
@@ -224,12 +217,9 @@ class TherapistController extends AbstractController
         }
 
         if (count($params) === 0) {
-            $appointments = $appointmentRepository->findBy(
-                ['therapist' => $currentUser],
-                ['bookingDate' => 'ASC']
-            );
+            $appointments = $appointmentRepository->findAvailableAppointmentsByParams($params, $currentUser);
         } else {
-            $appointments = $appointmentRepository->findAvailableAppointmentsByParams($params);
+            $appointments = $appointmentRepository->findAvailableAppointmentsByParams($params, $currentUser);
         }
 
         $paginated = $paginator->paginate(
@@ -238,12 +228,17 @@ class TherapistController extends AbstractController
             10
         );
 
+        $targetDate = new \DateTime('22-04-2020');
+        $nowDate = new \DateTime();
+
         return $this->render(
             'therapist/availabilities.html.twig',
             [
                 'appointment_form' => $appointmentForm->createView(),
                 'availabilities' => $paginated ?? [],
+                'total_appointments' => count($appointments),
                 'filters' => $params,
+                'permission' => ($targetDate >= $nowDate) ? false : true
             ]
         );
     }
@@ -403,7 +398,7 @@ class TherapistController extends AbstractController
             'therapist/security.html.twig',
             [
                 'change_password_form' => $changePasswordForm->createView(),
-                'appointments' => $appointmentRepository->findBy(['therapist' => $user, 'booked' => true])
+                'appointments' => $appointmentRepository->findBy(['therapist' => $user, 'status' => Appointment::STATUS_BOOKED])
             ]
         );
     }

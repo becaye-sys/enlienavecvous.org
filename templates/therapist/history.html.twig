@@ -15,35 +15,20 @@
                 <th>Début</th>
                 <th>Fin</th>
                 <th>Malus</th>
-                <th>Réservé</th>
-                <th>Annulé</th>
+                <th>Statut réservation</th>
             </tr>
             </thead>
             {% if history|length %}
                 <tbody>
-                {% for a in history %}
+                {% for h in history %}
                     <tr>
-                        <td>{{ a.id }}</td>
-                        <td>{{ a.action }}</td>
-                        <td>{{ a.actionedAt|date('d/m/Y H:i') }}</td>
-                        <td>{{ a.bookingDate|date('d/m/Y') }}</td>
-                        <td>{{ a.bookingStart|date('H:i') }}</td>
-                        <td>{{ a.bookingEnd|date('H:i') }}</td>
-                        <td>{{ a.patient.malus }}</td>
-                        <td>
-                            {% if a.booked == true %}
-                                Oui
-                            {% else %}
-                                Non
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if a.cancelled == true %}
-                                Oui
-                            {% else %}
-                                Non
-                            {% endif %}
-                        </td>
+                        <td>{{ h.id }}</td>
+                        <td>{{ h.action }}</td>
+                        <td>{{ h.actionedAt|date('d/m/Y H:i') }}</td>
+                        <td>{{ h.appointment.bookingDate|date('d/m/Y') }}</td>
+                        <td>{{ h.appointment.bookingStart|date('H:i') }}</td>
+                        <td>{{ h.appointment.bookingEnd|date('H:i') }}</td>
+                        <td>{{ h.patient.malus }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Interfaces\AppointmentInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -14,14 +16,22 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class Appointment implements AppointmentInterface
 {
-    public const STATUS_WAITING = 'waiting';
+    public const STATUS_AVAILABLE = 'available';
+    public const STATUS_BOOKING = 'booking';
+    public const STATUS_BOOKED = 'booked';
+    public const STATUS_CANCELLED = 'cancelled';
     public const STATUS_HONORED = 'honored';
     public const STATUS_DISHONORED = 'dishonored';
+    public const STATUS_TO_DELETE = 'to_delete';
 
     public const STATUS = [
-        self::STATUS_WAITING => "En attente",
+        self::STATUS_AVAILABLE => "Disponible",
+        self::STATUS_BOOKING => "Réservation en cours",
+        self::STATUS_BOOKED => "Réservé",
+        self::STATUS_CANCELLED => "Annulé",
         self::STATUS_HONORED => "Honoré",
-        self::STATUS_DISHONORED => "Non honoré"
+        self::STATUS_DISHONORED => "Non honoré",
+        self::STATUS_TO_DELETE => "En attente de suppression automatique"
     ];
 
     /**
@@ -46,7 +56,7 @@ class Appointment implements AppointmentInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Therapist", inversedBy="appointments")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      * @Groups({"create_booking"})
      */
     protected $therapist;
@@ -88,10 +98,16 @@ class Appointment implements AppointmentInterface
      */
     protected $status;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\History", mappedBy="appointment")
+     */
+    private $histories;
+
     public function __construct()
     {
         $this->booked = false;
         $this->cancelled = false;
+        $this->histories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -215,6 +231,37 @@ class Appointment implements AppointmentInterface
     public function setStatus(?string $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|History[]
+     */
+    public function getHistories(): Collection
+    {
+        return $this->histories;
+    }
+
+    public function addHistory(History $history): self
+    {
+        if (!$this->histories->contains($history)) {
+            $this->histories[] = $history;
+            $history->setAppointment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHistory(History $history): self
+    {
+        if ($this->histories->contains($history)) {
+            $this->histories->removeElement($history);
+            // set the owning side to null (unless already changed)
+            if ($history->getAppointment() === $this) {
+                $history->setAppointment(null);
+            }
+        }
 
         return $this;
     }

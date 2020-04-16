@@ -7,13 +7,15 @@
 
 {% block body %}
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Disponibilités</h1>
+        <h1 class="h2">Disponibilités - {{ total_appointments }}</h1>
     </div>
     <div class="container-fluid mt-5">
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCreateAvailability">
-            Ajouter un créneau
-        </button>
+        {% if permission is defined and permission == true %}
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCreateAvailability">
+                Ajouter un créneau
+            </button>
+        {% endif %}
 
         <!-- Modal -->
         <div class="modal fade" id="modalCreateAvailability" tabindex="-1" role="dialog" aria-labelledby="modalCreateAvailability" aria-hidden="true">
@@ -81,9 +83,7 @@
                 <th>Date</th>
                 <th>Début</th>
                 <th>Fin</th>
-                <th>Lieu</th>
-                <th>Réservé</th>
-                <th>Annulé</th>
+                <th>Statut</th>
                 <th></th>
             </tr>
             </thead>
@@ -95,20 +95,8 @@
                         <td>{{ a.bookingDate|date('d/m/Y') }}</td>
                         <td>{{ a.bookingStart|date('H:i') }}</td>
                         <td>{{ a.bookingEnd|date('H:i') }}</td>
-                        <td>{{ a.location }}</td>
                         <td>
-                            {% if a.booked == true %}
-                                Oui
-                            {% else %}
-                                Non
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if a.cancelled == true %}
-                                Oui
-                            {% else %}
-                                Non
-                            {% endif %}
+                            {{ constant('App\\Entity\\Appointment::STATUS')[a.status] }}
                         </td>
                         <td>
                             <!-- Button trigger modal -->

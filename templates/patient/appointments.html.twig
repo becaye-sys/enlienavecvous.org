@@ -16,7 +16,7 @@
                 <th>Début</th>
                 <th>Fin</th>
                 <th>Thérapeute</th>
-                <th>Réservé</th>
+                <th>Statut</th>
                 <th></th>
             </tr>
             </thead>
@@ -30,11 +30,7 @@
                         <td>{{ a.bookingEnd|date('H:i') }}</td>
                         <td>{{ a.therapist.email }}</td>
                         <td>
-                            {% if a.booked == true %}
-                                Oui
-                            {% else %}
-                                Non
-                            {% endif %}
+                            {{ constant('App\\Entity\\Appointment::STATUS')[a.status] }}
                         </td>
                         <td>
                             {% if a.cancelled == false %}

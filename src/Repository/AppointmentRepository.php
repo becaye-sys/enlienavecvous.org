@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Appointment;
+use App\Entity\Therapist;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use function Doctrine\ORM\QueryBuilder;
@@ -43,12 +44,14 @@ class AppointmentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findAvailableAppointmentsByParams(array $params)
+    public function findAvailableAppointmentsByParams(array $params, Therapist $therapist)
     {
         $query = $this->createQueryBuilder('a')
-            ->where('a.booked = :booked')
-            ->setParameter('booked', false)
-            ->orderBy('a.bookingDate', 'desc')
+            ->where('a.status = :status')
+            ->andWhere('a.therapist = :therapist')
+            ->setParameter('status', Appointment::STATUS_AVAILABLE)
+            ->setParameter('therapist', $therapist)
+            ->orderBy('a.bookingDate', 'asc')
         ;
 
         if (isset($params['date_filter'])) {

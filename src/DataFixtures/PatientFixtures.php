@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class PatientFixtures extends Fixture implements DependentFixtureInterface
 {
+    public const PATIENT_USER_REFERENCE = "patient_user";
     private $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder)
@@ -33,6 +34,7 @@ class PatientFixtures extends Fixture implements DependentFixtureInterface
             $patient->setZipCode($faker->postcode);
             $patient->setPhoneNumber($faker->phoneNumber);
             $patient->setHasAcceptedTermsAndPolicies(true);
+            $this->addReference(self::PATIENT_USER_REFERENCE."_$i", $patient);
             $patient->setIsMajor(true);
             $manager->persist($patient);
         }

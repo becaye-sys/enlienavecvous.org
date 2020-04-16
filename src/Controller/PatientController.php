@@ -62,7 +62,7 @@ class PatientController extends AbstractController
         /** @var Patient $currentPatient */
         $currentPatient = $this->getCurrentPatient();
         $appointsAndHistory = $appointmentRepository->findBy(
-            ['patient' => $currentPatient, 'booked' => true, 'status' => Appointment::STATUS_WAITING]
+            ['patient' => $currentPatient, 'status' => Appointment::STATUS_BOOKED]
         );
         $appoints = array_filter($appointsAndHistory, function ($a, $k) {
             return !$a instanceof History;
@@ -92,7 +92,7 @@ class PatientController extends AbstractController
             $appointment->setBooked(false);
             $appointment->setCancelled(true);
             // add booking cancel history
-            $historyHelper->addHistoryItem($appointment, History::ACTIONS[History::ACTION_CANCELLED_BY_PATIENT]);
+            $historyHelper->addHistoryItem($appointment, History::ACTION_CANCELLED_BY_PATIENT);
             $appointment->setPatient(null);
             $entityManager->flush();
             $mailerFactory->createAndSend(

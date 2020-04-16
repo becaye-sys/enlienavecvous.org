@@ -33,7 +33,7 @@ class DepartmentFixtures extends Fixture implements FixtureGroupInterface
 
     private function loadFrenchDepartments(ObjectManager $manager)
     {
-        $departmentArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/departments_fr.json");
+        $departmentArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/departments/departments_fr.json");
         // for each region -> create Region and persist
         foreach ($departmentArray as $value) {
             $department = new Department();
@@ -47,7 +47,7 @@ class DepartmentFixtures extends Fixture implements FixtureGroupInterface
 
     private function loadBelgiumDepartments(ObjectManager $manager)
     {
-        $departmentArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/departements_be.json");
+        $departmentArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/departments/departements_be.json");
         $faker = Factory::create("fr");
         // for each region -> create Region and persist
         foreach ($departmentArray as $value) {
@@ -62,7 +62,7 @@ class DepartmentFixtures extends Fixture implements FixtureGroupInterface
 
     private function loadLuxembourgDepartments(ObjectManager $manager)
     {
-        $departmentArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/departments_lu.json");
+        $departmentArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/departments/departments_lu.json");
         // for each region -> create Region and persist
         foreach ($departmentArray as $value) {
             $department = new Department();
@@ -76,7 +76,7 @@ class DepartmentFixtures extends Fixture implements FixtureGroupInterface
 
     private function loadSwissDepartments(ObjectManager $manager)
     {
-        $departmentArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/departements_ch.json");
+        $departmentArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/departments/departements_ch.json");
         // for each region -> create Region and persist
         foreach ($departmentArray as $value) {
             $department = new Department();

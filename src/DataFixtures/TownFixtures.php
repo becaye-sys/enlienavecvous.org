@@ -33,7 +33,7 @@ class TownFixtures extends Fixture implements FixtureGroupInterface, DependentFi
 
     private function loadFrenchTowns(ObjectManager $manager)
     {
-        $townsArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/communes_fr.json");
+        $townsArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/communes/communes_fr.json");
         // for each region -> create Region and persist
         foreach ($townsArray as $key => $item) {
             $town = new Town();
@@ -61,7 +61,7 @@ class TownFixtures extends Fixture implements FixtureGroupInterface, DependentFi
 
     private function loadLuxembourgTowns(ObjectManager $manager)
     {
-        $townsArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/communes_lu.json");
+        $townsArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/communes/communes_lu.json");
         // for each region -> create Region and persist
         foreach ($townsArray as $key => $item) {
             $town = new Town();
@@ -85,7 +85,7 @@ class TownFixtures extends Fixture implements FixtureGroupInterface, DependentFi
 
     private function loadSwissTowns(ObjectManager $manager)
     {
-        $townsArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/communes_ch.json");
+        $townsArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/communes/communes_ch.json");
         $cantonsArray = $this->getSwissCantons();
         // for each region -> create Region and persist
         foreach ($townsArray as $key => $item) {

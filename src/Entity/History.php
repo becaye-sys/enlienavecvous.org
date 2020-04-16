@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\HistoryRepository")
  */
-class History extends Appointment
+class History
 {
     public const ACTION_BOOKED = 'booked';
     public const ACTION_HONORED = 'honored';
@@ -44,9 +44,23 @@ class History extends Appointment
      */
     private $actionedAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Appointment", inversedBy="histories", cascade={"persist","remove"})
+     */
+    private $appointment;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Patient", inversedBy="histories")
+     */
+    private $patient;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Therapist", inversedBy="histories")
+     */
+    private $therapist;
+
     public function __construct()
     {
-        parent::__construct();
         $this->actionedAt = new \DateTime();
     }
 
@@ -75,6 +89,42 @@ class History extends Appointment
     public function setActionedAt(\DateTimeInterface $actionedAt): self
     {
         $this->actionedAt = $actionedAt;
+
+        return $this;
+    }
+
+    public function getAppointment(): ?Appointment
+    {
+        return $this->appointment;
+    }
+
+    public function setAppointment(?Appointment $appointment): self
+    {
+        $this->appointment = $appointment;
+
+        return $this;
+    }
+
+    public function getPatient(): ?Patient
+    {
+        return $this->patient;
+    }
+
+    public function setPatient(?Patient $patient): self
+    {
+        $this->patient = $patient;
+
+        return $this;
+    }
+
+    public function getTherapist(): ?Therapist
+    {
+        return $this->therapist;
+    }
+
+    public function setTherapist(?Therapist $therapist): self
+    {
+        $this->therapist = $therapist;
 
         return $this;
     }

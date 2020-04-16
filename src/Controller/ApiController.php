@@ -44,6 +44,7 @@ class ApiController extends AbstractController
     ): JsonResponse
     {
         $appoints = $appointmentRepository->findAvailableAppointments();
+        dump($appoints);
         $data = $serializer->serializeByGroups($appoints, ['create_booking']);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
@@ -81,7 +82,7 @@ class ApiController extends AbstractController
         $userId = (int)$request->attributes->get('user');
         $patient = $patientRepository->find($userId);
         $appointment = $appointmentRepository->find($appointId);
-        $appointment->setStatus(Appointment::STATUS_WAITING);
+        $appointment->setStatus(Appointment::STATUS_BOOKING);
         $patient->addAppointment($appointment);
         $entityManager->flush();
         $data = $serializer->serializeByGroups($appointment, ['create_booking']);
@@ -102,8 +103,9 @@ class ApiController extends AbstractController
     ): JsonResponse
     {
         $appointment->setBooked(true);
+        $appointment->setStatus(Appointment::STATUS_BOOKED);
         // add booking history
-        $historyHelper->addHistoryItem($appointment, History::ACTIONS[History::ACTION_BOOKED]);
+        $historyHelper->addHistoryItem(History::ACTIONS[History::ACTION_BOOKED], $appointment);
         $entityManager->flush();
 
         $mailer->createAndSend(
