@@ -17,7 +17,9 @@ class AppointmentFixtures extends Fixture implements DependentFixtureInterface
     public const APPOINT_REFERENCE = "appoint_";
     public function load(ObjectManager $manager)
     {
-        $faker = Factory::create("fr");
+        if ($_SERVER['APP_ENV'] === 'dev') {
+            $faker = Factory::create("fr");
+        }
 
         for ($i = 1; $i <= 80; $i++) {
             $therapistId = random_int(1,8);
@@ -36,7 +38,7 @@ class AppointmentFixtures extends Fixture implements DependentFixtureInterface
             } else {
                 $appointment->setStatus(Appointment::STATUS_AVAILABLE);
             }
-            $appointment->setLocation($faker->city);
+            $appointment->setLocation($faker ?? $faker->city ?? "Lyon");
             $randomDate = $this->getRandomDate();
             $date = $randomDate['start'];
             $start = new \DateTime($date);
