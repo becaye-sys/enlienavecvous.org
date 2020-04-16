@@ -7,19 +7,22 @@
         <h1>Demander de l'aide</h1>
         <p>La crise actuelle vous confronte à des situations déstabilisantes.</p>
         <p>
-            Un.e thérapeute est une personne qui a des compétences particulières pour vous accompagner dans ce que vous vivez en ce moment. Être
-            en lien avec un.e thérapeute va vous aider à sortir de l’état dans lequel vous êtes, retrouver du discernement, vous sentir moins seul.e,
-            prendre de la distance, retrouver du calme, etc.
-        </p>
-        <p>
             Durant cette période inédite de crise, nous sommes confronté.e.s à un changement de style de vie qui peut être source de difficultés au
             quotidien. La perte de notre routine peut nous impacter de diverses manières, que l’on doive travailler ou que l’on soit confiné : irritabilité,
             angoisse, peur du virus, pertes financières, isolement, manque d’intimité, ennui, manque de contact physique, tensions familiales, violences,
             difficultés à s’occuper des enfants, perte d’un proche, etc. Le soutien dont vous avez besoin est à quelques clics.
         </p>
+        <p>La Gestalt thérapie, en tant que thérapie humaniste et relationnelle, est tout particulièrement adaptée à ces situations.</p>
         <p>
-            Si un ou des enfants autour de vous vivent des difficultés durant cette période, nous pouvons vous aider à trouver la manière de les aider au
-            mieux à traverser cette crise.
+            Un.e thérapeute est une personne avec des compétences professionnelles qui offre un cadre sécurisant pour vous accompagner dans ce que
+            vous vivez en ce moment. Être en lien avec un.e thérapeute peut vous aider à vous sen1r moins seul.e, être accueilli.e et entendu.e dans vos
+            émo1ons, prendre de la distance et retrouver du discernement.
+        </p>
+        <p>
+            Parler, échanger, être accompagné.e, même sans difficultés aiguës, vous permet de mieux prendre soin de vous et des autres.
+        </p>
+        <p>
+            Le soutien dont vous avez besoin est à quelques clics.
         </p>
         <p>
             Remplissez le formulaire ci-dessous afin de vous enregistrer et accéder à notre calendrier de prise de rendez-vous.
@@ -27,6 +30,12 @@
         <p>
             <i>
                 Attention ce service est réservé aux personnes majeures (18 ans et +). Si vous êtes mineur, <a href="{{ path('emergency_numbers') }}">appelez la ligne dédiée aux mineur.e.s.</a>
+            </i>
+        </p>
+        <p>
+            <i>
+                Tou.te.s les thérapeutes inscrit.e.s sur la plateforme sont des professionnel.le.s certifié.e.s respectant un code de déontologie.
+                Cela les engage notamment au respect de la confidentialité, à la bienveillance et au non-jugement.
             </i>
         </p>
         <p>
@@ -39,25 +48,9 @@
             {{ form_widget(form.lastName, {'attr': {'placeholder': "Votre nom"}}) }}
         </fieldset>
         <fieldset>
-            {{ form_widget(form.country, {
-                'attr': {
-                    'data-get-departments-url': path('api_get_departments_by_country')
-                }
-            }) }}
-            <select
-                    name="patient_register_department"
-                    id="patient_register_department"
-                    data-get-towns-url="{{ path('api_get_towns_by_department') }}"
-            >
-                {% for depart in departments %}
-                    <option value="{{ depart.id }}">{{ depart.code }} {{ depart.name }}</option>
-                {% endfor %}
-            </select>
-            <select name="patient_register_town" id="patient_register_town">
-                {% for town in towns %}
-                    <option value="{{ town.id }}">{{ town.code }} {{ town.name }}</option>
-                {% endfor %}
-            </select>
+            {{ form_widget(form.country) }}
+            {{ form_widget(form.scalarDepartment) }}
+            {{ form_widget(form.scalarTown) }}
         </fieldset>
         <fieldset>
             {{ form_widget(form.phoneNumber, {'attr': {'placeholder': "Votre numéro de téléphone"}}) }}
@@ -93,5 +86,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('patient_register') }}
+    {{ encore_entry_script_tags('patient_geoloc') }}
 {% endblock %}

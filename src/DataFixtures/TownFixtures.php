@@ -8,11 +8,12 @@ use App\Entity\Department;
 use App\Entity\Town;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use App\Services\FixturesTrait;
 
-class TownFixtures extends Fixture implements FixtureGroupInterface
+class TownFixtures extends Fixture implements FixtureGroupInterface, DependentFixtureInterface
 {
     use FixturesTrait;
 
@@ -32,7 +33,7 @@ class TownFixtures extends Fixture implements FixtureGroupInterface
 
     private function loadFrenchTowns(ObjectManager $manager)
     {
-        $townsArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/communes_fr.json");
+        $townsArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/communes/communes_fr.json");
         // for each region -> create Region and persist
         foreach ($townsArray as $key => $item) {
             $town = new Town();
@@ -60,7 +61,7 @@ class TownFixtures extends Fixture implements FixtureGroupInterface
 
     private function loadLuxembourgTowns(ObjectManager $manager)
     {
-        $townsArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/communes_lu.json");
+        $townsArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/communes/communes_lu.json");
         // for each region -> create Region and persist
         foreach ($townsArray as $key => $item) {
             $town = new Town();
@@ -84,7 +85,7 @@ class TownFixtures extends Fixture implements FixtureGroupInterface
 
     private function loadSwissTowns(ObjectManager $manager)
     {
-        $townsArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/communes_ch.json");
+        $townsArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/communes/communes_ch.json");
         $cantonsArray = $this->getSwissCantons();
         // for each region -> create Region and persist
         foreach ($townsArray as $key => $item) {
@@ -119,5 +120,12 @@ class TownFixtures extends Fixture implements FixtureGroupInterface
     public static function getGroups(): array
     {
         return ['towns'];
+    }
+
+    public function getDependencies()
+    {
+        return array(
+            DepartmentFixtures::class,
+        );
     }
 }

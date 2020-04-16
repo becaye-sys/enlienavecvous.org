@@ -22,12 +22,12 @@ final class Version20200409110603 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE district DROP FOREIGN KEY FK_31C15487AE80F5DF');
-        $this->addSql('ALTER TABLE department DROP FOREIGN KEY FK_CD1DE18A98260155');
-        $this->addSql('DROP TABLE department');
-        $this->addSql('DROP TABLE district');
-        $this->addSql('DROP TABLE region');
-        $this->addSql('DROP TABLE town');
+        //$this->addSql('ALTER TABLE district DROP FOREIGN KEY FK_31C15487AE80F5DF');
+        //$this->addSql('ALTER TABLE department DROP FOREIGN KEY FK_CD1DE18A98260155');
+        //$this->addSql('DROP TABLE department');
+        //$this->addSql('DROP TABLE district');
+        //$this->addSql('DROP TABLE region');
+        //$this->addSql('DROP TABLE town');
     }
 
     public function down(Schema $schema) : void

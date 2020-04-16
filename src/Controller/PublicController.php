@@ -10,6 +10,7 @@ use App\Entity\Therapist;
 use App\Entity\Town;
 use App\Form\PatientRegisterType;
 use App\Form\TherapistRegisterType;
+use App\Repository\AppointmentRepository;
 use App\Repository\DepartmentRepository;
 use App\Repository\TherapistRepository;
 use App\Repository\TownRepository;
@@ -30,7 +31,7 @@ class PublicController extends AbstractController
      * @Route(path="/", name="index")
      * @return Response
      */
-    public function index()
+    public function index(AppointmentRepository $appointmentRepository)
     {
         return $this->render(
             'public/index.html.twig'
@@ -76,15 +77,10 @@ class PublicController extends AbstractController
             }
         }
 
-        $departments = $departmentRepository->findBy(['country' => $request->request->get('country') ?? 'fr']);
-        $towns = $townRepository->findBy(['department' => $departments[0]]);
-
         return $this->render(
             'public/ask_for_help.html.twig',
             [
                 'patient_register_form' => $patientForm->createView(),
-                'departments' => $departments,
-                'towns' => $towns
             ]
         );
     }
@@ -135,15 +131,10 @@ class PublicController extends AbstractController
             }
         }
 
-        $departments = $departmentRepository->findBy(['country' => $request->request->get('country') ?? 'fr']);
-        $towns = $townRepository->findBy(['department' => $departments[0]]);
-
         return $this->render(
             'public/therapist_register.html.twig',
             [
                 'therapist_register_form' => $therapistForm->createView(),
-                'departments' => $departments,
-                'towns' => $towns
             ]
         );
     }

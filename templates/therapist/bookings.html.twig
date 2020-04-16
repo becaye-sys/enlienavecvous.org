@@ -13,9 +13,8 @@
                     <th>Date</th>
                     <th>Début</th>
                     <th>Fin</th>
-                    <th>Lieu</th>
-                    <th>Réservé</th>
-                    <th>Annulé</th>
+                    <th>Demandeur</th>
+                    <th>Email</th>
                     <th>Annulation</th>
                     <th>Honoré ?</th>
                 </tr>
@@ -28,23 +27,16 @@
                             <td>{{ a.bookingDate|date('d/m/Y') }}</td>
                             <td>{{ a.bookingStart|date('H:i') }}</td>
                             <td>{{ a.bookingEnd|date('H:i') }}</td>
-                            <td>{{ a.location }}</td>
                             <td>
-                                {% if a.booked == true %}
-                                    Oui
+                                {% if a.patient.displayName is not null %}
+                                    {{ a.patient.displayName }}
                                 {% else %}
-                                    Non
+                                    {{ a.patient.firstName }} {{ a.patient.lastName }}
                                 {% endif %}
                             </td>
+                            <td>{{ a.patient.email }}</td>
                             <td>
-                                {% if a.cancelled == true %}
-                                    Oui
-                                {% else %}
-                                    Non
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if a.patient %}
+                                {% if a.cancelled == false %}
                                     <a href="{{ path('therapist_booking_cancel', {'id': a.id}) }}" class="btn btn-danger">
                                         Annuler
                                     </a>

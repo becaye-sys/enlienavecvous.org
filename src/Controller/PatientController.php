@@ -61,7 +61,12 @@ class PatientController extends AbstractController
         $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
         /** @var Patient $currentPatient */
         $currentPatient = $this->getCurrentPatient();
-        $appoints = $appointmentRepository->findBy(['patient' => $currentPatient, 'booked' => true]);
+        $appointsAndHistory = $appointmentRepository->findBy(
+            ['patient' => $currentPatient, 'status' => Appointment::STATUS_BOOKED]
+        );
+        $appoints = array_filter($appointsAndHistory, function ($a, $k) {
+            return !$a instanceof History;
+        }, ARRAY_FILTER_USE_BOTH);
         return $this->render(
             'patient/appointments.html.twig',
             [
@@ -87,8 +92,9 @@ class PatientController extends AbstractController
             $appointment->setBooked(false);
             $appointment->setCancelled(true);
             // add booking cancel history
-            $historyHelper->addHistoryItem($appointment, History::ACTIONS[History::ACTION_CANCELLED_BY_PATIENT]);
+            $historyHelper->addHistoryItem(History::ACTIONS[History::ACTION_CANCELLED_BY_PATIENT], $appointment);
             $appointment->setPatient(null);
+            $appointment->setStatus(Appointment::STATUS[Appointment::STATUS_AVAILABLE]);
             $entityManager->flush();
             $mailerFactory->createAndSend(
                 "Annulation du rendez-vous",

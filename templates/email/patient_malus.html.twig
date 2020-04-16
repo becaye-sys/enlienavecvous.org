@@ -1,0 +1,9 @@
+{% extends "email_layout.html.twig" %}
+
+{% block body %}
+    <p>La personne suivante n’a pas honorée 3 rendez-vous d’affilé :</p>
+    <p>{{ patient.firstName }} {{ patient.lastName }}, tél : {{ patient.phoneNumber }}, e-mail : {{ patient.email }}</p>
+
+    <p>Cordialement,</p>
+    <p>L'équipe de Onestlapourvous.org</p>
+{% endblock %}
