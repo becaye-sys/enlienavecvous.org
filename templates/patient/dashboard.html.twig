@@ -14,38 +14,29 @@
             </button>
         </div>
     </div>
+    <div class="container">
+        <p>
+            Choisissez l’horaire qui vous convient en fonction de la date et la localité.
+        </p>
+        <p>
+            Une fois le rendez-vous validé, vous recevez immédiatement une confirmation par e-mail dans lequel
+            apparaissent les coordonnées de votre thérapeute (pensez à vérifier vos spams).
+        </p>
+        <p>
+            C'est à vous de prendre contact à l’heure du rendez-vous avec votre thérapeute. Si vous devez annuler votre
+            rendez-vous, merci de le faire au moins 24h à l’avance afin de libérer le créneau pour une autre personne.
+            D'une manière générale, ce dispositif vous offre un soutien de 5 séances sur l'ensemble de la durée du
+            confinement.* Vous pouvez prendre plusieurs rendez-vous avec le ou la même thérapeute en recherchant son
+            nom mais vous pouvez également faire appel à un.e autre thérapeute la fois suivante.
+        </p>
+        <p>
+            Nb: Si à la suite de ce soutien psychologique ponctuel, vous décidez d’engager une thérapie avec un.e
+            thérapeute de la plateforme, nous vous invitons à lui formuler votre demande directement. Ce suivi se fera aux
+            conditions définies par le/la thérapeute dans le cadre de son activité régulière (régularité, tarif, etc.).
+        </p>
+        <p>*ces modalités peuvent évoluer en fonction de la situation</p>
+    </div>
 
-    <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
 {% endblock %}
 {% block javascripts %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
-    <script>
-        var ctx = document.getElementById("myChart");
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-                datasets: [{
-                    data: [15339, 21345, 18483, 24003, 23489, 24092, 12034],
-                    lineTension: 0,
-                    backgroundColor: 'transparent',
-                    borderColor: '#007bff',
-                    borderWidth: 4,
-                    pointBackgroundColor: '#007bff'
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: false
-                        }
-                    }]
-                },
-                legend: {
-                    display: false,
-                }
-            }
-        });
-    </script>
 {% endblock %}
