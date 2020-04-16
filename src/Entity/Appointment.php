@@ -265,4 +265,10 @@ class Appointment implements AppointmentInterface
 
         return $this;
     }
+
+    public function emptyHistories(): self
+    {
+        $this->histories->clear();
+        return $this;
+    }
 }

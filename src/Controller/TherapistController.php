@@ -154,9 +154,8 @@ class TherapistController extends AbstractController
             $appointment->setBooked(false);
             $patientEmail = $appointment->getPatient()->getEmail();
             $appointment->setStatus(Appointment::STATUS[Appointment::STATUS_CANCELLED]);
-            $history = $historyHelper->addHistoryItem(History::ACTIONS[History::ACTION_CANCELLED_BY_THERAPIST], $appointment);
             $appointment->setPatient(null);
-            $appointment->setStatus(Appointment::STATUS[Appointment::STATUS_TO_DELETE]);
+            $appointment->setStatus(Appointment::STATUS_TO_DELETE);
             $mailer->createAndSend(
                 "Annulation du rendez-vous",
                 $patientEmail,
@@ -169,7 +168,6 @@ class TherapistController extends AbstractController
                 )
             );
             $currentUser->removeAppointment($appointment);
-            //dd($currentUser, $appointment, $history);
             $entityManager->remove($appointment);
             $entityManager->flush();
             $this->addFlash('info', "Rendez-vous annulé, créneau supprimé et message envoyé.");

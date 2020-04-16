@@ -46,6 +46,7 @@ class History
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Appointment", inversedBy="histories", cascade={"persist","remove"})
+     * @ORM\Column(nullable=true)
      */
     private $appointment;
 

@@ -25,9 +25,27 @@
                         <td>{{ h.id }}</td>
                         <td>{{ h.action }}</td>
                         <td>{{ h.actionedAt|date('d/m/Y H:i') }}</td>
-                        <td>{{ h.appointment.bookingDate|date('d/m/Y') }}</td>
-                        <td>{{ h.appointment.bookingStart|date('H:i') }}</td>
-                        <td>{{ h.appointment.bookingEnd|date('H:i') }}</td>
+                        <td>
+                            {% if h.appointment is not null %}
+                                {{ h.appointment.bookingDate|date('d/m/Y') }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if h.appointment is not null %}
+                                {{ h.appointment.bookingStart|date('H:i') }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if h.appointment is not null %}
+                                {{ h.appointment.bookingEnd|date('H:i') }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
                         <td>{{ h.patient.malus }}</td>
                     </tr>
                 {% endfor %}

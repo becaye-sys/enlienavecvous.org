@@ -92,8 +92,9 @@ class PatientController extends AbstractController
             $appointment->setBooked(false);
             $appointment->setCancelled(true);
             // add booking cancel history
-            $historyHelper->addHistoryItem($appointment, History::ACTION_CANCELLED_BY_PATIENT);
+            $historyHelper->addHistoryItem(History::ACTIONS[History::ACTION_CANCELLED_BY_PATIENT], $appointment);
             $appointment->setPatient(null);
+            $appointment->setStatus(Appointment::STATUS[Appointment::STATUS_AVAILABLE]);
             $entityManager->flush();
             $mailerFactory->createAndSend(
                 "Annulation du rendez-vous",
