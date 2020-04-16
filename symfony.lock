@@ -1,4 +1,10 @@
 {
+    "cron/cron": {
+        "version": "1.4.2"
+    },
+    "cron/cron-bundle": {
+        "version": "2.4.0"
+    },
     "dama/doctrine-test-bundle": {
         "version": "4.0",
         "recipe": {

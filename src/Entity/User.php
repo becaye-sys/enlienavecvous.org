@@ -74,7 +74,6 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", nullable=true)
-     * @Groups({"create_booking"})
      */
     protected $zipCode;
 
@@ -90,6 +89,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"create_booking"})
      */
     protected $displayName;
 

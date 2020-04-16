@@ -35,12 +35,18 @@ class Patient extends User
      */
     private $malus;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\History", mappedBy="patient")
+     */
+    private $histories;
+
     public function __construct()
     {
         parent::__construct();
         $this->roles = ["ROLE_USER", self::ROLE_PATIENT];
         $this->appointments = new ArrayCollection();
         $this->malus = 0;
+        $this->histories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -99,6 +105,37 @@ class Patient extends User
     public function setMalus(?int $malus): self
     {
         $this->malus = $malus;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|History[]
+     */
+    public function getHistories(): Collection
+    {
+        return $this->histories;
+    }
+
+    public function addHistory(History $history): self
+    {
+        if (!$this->histories->contains($history)) {
+            $this->histories[] = $history;
+            $history->setPatient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHistory(History $history): self
+    {
+        if ($this->histories->contains($history)) {
+            $this->histories->removeElement($history);
+            // set the owning side to null (unless already changed)
+            if ($history->getPatient() === $this) {
+                $history->setPatient(null);
+            }
+        }
 
         return $this;
     }

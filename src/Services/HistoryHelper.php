@@ -6,6 +6,8 @@ namespace App\Services;
 
 use App\Entity\Appointment;
 use App\Entity\History;
+use App\Entity\Patient;
+use App\Entity\Therapist;
 use Doctrine\ORM\EntityManagerInterface;
 
 class HistoryHelper
@@ -17,19 +19,22 @@ class HistoryHelper
         $this->entityManager = $entityManager;
     }
 
-    public function addHistoryItem(Appointment $appointment, string $action)
+    public function addHistoryItem(string $action, Appointment $appointment = null): History
     {
         $history = new History();
         $history->setAction($action);
-        $history->setBooked($appointment->getBooked());
-        $history->setBookingDate($appointment->getBookingDate());
-        $history->setBookingStart($appointment->getBookingStart());
-        $history->setBookingEnd($appointment->getBookingEnd());
-        $history->setTherapist($appointment->getTherapist());
-        $history->setPatient($appointment->getPatient());
-        $history->setLocation($appointment->getLocation());
-        $history->setCancelled($appointment->getCancelled());
-        $history->setCancelMessage($appointment->getCancelMessage());
+        if ($action !== History::ACTIONS[History::ACTION_DELETED_BY_THERAPIST]) {
+            $history->setAppointment($appointment);
+        }
+        if (null !== $appointment) {
+            if ($appointment->getTherapist() instanceof Therapist) {
+                $history->setTherapist($appointment->getTherapist());
+            }
+            if ($appointment->getPatient() instanceof Patient) {
+                $history->setPatient($appointment->getPatient());
+            }
+        }
         $this->entityManager->persist($history);
+        return $history;
     }
 }

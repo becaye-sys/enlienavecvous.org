@@ -16,6 +16,7 @@ use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,7 +44,8 @@ class ApiController extends AbstractController
     ): JsonResponse
     {
         $appoints = $appointmentRepository->findAvailableAppointments();
-        $data = $serializer->serialize($appoints, ['therapist', 'patient']);
+        dump($appoints);
+        $data = $serializer->serializeByGroups($appoints, ['create_booking']);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
@@ -80,7 +82,7 @@ class ApiController extends AbstractController
         $userId = (int)$request->attributes->get('user');
         $patient = $patientRepository->find($userId);
         $appointment = $appointmentRepository->find($appointId);
-        $appointment->setStatus(Appointment::STATUS_WAITING);
+        $appointment->setStatus(Appointment::STATUS_BOOKING);
         $patient->addAppointment($appointment);
         $entityManager->flush();
         $data = $serializer->serializeByGroups($appointment, ['create_booking']);
@@ -101,8 +103,9 @@ class ApiController extends AbstractController
     ): JsonResponse
     {
         $appointment->setBooked(true);
+        $appointment->setStatus(Appointment::STATUS_BOOKED);
         // add booking history
-        $historyHelper->addHistoryItem($appointment, History::ACTIONS[History::ACTION_BOOKED]);
+        $historyHelper->addHistoryItem(History::ACTIONS[History::ACTION_BOOKED], $appointment);
         $entityManager->flush();
 
         $mailer->createAndSend(
@@ -161,6 +164,34 @@ class ApiController extends AbstractController
             ['code' => 'ASC']
         );
         $data = $serializer->serialize($towns, ['users','department']);
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
+    }
+
+    /**
+     * @Route(path="/get-cities", name="api_get_cities_react_select", methods={"GET"})
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     */
+    public function getCitiesForReactSelect(Request $request, SerializerInterface $serializer)
+    {
+        $country = $request->query->get('country');
+        $city = $request->query->get('city');
+        $client = HttpClient::create();
+        $apiLogin = 'onestlapourvous';
+        $apiKey = 'so4c0d00de65b6aae5842f3e6f4a32040c0f5f7058';
+        $url = "http://www.citysearch-api.com/$country/city?login=$apiLogin&apikey=$apiKey&ville=$city";
+        $response = $client->request('GET', $url);
+        $data = $serializer->serialize($response, 'json');
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
+    }
+
+    /**
+     * @Route(path="/get-ip", name="api_get_ip")
+     */
+    public function getIp(SerializerInterface $serializer) {
+        $client = HttpClient::create();
+        $url = "http://ip-api.com/json/";
+        $response = $client->request('GET', $url);
+        $data = $serializer->serialize($response, 'json');
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 }

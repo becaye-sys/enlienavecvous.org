@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 
 
 use App\Entity\Appointment;
+use App\Entity\Patient;
 use App\Entity\Therapist;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -13,17 +14,29 @@ use Faker\Factory;
 
 class AppointmentFixtures extends Fixture implements DependentFixtureInterface
 {
+    public const APPOINT_REFERENCE = "appoint_";
     public function load(ObjectManager $manager)
     {
         $faker = Factory::create("fr");
 
         for ($i = 1; $i <= 80; $i++) {
-            $refId = random_int(1,8);
+            $therapistId = random_int(1,8);
             /** @var Therapist $therapist */
-            $therapist = $this->getReference(TherapistFixtures::THERAPIST_USER_REFERENCE."_$refId");
+            $therapist = $this->getReference(TherapistFixtures::THERAPIST_USER_REFERENCE."_$therapistId");
+
+            $patientId = random_int(1,5);
+            /** @var Patient $patient */
+            $patient = $this->getReference(PatientFixtures::PATIENT_USER_REFERENCE."_$patientId");
             $appointment = new Appointment();
             $appointment->setTherapist($therapist);
-            $appointment->setLocation($faker->countryCode);
+            if ($i%2 === 0) {
+                $appointment->setPatient($patient);
+                $this->addReference(self::APPOINT_REFERENCE.$i, $appointment);
+                $appointment->setStatus(Appointment::STATUS_BOOKED);
+            } else {
+                $appointment->setStatus(Appointment::STATUS_AVAILABLE);
+            }
+            $appointment->setLocation($faker->city);
             $randomDate = $this->getRandomDate();
             $date = $randomDate['start'];
             $start = new \DateTime($date);
@@ -46,7 +59,7 @@ class AppointmentFixtures extends Fixture implements DependentFixtureInterface
 
     private function getRandomDate(): array
     {
-        $day = random_int(1,31);
+        $day = random_int(16,31);
         $hour = random_int(9,20);
         $minute = random_int(0,59);
         if ($day < 10) {

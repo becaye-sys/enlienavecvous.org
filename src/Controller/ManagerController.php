@@ -4,9 +4,11 @@
 namespace App\Controller;
 
 
+use App\Entity\Appointment;
 use App\Entity\Department;
 use App\Entity\Town;
 use App\Entity\User;
+use App\Repository\AppointmentRepository;
 use App\Repository\DepartmentRepository;
 use App\Repository\TownRepository;
 use App\Repository\UserRepository;
@@ -283,5 +285,22 @@ class ManagerController extends AbstractController
                 'towns' => $paginated
             ]
         );
+    }
+
+    /**
+     * @Route(path="/appoints-to-delete", name="manager_appoints_to_delete")
+     * @param AppointmentRepository $appointmentRepository
+     * @param EntityManagerInterface $entityManager
+     */
+    public function bookingsWaitingToBeDeleted(AppointmentRepository $appointmentRepository, EntityManagerInterface $entityManager)
+    {
+        $appoints = $appointmentRepository->findBy(['status' => Appointment::STATUS_TO_DELETE]);
+        foreach ($appoints as $appoint) {
+            $appoint->emptyHistories();
+            $entityManager->remove($appoint);
+        }
+        $entityManager->flush();
+        $this->addFlash('success', "Rendez-vous en attente de suppression correctement supprimés.");
+        return $this->redirectToRoute('manager_new_users');
     }
 }

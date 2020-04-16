@@ -26,10 +26,14 @@
                         <td>{{ a.bookingEnd|date('H:i') }}</td>
                         <td>{{ a.location }}</td>
                         <td>
-                            <form action="{{ path('patient_research_by_therapist', {'id': a.therapist.id}) }}" method="post">
-                                <input type="hidden" name="booking_id" value="{{ a.id }}">
-                                <button type="submit" class="btn btn-primary">Réserver</button>
-                            </form>
+                            {% if a.booked == false %}
+                                <form action="{{ path('patient_research_by_therapist', {'id': a.therapist.id}) }}" method="post">
+                                    <input type="hidden" name="booking_id" value="{{ a.id }}">
+                                    <button type="submit" class="btn btn-primary">Réserver</button>
+                                </form>
+                            {% else %}
+                                <button type="button" disabled class="btn btn-info">Réservé</button>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}

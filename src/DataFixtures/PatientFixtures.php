@@ -4,12 +4,14 @@ namespace App\DataFixtures;
 
 use App\Entity\Patient;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class PatientFixtures extends Fixture
+class PatientFixtures extends Fixture implements DependentFixtureInterface
 {
+    public const PATIENT_USER_REFERENCE = "patient_user";
     private $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder)
@@ -32,10 +34,18 @@ class PatientFixtures extends Fixture
             $patient->setZipCode($faker->postcode);
             $patient->setPhoneNumber($faker->phoneNumber);
             $patient->setHasAcceptedTermsAndPolicies(true);
+            $this->addReference(self::PATIENT_USER_REFERENCE."_$i", $patient);
             $patient->setIsMajor(true);
             $manager->persist($patient);
         }
 
         $manager->flush();
+    }
+
+    public function getDependencies()
+    {
+        return array(
+            TownFixtures::class,
+        );
     }
 }

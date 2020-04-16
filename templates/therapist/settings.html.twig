@@ -28,6 +28,15 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="firstName">Nom d'affichage (optionnel)</label>
+                            {{ form_widget(form.displayName, {'attr': {'class': 'form-control'}}) }}
+                            <div class="invalid-feedback">
+                                Valid display name is required.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="email">E-mail <span class="text-muted">(Un mail de confirmation comme à l'inscription vous sera envoyé afin de confirmer votre nouvelle adresse email)</span></label>
                             {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}

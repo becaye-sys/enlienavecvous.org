@@ -43,48 +43,20 @@ class PatientRegisterType extends AbstractType
             ->add('lastName', TextType::class)
             ->add(
                 'country',
-                ChoiceType::class,
-                [
-                    'choices' => [
-                        "France" => 'fr',
-                        "Belgique" => 'be',
-                        "Luxembourg" => 'lu',
-                        "Suisse" => 'ch'
-                    ]
-                ]
+                TextType::class
+            )
+            ->add(
+                'scalarDepartment',
+                TextType::class
+            )
+            ->add(
+                'scalarTown',
+                TextType::class
             )
             ->add('phoneNumber', TextType::class)
             ->add('hasAcceptedTermsAndPolicies', CheckboxType::class)
             ->add('isMajor', CheckboxType::class)
         ;
-
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            /** @var Patient $data */
-            $data = $event->getData();
-            $form = $event->getForm();
-            if ($data->getCountry() !== null) {
-                $country = $data->getCountry();
-                $form->remove('department');
-                $form->add(
-                    'scalarDepartment',
-                    ChoiceType::class,
-                    [
-                        'choices' => $this->getDepartmentByCountry($country)
-                    ]
-                );
-            }
-            if ($data->getScalarDepartment() !== null) {
-                $department = $data->getScalarDepartment();
-                $form->remove('town');
-                $form->add(
-                    'scalarTown',
-                    ChoiceType::class,
-                    [
-                        'choices' => $this->getTownsByDepartment()
-                    ]
-                );
-            }
-        });
     }
 
     public function configureOptions(OptionsResolver $resolver)

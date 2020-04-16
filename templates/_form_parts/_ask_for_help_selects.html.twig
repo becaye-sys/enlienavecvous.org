@@ -1,0 +1,14 @@
+<select
+        name="patient_register_department"
+        id="patient_register_department"
+        data-get-towns-url="{{ path('api_get_towns_by_department') }}"
+>
+    {% for depart in departments %}
+        <option value="{{ depart.id }}">{{ depart.code }} {{ depart.name }}</option>
+    {% endfor %}
+</select>
+<select name="patient_register_town" id="patient_register_town">
+    {% for town in towns %}
+        <option value="{{ town.id }}">{{ town.code }} {{ town.name }}</option>
+    {% endfor %}
+</select>

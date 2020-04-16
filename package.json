@@ -3,7 +3,10 @@
         "@symfony/webpack-encore": "^0.28.2",
         "core-js": "^3.0.0",
         "dotenv": "^8.2.0",
+        "fork-ts-checker-webpack-plugin": "^0.4.15",
         "regenerator-runtime": "^0.13.2",
+        "ts-loader": "^5.4.5",
+        "typescript": "^3.8.3",
         "webpack-notifier": "^1.6.0"
     },
     "license": "UNLICENSED",
@@ -22,6 +25,7 @@
     },
     "dependencies": {
         "@babel/preset-react": "^7.9.4",
+        "@bit/onino-js.nice-pickers.city-select": "0.0.2",
         "axios": "^0.19.2",
         "bootstrap-select": "^1.13.12",
         "gijgo": "^1.9.13",
