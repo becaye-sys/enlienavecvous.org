@@ -46,7 +46,7 @@ class TherapistFixtures extends Fixture implements DependentFixtureInterface
             $therapist->setFirstName($faker ?? $faker->firstName ?? "Firstname");
             $therapist->setLastName($faker ?? $faker->lastName ?? "Lastname");
             $therapist->setCountry("France");
-            $therapist->setZipCode($faker ?? $faker->randomElement(['01500', '01430', '69000']) ?? "01500");
+            $therapist->setZipCode($faker ? $faker->randomElement(['01500', '01430', '69000']) : "01500");
             $therapist->setPhoneNumber($faker ?? $faker->phoneNumber ?? "0600000001");
             $therapist->setHasAcceptedTermsAndPolicies(true);
             $this->addReference(self::THERAPIST_USER_REFERENCE."_$i", $therapist);
