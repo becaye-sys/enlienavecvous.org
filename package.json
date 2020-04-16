@@ -25,10 +25,8 @@
     },
     "dependencies": {
         "@babel/preset-react": "^7.9.4",
-        "@bit/onino-js.nice-pickers.city-select": "0.0.2",
         "axios": "^0.19.2",
         "bootstrap-select": "^1.13.12",
-        "gijgo": "^1.9.13",
         "jquery": "^3.4.1",
         "moment": "^2.24.0",
         "react": "^16.13.1",
