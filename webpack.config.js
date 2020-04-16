@@ -31,7 +31,6 @@ Encore
     .addEntry('therapist_geoloc', './assets/js/therapist_geoloc.js')
     .addEntry('patient_geoloc', './assets/js/patient_geoloc.js')
     .addEntry('manage_geolocalisation', './assets/js/manage_geolocalisation.js')
-    .addEntry('city_register', './assets/js/city_register.js')
     //.addEntry('page2', './assets/js/page2.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
