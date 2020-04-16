@@ -31,13 +31,7 @@ class AppointmentFixtures extends Fixture implements DependentFixtureInterface
             $patient = $this->getReference(PatientFixtures::PATIENT_USER_REFERENCE."_$patientId");
             $appointment = new Appointment();
             $appointment->setTherapist($therapist);
-            if ($i%2 === 0) {
-                $appointment->setPatient($patient);
-                $this->addReference(self::APPOINT_REFERENCE.$i, $appointment);
-                $appointment->setStatus(Appointment::STATUS_BOOKED);
-            } else {
-                $appointment->setStatus(Appointment::STATUS_AVAILABLE);
-            }
+            $appointment->setStatus(Appointment::STATUS_AVAILABLE);
             $appointment->setLocation($faker ?? $faker->city ?? "Lyon");
             $randomDate = $this->getRandomDate();
             $date = $randomDate['start'];
