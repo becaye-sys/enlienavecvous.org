@@ -29,7 +29,7 @@ class HistoryFixtures extends Fixture implements DependentFixtureInterface
                 /** @var Appointment $appointment */
                 $appointment = $this->getReference(AppointmentFixtures::APPOINT_REFERENCE.$i);
                 if ($appointment->getStatus() === Appointment::STATUS_BOOKED) {
-                    $history = $this->historyHelper->addHistoryItem(History::ACTIONS[History::ACTION_BOOKED], $appointment);
+                    $this->historyHelper->addHistoryItem(History::ACTIONS[History::ACTION_BOOKED], $appointment);
                 }
             }
         }
