@@ -16,6 +16,7 @@ use App\Repository\TherapistRepository;
 use App\Repository\TownRepository;
 use App\Repository\UserRepository;
 use App\Services\MailerFactory;
+use App\Services\StatisticTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,15 +27,20 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class PublicController extends AbstractController
 {
+    use StatisticTrait;
 
     /**
      * @Route(path="/", name="index")
      * @return Response
      */
-    public function index(AppointmentRepository $appointmentRepository)
+    public function index()
     {
+        $funFacts = $this->getFunFacts();
         return $this->render(
-            'public/index.html.twig'
+            'public/index.html.twig',
+            [
+                'fun_facts' => $funFacts
+            ]
         );
     }
 
@@ -239,5 +245,14 @@ class PublicController extends AbstractController
         return $this->render(
             'public/legal_notices.html.twig'
         );
+    }
+
+    /**
+     * @Route(path="/coming-soon", name="coming_soon")
+     * @return Response
+     */
+    public function comingSoon()
+    {
+        return $this->render('public/coming_soon.html.twig');
     }
 }

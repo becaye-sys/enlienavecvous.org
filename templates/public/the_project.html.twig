@@ -1,33 +1,69 @@
 {% extends "public_layout.html.twig" %}
 
 {% block body %}
-    <div class="container text-center">
-        <h1>Le projet</h1>
-        <div class="row">
-            <div class="col-lg-12">
-                <p>
-                    Depuis déjà plusieurs semaines nous vivons une situation sanitaire inédite. Les périodes de crise sont une perte de repères et peuvent
-                    accroitre maintes difficultés. Consciente des répercussions et des changements dus à la crise du Covid-19 au sein des familles et de la
-                    société, et portée par des valeurs d’entraide et de solidarité, l’<a href="">équipe de enlienavecvous.org</a> a eu à cœur de se rendre utile.
-                </p>
-                <p>
-                    Enlienavecvous.org a été pensé pour mettre en relation de manière coordonnée et gratuite des praticien.ne.s de la Gestalt-thérapie avec des
-                    personnes ayant <a href="">besoin d’un soutien psychologique</a> durant cette période.
-                </p>
-                <p>
-                    Cette plateforme est ouverte à l’ensemble de la population francophone de France, Suisse, Belgique et du Luxembourg.
-                </p>
-                <p>
-                    L’<a href="">équipe de enlienavecvous.org</a> est constituée de gestaltistes d’horizons différents et a élaboré ce projet pour permettre à chacun.e de
-                    l’ensemble des praticien.ne.s de <a href="">la Gestalt-thérapie</a> de <a href="">prendre part</a> à l’élan incroyable de solidarité actuel.
-                </p>
-                <p>
-                    Notre plateforme est gratuite, sans publicité, open-source, et ne garde pas vos données.
-                </p>
-                <p>
-                    <a href="{{ path('how_it_works') }}">En savoir plus sur Comment ça marche ?</a>
-                </p>
+    <section class="divider parallax layer-overlay overlay-deep" data-bg-img="https://placehold.it1920x1280">
+        <div class="container">
+            <div class="row text-justify">
+                <div class="col-md-6">
+                    <h3 class="line-bottom">Le projet</h3>
+                    <p>
+                        Depuis déjà plusieurs semaines nous vivons une situation sanitaire inédite. Les périodes de crise sont une perte de repères et peuvent
+                        accroitre maintes difficultés. Consciente des répercussions et des changements dus à la crise du Covid-19 au sein des familles et de la
+                        société, et portée par des valeurs d’entraide et de solidarité, <a href="{{ path('who_are_we') }}">l’équipe de enlienavecvous.org</a> a eu à cœur de se rendre utile.
+                    </p>
+                    <p>
+                        <i>Enlienavecvous.org</i> a été pensé pour mettre en relation de manière coordonnée et gratuite des praticien.ne.s de la
+                        <a href="">Gestalt-thérapie</a> avec des
+                        personnes ayant <a href="{{ path('ask_for_help') }}">besoin d’un soutien psychologique</a> durant cette période.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <h3 class="line-bottom">La plateforme</h3>
+                    <p>
+                        Cette plateforme est ouverte à l’ensemble de la population francophone de France, Suisse, Belgique et du Luxembourg.
+                    </p>
+                    <p>
+                        <a href="">L’équipe de enlienavecvous.org</a> est constituée de gestaltistes d’horizons différents et a élaboré ce projet pour permettre à chacun.e de
+                        l’ensemble des praticien.ne.s de <a href="">la Gestalt-thérapie</a> de <a href="">prendre part</a> à l’élan incroyable de solidarité actuel.
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Section: About Us -->
+    <section id="about">
+        <div class="container">
+            <div class="section-content">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h2>Envie de nous rejoindre ?</h2>
+                        <p class="lead text-theme-colored">
+                            Notre plateforme est gratuite, sans publicité, open-source, et ne garde pas vos données.
+                        </p>
+                        <!--<a href="#" class="btn-read-more btn-sm text-uppercase mt-10">Read More</a>-->
+                    </div>
+                    <div class="col-md-4">
+                        <div class="icon-box text-center p-0 mb-sm-40 p-40 border-1px border-theme-colored">
+                            <a href="#" class="icon">
+                                <i class="flaticon-charity-shaking-hands-inside-a-heart font-54 text-theme-colored"></i>
+                            </a>
+                            <div>
+                                <h4 class="icon-box-title mt-15 mb-10 text-uppercase letter-space-2">
+                                    <strong>En savoir plus</strong>
+                                </h4>
+                                <!--<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam interdum diam tortor, egestas varius erat aliquam a. </p>-->
+                                <a href="{{ path('how_it_works') }}" class="btn btn-dark btn-theme-colored btn-sm mt-10">Comment ça marche ?</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="donate-thumb">
+                            <img src="https://placehold.it/360x256" class="img-fullwidth" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}

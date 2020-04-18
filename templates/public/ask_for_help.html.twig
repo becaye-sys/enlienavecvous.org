@@ -3,86 +3,218 @@
 {% set form = patient_register_form %}
 
 {% block body %}
-    <div class="container text-center">
-        <h1>Demander de l'aide</h1>
-        <p>La crise actuelle vous confronte à des situations déstabilisantes.</p>
-        <p>
-            Durant cette période inédite de crise, nous sommes confronté.e.s à un changement de style de vie qui peut être source de difficultés au
-            quotidien. La perte de notre routine peut nous impacter de diverses manières, que l’on doive travailler ou que l’on soit confiné : irritabilité,
-            angoisse, peur du virus, pertes financières, isolement, manque d’intimité, ennui, manque de contact physique, tensions familiales, violences,
-            difficultés à s’occuper des enfants, perte d’un proche, etc. Le soutien dont vous avez besoin est à quelques clics.
-        </p>
-        <p>La Gestalt thérapie, en tant que thérapie humaniste et relationnelle, est tout particulièrement adaptée à ces situations.</p>
-        <p>
-            Un.e thérapeute est une personne avec des compétences professionnelles qui offre un cadre sécurisant pour vous accompagner dans ce que
-            vous vivez en ce moment. Être en lien avec un.e thérapeute peut vous aider à vous sen1r moins seul.e, être accueilli.e et entendu.e dans vos
-            émo1ons, prendre de la distance et retrouver du discernement.
-        </p>
-        <p>
-            Parler, échanger, être accompagné.e, même sans difficultés aiguës, vous permet de mieux prendre soin de vous et des autres.
-        </p>
-        <p>
-            Le soutien dont vous avez besoin est à quelques clics.
-        </p>
-        <p>
-            Remplissez le formulaire ci-dessous afin de vous enregistrer et accéder à notre calendrier de prise de rendez-vous.
-        </p>
-        <p>
-            <i>
-                Attention ce service est réservé aux personnes majeures (18 ans et +). Si vous êtes mineur, <a href="{{ path('emergency_numbers') }}">appelez la ligne dédiée aux mineur.e.s.</a>
-            </i>
-        </p>
-        <p>
-            <i>
-                Tou.te.s les thérapeutes inscrit.e.s sur la plateforme sont des professionnel.le.s certifié.e.s respectant un code de déontologie.
-                Cela les engage notamment au respect de la confidentialité, à la bienveillance et au non-jugement.
-            </i>
-        </p>
-        <p>
-            <a href="{{ path('how_it_works') }}">En savoir plus le fonctionnement de la plateforme</a> {# renvoie à la page comment ça marche #}
-        </p>
-        <h2>Formulaire d'inscription</h2>
-        {{ form_start(form) }}
-        <fieldset>
-            {{ form_widget(form.firstName, {'attr': {'placeholder': "Votre prénom"}}) }}
-            {{ form_widget(form.lastName, {'attr': {'placeholder': "Votre nom"}}) }}
-        </fieldset>
-        <fieldset>
-            {{ form_widget(form.country) }}
-            {{ form_widget(form.scalarDepartment) }}
-            {{ form_widget(form.scalarTown) }}
-        </fieldset>
-        <fieldset>
-            {{ form_widget(form.phoneNumber, {'attr': {'placeholder': "Votre numéro de téléphone"}}) }}
-            {{ form_widget(form.email, {'attr': {'placeholder': "Votre email"}}) }}
-        </fieldset>
-        <fieldset>
-            {{ form_label(form.password.first) }}
-            {{ form_widget(form.password.first, {'attr': {'placeholder': "Votre mot de passe"}}) }}
-            {{ form_label(form.password.second) }}
-            {{ form_widget(form.password.second, {'attr': {'placeholder': "Confirmez votre mot de passe"}}) }}
-        </fieldset>
-        <fieldset>
-            {{ form_widget(form.isMajor) }} Je certifie être majeur.e
-        </fieldset>
-        <fieldset>
-            {{ form_widget(form.hasAcceptedTermsAndPolicies) }} J'ai lu et j'accepte la <a>Politique de Confidentialité</a> et les <a>Conditions d'utilisation</a> de Onestlapourvous.org
-        </fieldset>
-
-        <button type="submit">Valider</button>
-        {{ form_end(form) }}
-        <p>
-            (Un email vous sera envoyé afin de confirmer votre compte et vous permettra de vous connecter)
-        </p>
-        <p>
-            (Vous ne pourrez pas vous connecter avant d'avoir confirmé votre compte par email)
-        </p>
-        <div class="row">
-            <div class="col-lg-12">
-                <h2 class="text-center">En cas d'urgence, si votre vie ou celle d'autrui est en danger, <a href="{{ path('emergency_numbers') }}">contactez les numéros d'urgence de votre pays.</a></h2>
+    <!-- Section: inner-header -->
+    <section class="inner-header divider parallax layer-overlay overlay-dark-6" data-bg-img="https://placehold.it/1920x1280">
+        <div class="container pt-60 pb-60">
+            <!-- Section Content -->
+            <div class="section-content">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <h1 class="font-28 text-white">Demander de l'aide</h1>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Section: About Us -->
+    <section id="about">
+        <div class="container">
+            <div class="section-content">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h2>Demander de l'aide</h2>
+                        <p class="lead text-theme-colored">La crise actuelle vous confronte à des situations déstabilisantes.</p>
+                        <p>
+                            Durant cette période inédite de crise, nous sommes confronté.e.s à un changement de style de vie qui peut être source de difficultés au
+                            quotidien. La perte de notre routine peut nous impacter de diverses manières, que l’on doive travailler ou que l’on soit confiné : irritabilité,
+                            angoisse, peur du virus, pertes financières, isolement, manque d’intimité, ennui, manque de contact physique, tensions familiales, violences,
+                            difficultés à s’occuper des enfants, perte d’un proche, etc. Le soutien dont vous avez besoin est à quelques clics.
+                        </p>
+                    </div>
+                    <div class="col-md-8">
+                        {{ form_start(form, {
+                            'attr': {
+                                'name': "reg-form",
+                                'class': 'register-form'
+                            }
+                        }) }}
+                            <div class="icon-box mb-0 p-0">
+                                <a href="#" class="icon icon-bordered icon-rounded icon-sm pull-left mb-0 mr-10">
+                                    <i class="pe-7s-users"></i>
+                                </a>
+                                <h4 class="text-gray pt-10 mt-0 mb-30">Créez votre compte maintenant.</h4>
+                            </div>
+                            <hr>
+                            <p class="text-gray">
+                                Un email vous sera envoyé afin de confirmer votre compte et vous permettra de vous connecter
+                            </p>
+                            <p class="text-danger">
+                                Vous ne pourrez pas vous connecter avant d'avoir confirmé votre compte par email
+                            </p>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label>Prénom</label>
+                                    {{ form_widget(form.firstName, {'attr': {'placeholder': "Votre prénom"}}) }}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Nom</label>
+                                    {{ form_widget(form.lastName, {'attr': {'placeholder': "Votre nom"}}) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="">Numéro de téléphone</label>
+                                    {{ form_widget(form.phoneNumber, {'attr': {'placeholder': "Votre numéro de téléphone"}}) }}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="form_choose_username">Email</label>
+                                    {{ form_widget(form.email, {'attr': {'placeholder': "Votre email"}}) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="">Votre pays</label>
+                                    {{ form_widget(form.country) }}
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="">Votre Région</label>
+                                    {{ form_widget(form.scalarDepartment) }}
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="">Votre ville</label>
+                                    {{ form_widget(form.scalarTown) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="form_choose_password">Mot de passe</label>
+                                    {{ form_widget(form.password.first, {'attr': {'placeholder': "Votre mot de passe"}}) }}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Confirmez votre mot de passe</label>
+                                    {{ form_widget(form.password.second, {'attr': {'placeholder': "Confirmez votre mot de passe"}}) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    {{ form_widget(form.isMajor) }} Je certifie être majeur.e
+                                </div>
+                                <div class="form-group col-md-6">
+                                    {{ form_widget(form.hasAcceptedTermsAndPolicies) }} J'ai lu et j'accepte la <a>Politique de Confidentialité</a> et les <a>Conditions d'utilisation</a> de Onestlapourvous.org
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-dark btn-lg btn-block mt-15" type="submit">Valider mon inscription</button>
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="divider parallax layer-overlay overlay-deep" data-bg-img="https://placehold.it/1920x1280">
+        <div class="container">
+            <div class="row text-justify">
+                <div class="col-md-6">
+                    <p>La Gestalt thérapie, en tant que thérapie humaniste et relationnelle, est tout particulièrement adaptée à ces situations.</p>
+                    <p>
+                        Un.e thérapeute est une personne avec des compétences professionnelles qui offre un cadre sécurisant pour vous accompagner dans ce que
+                        vous vivez en ce moment. Être en lien avec un.e thérapeute peut vous aider à vous sen1r moins seul.e, être accueilli.e et entendu.e dans vos
+                        émo1ons, prendre de la distance et retrouver du discernement.
+                    </p>
+                    <p>
+                        Parler, échanger, être accompagné.e, même sans difficultés aiguës, vous permet de mieux prendre soin de vous et des autres.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <p>
+                        Le soutien dont vous avez besoin est à quelques clics.
+                    </p>
+                    <p>
+                        Remplissez le formulaire ci-dessous afin de vous enregistrer et accéder à notre calendrier de prise de rendez-vous.
+                    </p>
+                    <p>
+                        <i>
+                            Attention ce service est réservé aux personnes majeures (18 ans et +). Si vous êtes mineur, <a href="{{ path('emergency_numbers') }}">appelez la ligne dédiée aux mineur.e.s.</a>
+                        </i>
+                    </p>
+                    <p>
+                        <i>
+                            Tou.te.s les thérapeutes inscrit.e.s sur la plateforme sont des professionnel.le.s certifié.e.s respectant un code de déontologie.
+                            Cela les engage notamment au respect de la confidentialité, à la bienveillance et au non-jugement.
+                        </i>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: Divider call -->
+    <section class="divider parallax layer-overlay overlay-dark-8" data-bg-img="https://placehold.it/1920x1280">
+        <div class="container pt-0 pb-0">
+            <div class="row">
+                <div class="call-to-action">
+                    <div class="col-md-9">
+                        <h2 class="text-white font-opensans font-30 mt-0 mb-5">En savoir plus</h2>
+                        <h3 class="text-white font-opensans font-18 mt-0">sur le fonctionnement de la plateforme</h3>
+                    </div>
+                    <div class="col-md-3 mt-30">
+                        <a href="{{ path('how_it_works') }}" class="btn btn-default btn-circled btn-lg">En savoir plus</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-push-3">
+                    <form name="reg-form" class="register-form" method="post">
+                        <div class="icon-box mb-0 p-0">
+                            <a href="#" class="icon icon-bordered icon-rounded icon-sm pull-left mb-0 mr-10">
+                                <i class="pe-7s-users"></i>
+                            </a>
+                            <h4 class="text-gray pt-10 mt-0 mb-30">Don't have an Account? Register Now.</h4>
+                        </div>
+                        <hr>
+                        <p class="text-gray">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi id perspiciatis facilis nulla possimus quasi, amet qui. Ea rerum officia, aspernatur nulla neque nesciunt alias.</p>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label>Name</label>
+                                <input name="form_name" class="form-control" type="text">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Email Address</label>
+                                <input name="form_email" class="form-control" type="email">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <label for="form_choose_username">Choose Username</label>
+                                <input id="form_choose_username" name="form_choose_username" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="form_choose_password">Choose Password</label>
+                                <input id="form_choose_password" name="form_choose_password" class="form-control" type="text">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Re-enter Password</label>
+                                <input id="form_re_enter_password" name="form_re_enter_password"  class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-dark btn-lg btn-block mt-15" type="submit">Register Now</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}
 
 {% block javascripts %}
