@@ -1,137 +1,288 @@
 {% extends "public_layout.html.twig" %}
 
 {% block body %}
-    <section class="divider parallax layer-overlay overlay-deep" data-bg-img="https://placehold.it1920x1280">
+    <!-- Section: inner-header -->
+    <section class="inner-header divider layer-overlay overlay-dark" data-bg-img="{{ asset('images/enlien_mains.jpg') }}">
+        <div class="container pt-30 pb-30">
+            <!-- Section Content -->
+            <div class="section-content text-center">
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3 text-center">
+                        <h1 class="text-theme-colored font-36">Comment ça marche ?</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container pt-sm-30">
+            <div class="section-content">
+                <div class="row">
+                    <div class="col-md-7 mb-sm-40">
+                        <h3 class="pb-10">Si vous demandez de l'aide :</h3>
+                        <p>
+                            <strong>
+                                <i>Enlienavecvous.org</i> est complètement gratuit.
+                            </strong>
+                        </p>
+                        <p>
+                            Cette situation hors-norme justifie de sortir des conditions d’échange habituelles.
+                        </p>
+                        <p>
+                            Ce service se veut une main tendue, un acte de solidarité parmi de nombreux autres.
+                        </p>
+                        <a href="{{ path('how_it_works') }}" class="btn btn-default btn-md mt-20">En savoir plus sur le projet</a>
+                    </div>
+                    <div class="col-md-5">
+                        <img src="http://placehold.it/1920x1280" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: Divider call -->
+    <section class="divider layer-overlay overlay-theme-colored" data-bg-img="http://placehold.it/1920x1280">
+        <div class="container pt-0 pb-0">
+            <div class="row">
+                <div class="call-to-action">
+                    <div class="col-md-10">
+                        <h2 class="text-white font-opensans font-30 mt-0 mb-5">La crise actuelle nous confronte à des situations déstabilisantes.</h2>
+                        <p class="text-white font-opensans font-18 mt-0">
+                            Durant cette période inédite, nous sommes confronté.e.s à un changement de vie qui peut être source de difficultés au
+                            quotidien. La perte de notre routine peut nous impacter de diverses manières, que l’on doive travailler ou que l’on soit
+                            confiné : irritabilité, angoisse, peurs, pertes financières, isolement, manque d’intimité ou de contact physique, ennui,
+                            tensions familiales, violences, difficultés liées aux enfants, perte d’un proche, etc.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
         <div class="container">
-            <div class="row text-justify">
-                <div class="col-md-12">
-                    <h3 class="line-bottom">Si vous demandez de l'aide :</h3>
-                    <p>
-                        <strong>
-                            <i>Enlienavecvous.org</i> est complètement gratuit.
-                        </strong>
-                    </p>
-                    <p>
-                        Cette situation hors-norme justifie de sortir des conditions d’échange habituelles.
-                    </p>
-                    <p>
-                        Ce service se veut une main tendue, un acte de solidarité parmi de nombreux autres.
-                    </p>
-                    <p>
-                        <a href="{{ path('how_it_works') }}">En savoir plus sur le projet</a>
-                    </p>
+            <div class="section-content">
+                <div class="row mt-30">
+                    <div class="col-sm-4 col-md-4 col-lg-4">
+                        <div class="schedule-box maxwidth500 bg-lighter mb-30">
+                            <div class="schedule-details clearfix p-15 pt-10">
+                                <h4 class="title bg-danger p-25 text-center font-30 text-white mt-0">Qui ?</h4>
+                                <div class="clearfix"></div>
+                                <p class="mt-10">
+                                    Toutes les personnes majeures ressentant le besoin d'un soutien psychologique en cette période de covid-19.
+                                </p>
+                                <blockquote class="gray">
+                                    <p>Être en lien avec un.e thérapeute peut vous aider à vous sentir moins seul.e, être accueilli.e et entendu.e
+                                        dans vos émotions, prendre de la distance et retrouver du discernement.</p>
+                                </blockquote>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-md-4 col-lg-4">
+                        <div class="schedule-box maxwidth500 bg-lighter mb-30">
+                            <div class="schedule-details clearfix p-15 pt-10">
+                                <h4 class="title bg-danger p-25 text-center font-30 text-white mt-0">Quoi ?</h4>
+                                <div class="clearfix"></div>
+                                <p class="mt-10">
+                                    <a class="text-theme-colored" href="{{ path('who_are_we') }}">La Gestalt thérapie</a>, en tant que thérapie humaniste et relationnelle,
+                                    est tout particulièrement adaptée à ces situations.
+                                    Un.e thérapeute est une personne avec des compétences professionnelles qui offre un
+                                    cadre sécurisant pour vous accompagner dans ce que vous vivez en ce moment. Parler,
+                                    échanger, être accompagné.e, même sans difficultés aiguës, vous permet de mieux prendre soin de vous et des autres.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-md-4 col-lg-4">
+                        <div class="schedule-box maxwidth500 bg-lighter mb-30">
+                            <div class="schedule-details clearfix p-15 pt-10">
+                                <h4 class="title bg-danger p-25 text-center font-30 text-white mt-0">Avec qui ?</h4>
+                                <div class="clearfix"></div>
+                                <p class="mt-10">
+                                    Tou.te.s les thérapeutes inscrit.e.s sur la plateforme sont des
+                                    professionnel.le.s certifié.e.s respectant un code de déontologie.
+                                    Cela les engage notamment au respect de la confidentialité́, à la bienveillance et
+                                    au non-jugement.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-12">
-                    <h3 class="line-bottom">Qui peut bénéficier de l'aide ?</h3>
-                    <p>
-                        Toutes les personnes majeures ressentant le besoin d'un soutien psychologique en cette période de covid-19.
-                    </p>
+                <div class="row mt-30">
+                    <div class="col-sm-4 col-md-4 col-lg-8">
+                        <div class="schedule-box maxwidth500 bg-lighter mb-30">
+                            <div class="schedule-details clearfix p-15 pt-10">
+                                <h4 class="title bg-danger p-25 text-center font-30 text-white mt-0">Comment ?</h4>
+                                <div class="clearfix"></div>
+                                <p class="mt-10">
+                                    Inscrivez-vous sur la plateforme via le formulaire Demander de l’aide.
+                                    Vous allez recevoir un e-mail de confirmation. Cliquez sur le lien puis sur
+                                    Prendre rendez-vous.
+                                    Choisissez l’horaire qui vous convient en fonction de la date et de la localité.
+                                    Une fois le rendez-vous validé, vous recevez immédiatement une
+                                    confirmation par e-mail dans lequel apparaissent les coordonnées de votre
+                                    thérapeute (pensez à vérifier vos spams).
+                                    C'est à vous de prendre contact à l’heure du rendez-vous avec votre
+                                    thérapeute. Merci d'annuler au moins 24h à l’avance le rendez-vous afin de
+                                    libérer le créneau pour une autre personne.
+                                </p>
+                                <p>
+                                    *Le fonctionnement de la plateforme pourra être prolongé en fonction de
+                                    l’évolution de la situation.
+                                </p>
+                                <p class="danger">
+                                    Nous vous invitons à respecter les consignes en vigueur disponibles sur https://www.gouvernement.fr/info-coronavirus
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-md-4 col-lg-4">
+                        <div class="schedule-box maxwidth500 bg-lighter mb-30">
+                            <div class="schedule-details clearfix p-15 pt-10">
+                                <h4 class="title bg-danger p-25 text-center font-30 text-white mt-0">Quoi ?</h4>
+                                <div class="clearfix"></div>
+                                <p class="mt-10">
+                                    <a class="text-theme-colored" href="{{ path('who_are_we') }}">La Gestalt thérapie</a>, en tant que thérapie humaniste et relationnelle,
+                                    est tout particulièrement adaptée à ces situations.
+                                    Un.e thérapeute est une personne avec des compétences professionnelles qui offre un
+                                    cadre sécurisant pour vous accompagner dans ce que vous vivez en ce moment. Parler,
+                                    échanger, être accompagné.e, même sans difficultés aiguës, vous permet de mieux prendre soin de vous et des autres.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-12">
-                    <h3 class="line-bottom">De quelle aide pouvez-vous bénéficier ?</h3>
-                    <p>
-                        La crise actuelle nous confronte à des situa1ons déstabilisantes.
-                    </p>
-                    <p>
-                        Durant cette période inédite, nous sommes confronté.e.s à un changement de vie qui peut être source de difficultés au quo1dien. La perte
-                        de notre routine peut nous impacter de diverses manières, que l’on doive travailler ou que l’on soit confiné : irritabilité, angoisse, peurs,
-                        pertes financières, isolement, manque d’intimité ou de contact physique, ennui, tensions familiales, violences, difficultés liées aux enfants,
-                        perte d’un proche, etc.
-                    </p>
-                    <p>
-                        <a href="{{ path('the_project') }}">La Gestalt thérapie</a>, en tant que thérapie humaniste et rela1onnelle, est tout par1culièrement adaptée à ces situa1ons.
-                    </p>
-                    <p>
-                        Un.e thérapeute est une personne avec des compétences professionnelles qui offre un cadre sécurisant pour vous accompagner dans ce que
-                        vous vivez en ce moment. Être en lien avec un.e thérapeute peut vous aider à vous sen1r moins seul.e, être accueilli.e et entendu.e dans vos
-                        émo1ons, prendre de la distance et retrouver du discernement.
-                    </p>
-                    <p>
-                        Parler, échanger, être accompagné.e, même sans difficultés aiguës, vous permet de mieux prendre soin de vous et des autres.
-                    </p>
-                    <p>
-                        Tou.te.s les thérapeutes inscrit.e.s sur la plateforme sont des professionnel.le.s certifié.e.s respectant un code de déontologie
-                    </p>
-                    <p>
-                        Cela les engage notamment au respect de la confidentialité́, à la bienveillance et au non-jugement.
-                    </p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container pt-sm-30">
+            <div class="section-content">
+                <div class="row">
+                    <div class="col-md-7 mb-sm-40">
+                        <h3 class="pb-10">Si vous proposez de l'aide :</h3>
+                        <p>
+                            Vous souhaitez mettre vos compétences au service des personnes ressentant le besoin d'un soutien psychologique en cette période de covid-19.
+                        </p>
+                    </div>
+                    <div class="col-md-5">
+                        <img src="http://placehold.it/1920x1280" alt="">
+                    </div>
                 </div>
-                <div class="col-md-12">
-                    <h3 class="line-bottom">Comment prendre rendez-vous :</h3>
-                    <p>
-                        Inscrivez-vous sur la plateforme via le formulaire Demander de l’aide.
-                    </p>
-                    <p>
-                        Vous allez recevoir un e-mail de confirmation. Cliquez sur le lien puis sur Prendre rendez-vous.
-                    </p>
-                    <p>
-                        Choisissez l’horaire qui vous convient en fonction de la date et de la localité.
-                    </p>
-                    <p>
-                        Une fois le rendez-vous validé, vous recevez immédiatement une confirmation par e-mail dans lequel apparaissent les coordonnées de votre
-                        thérapeute (pensez à vérifier vos spams).
-                    </p>
-                    <p>
-                        C'est à vous de prendre contact à l’heure du rendez-vous avec votre thérapeute. Merci d'annuler au moins 24h à l’avance le rendez-vous afin
-                        de libérer le créneau pour une autre personne.
-                    </p>
-                    <p>
-                        D'une manière générale, ce dispositif vous offre un soutien de 5 séances sur l'ensemble de la durée du confinement*Vous pouvez prendre
-                        plusieurs rendez-vous avec le ou la même thérapeute en recherchant son nom mais vous pouvez également faire appel à un.e autre
-                        thérapeute la fois suivante.
-                    </p>
-                    <p>
-                        Nb: Si dans le cadre de ce soutien psychologique ponctuelle, vous décidez de faire appel aux services d’un.e des thérapeutes de la
-                        plateforme, nous vous invitons à lui formuler votre demande directement. Ce suivi se fera aux conditions définies par le/la thérapeute dans
-                        le cadre de son activité régulière (régularité, tarif, etc.).
-                    </p>
-                    <p>
-                        *cette date peut être repoussée en fonction de l’évolution de la situation
-                    </p>
-                    <p>
-                        Nous vous invitons à respecter, à tout instant de votre relation d'entraide, les consignes en vigueur disponibles
-                        sur <a href="https://www.gouvernement.fr/info-coronavirus" target="_blank">https://www.gouvernement.fr/info-coronavirus</a>.
-                    </p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="section-content">
+                <div class="row mt-30">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="schedule-box maxwidth500 bg-lighter mb-30">
+                            <div class="schedule-details clearfix p-15 pt-10">
+                                <h4 class="title bg-danger p-25 text-center font-30 text-white mt-0">Comment ?</h4>
+                                <div class="clearfix"></div>
+                                <p class="mt-10">
+                                    Une fois complété le formulaire ci-dessous, vous
+                                    recevrez un mail de confirmaPon avec les informaPons
+                                    nécessaires au bon déroulement de votre parPcipaPon.
+                                    En cliquant sur le lien, vous accéderez à votre
+                                    calendrier. Vous pourrez y renseigner les horaires
+                                    auxquels vous souhaitez vous rendre disponible. Vous
+                                    êtes libre de choisir le temps mis à disposiPon et celui-
+                                    ci peut varier d’un jour à l’autre et d’une semaine à
+                                    l’autre. Vous êtes libre de définir la durée des séances.
+                                    Une fois la séance passée, vous avez la possibilité de
+                                    renseigner dans l’historique si elle a bien été honorée.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="schedule-box maxwidth500 bg-lighter mb-30">
+                            <div class="schedule-details clearfix p-15 pt-10">
+                                <h4 class="title bg-danger p-25 text-center font-30 text-white mt-0">Cadre</h4>
+                                <div class="clearfix"></div>
+                                <h5 class="line-bottom">Conditions d’inscription de la plateforme :</h5>
+                                <p class="mt-10">Pour être présent.e sur la plateforme, vous vous engagez à :</p>
+                                <ul>
+                                    <li>
+                                        Avoir suivi une formation théorique et pratique validée par une école ou un institut, vous octroyant le droit de praCquer
+                                        la Gestalt-thérapie
+                                    </li>
+                                    <li>
+                                        Être déjà en activité
+                                    </li>
+                                    <li>
+                                        Respecter le code déontologique de gestalt-thérapie de votre choix, validé par une entité officielle (école, institut,
+                                        organisation professionnelle ...).
+                                    </li>
+                                    <li>
+                                        Être supervisé.e dans votre pratique professionnelle, (de l'ordre d'une fois par mois)
+                                    </li>
+                                    <li>
+                                        Offrir ici une prestation qui s’inscrit dans la continuité de sa pratique professionnelle
+                                    </li>
+                                    <li>
+                                        Ne recevoir aucune rétribution pour les séances proposées via la plateforme. L’aide apportée est enCèrement bénévole.
+                                    </li>
+                                    <li>être disponible aux horaires indiqués sur la plateforme</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-12">
-                    <h3 class="line-bottom">Si vous proposez de l'aide :</h3>
-                    <p>Vous souhaitez mettre vos compétences au service des personnes ressentant le besoin d'un soutien psychologique en cette période de
-                        covid-19.</p>
-                    <p>Une fois complété le formulaire ci-dessous, vous recevrez un mail de confirmation avec les informations nécessaires au bon déroulement de
-                        votre participation.</p>
-                    <p>
-                        En cliquant sur le lien, vous accéderez à votre calendrier. Vous pourrez y renseigner les horaires auxquels vous souhaitez vous rendre
-                        disponible. Vous êtes libre de choisir le temps mis à disposition et celui-ci peut varier d’un jour à l’autre et d’une semaine à l’autre. Vous êtes
-                        libre de définir la durée des séances. Une fois la séance passée, vous avez la possibilité de renseigner dans l’historique si elle a bien été
-                        honorée.
-                    </p>
-                </div>
-                <div class="col-md-12">
-                    <h3 class="line-bottom">Conditions d’inscription de la plateforme :</h3>
-                    <p>Pour être présent.e sur la plateforme, vous vous engagez à :</p>
-                    <ul>
-                        <li>
-                            Avoir suivi une formation théorique et pratique validée par une école ou un institut, vous octroyant le droit de praCquer
-                            la Gestalt-thérapie
-                        </li>
-                        <li>
-                            Être déjà en activité
-                        </li>
-                        <li>
-                            Respecter le code déontologique de gestalt-thérapie de votre choix, validé par une entité officielle (école, institut,
-                            organisation professionnelle ...).
-                        </li>
-                        <li>
-                            Être supervisé.e dans votre pratique professionnelle, (de l'ordre d'une fois par mois)
-                        </li>
-                        <li>
-                            Offrir ici une prestation qui s’inscrit dans la continuité de sa pratique professionnelle
-                        </li>
-                        <li>
-                            Ne recevoir aucune rétribution pour les séances proposées via la plateforme. L’aide apportée est enCèrement bénévole.
-                        </li>
-                        <li>être disponible aux horaires indiqués sur la plateforme</li>
-                    </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: Causes -->
+    <section>
+        <div class="container">
+            <div class="row mtli-row-clearfix">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <div class="event-details">
+                        <h2>Qu’est-ce que la Gestalt-thérapie ?</h2>
+                        <p class="mb-20 mt-20">
+                            Gestalt vient du verbe allemand « gestalten » qui pourrait se traduire par prendre forme, se structurer.
+                            La Gestalt-thérapie est née dans les années cinquante aux États-Unis, et s’est développée en Europe dans les années 7O.
+                        </p>
+                        <p class="mb-20 mt-20">
+                            En Gestalt-thérapie, l'attention est portée à ce qui se passe dans l'ici et maintenant et à l’impact que le passé continue
+                            d’avoir dans nos vies présentes. Elle s'intéresse à remettre du mouvement, là où se sont installés de la fixité, de
+                            l’habitude, du blocage en aidant la personne à élargir ses zones de choix. Elle permet ainsi de développer autonomie,
+                            responsabilité et créativité.
+                        </p>
+                        <div class="pull-left flip mr-15">
+                            <img alt="" src="http://placehold.it/370x235">
+                        </div>
+                        <div class="">
+                            <p class="font-14 text-black-light">
+                                La Gestalt-thérapie s’inscrit dans le courant de la psychologie humaniste considérant
+                                l’être humain comme ayant les capacités et les ressources nécessaires à son
+                                épanouissement. Elle s'intéresse à l'individu dans ses dimensions corporelles,
+                                émotionnelles, culturelles, intellectuelles, spirituelles et à la manière dont nous
+                                sommes en relation : de soi à soi, avec les autres, avec le monde.
+                            </p>
+                            <p class="mt-10">
+                                Impliqué.e et engagé.e dans la relation thérapeutique, le/la thérapeute accompagne
+                                la personne pour l'aider à identifier et exprimer ses émotions et ses besoins. Ce
+                                cheminement à deux permet à la personne de consolider sa sécurité intérieure et de
+                                devenir créatrice de sa vie.
+                            </p>
+                        </div>
+                        <p class="mt-20">
+                            Pour accéder à ce niveau d’existence, il s’agit de remettre l’individu au centre de sa vie, en l’initiant pas à pas, à la notion de
+                            responsabilité au sens existentialiste. Ce qu’exprime Sartre en ces mots :
+                        </p>
+                        <blockquote class="gray">
+                            <p>Je ne suis pas responsable de ce qu’on a fait de moi, mais je suis
+                                responsable de ce que je fais de ce qu’on a fait de moi.</p>
+                        </blockquote>
+                    </div>
                 </div>
             </div>
         </div>

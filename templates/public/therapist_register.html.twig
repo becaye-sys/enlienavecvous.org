@@ -8,7 +8,7 @@
 
 {% block body %}
     <!-- Section: inner-header -->
-    <section class="inner-header divider layer-overlay overlay-dark" data-bg-img="https://placehold.it/1920x1280">
+    <section class="inner-header divider layer-overlay overlay-dark" data-bg-img="{{ asset('images/enlien_courbe.jpg') }}">
         <div class="container pt-30 pb-30">
             <!-- Section Content -->
             <div class="section-content text-center">
@@ -106,6 +106,7 @@
                             Vous êtes libre de définir la durée des séances. Une fois la
                             séance passée, vous avez la possibilité de renseigner dans l’historique si elle a bien été honorée.
                         </p>
+                        <img src="{{ asset('images/enlien_sil.jpg') }}"/>
                     </div>
                     <div class="col-md-8">
                         {{ form_start(form, {
