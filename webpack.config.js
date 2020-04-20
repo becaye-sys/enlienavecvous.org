@@ -85,7 +85,7 @@ Encore
 ;
 Encore.configureDefinePlugin(options => {
     options["process.env"].API_URL = process.env.API_URL;
-    options["process.env"].PROJECT_ADDR = process.env.PROJECT_ADDR;
+    //options["process.env"].PROJECT_ADDR = process.env.PROJECT_ADDR;
 });
 
 module.exports = Encore.getWebpackConfig();

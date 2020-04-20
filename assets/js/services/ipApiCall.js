@@ -1,11 +1,12 @@
 import $ from "jquery";
-import {API_URL} from "../config";
+import {API_URL, customHeaders} from "../config";
 
 export function ajaxCallIpAPI(callback, $country, $department, $town) {
     $.ajax({
         url: `${API_URL}get-ip`,
         async: false,
         method: 'GET',
+        headers: customHeaders,
         success: function (result) {
             callback(result, $country, $department, $town);
         }
