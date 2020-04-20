@@ -10,9 +10,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AppointmentRepository")
- * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="discriminator", type="string")
- * @ORM\DiscriminatorMap({"appointment" = "Appointment", "history" = "History"})
  */
 class Appointment implements AppointmentInterface
 {
@@ -44,7 +41,6 @@ class Appointment implements AppointmentInterface
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"create_booking"})
      */
     protected $booked;
 
@@ -98,16 +94,11 @@ class Appointment implements AppointmentInterface
      */
     protected $status;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\History", mappedBy="appointment")
-     */
-    private $histories;
-
     public function __construct()
     {
         $this->booked = false;
+        $this->setStatus(self::STATUS_AVAILABLE);
         $this->cancelled = false;
-        $this->histories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -232,43 +223,6 @@ class Appointment implements AppointmentInterface
     {
         $this->status = $status;
 
-        return $this;
-    }
-
-    /**
-     * @return Collection|History[]
-     */
-    public function getHistories(): Collection
-    {
-        return $this->histories;
-    }
-
-    public function addHistory(History $history): self
-    {
-        if (!$this->histories->contains($history)) {
-            $this->histories[] = $history;
-            $history->setAppointment($this);
-        }
-
-        return $this;
-    }
-
-    public function removeHistory(History $history): self
-    {
-        if ($this->histories->contains($history)) {
-            $this->histories->removeElement($history);
-            // set the owning side to null (unless already changed)
-            if ($history->getAppointment() === $this) {
-                $history->setAppointment(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function emptyHistories(): self
-    {
-        $this->histories->clear();
         return $this;
     }
 }
