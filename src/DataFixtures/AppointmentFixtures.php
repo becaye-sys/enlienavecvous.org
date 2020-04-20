@@ -32,7 +32,7 @@ class AppointmentFixtures extends Fixture implements DependentFixtureInterface
             $appointment = new Appointment();
             $appointment->setTherapist($therapist);
             $appointment->setStatus(Appointment::STATUS_AVAILABLE);
-            $appointment->setLocation($faker ?? $faker->city ?? "Lyon");
+            $appointment->setLocation($faker ? $faker->city : "Lyon");
             $randomDate = $this->getRandomDate();
             $date = $randomDate['start'];
             $start = new \DateTime($date);
