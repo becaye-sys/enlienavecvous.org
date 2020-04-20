@@ -26,30 +26,23 @@
                         <td>{{ a.action }}</td>
                         <td>{{ a.actionedAt|date('d/m/Y H:i') }}</td>
                         <td>
-                            {% if a.appointment is not null %}
-                                {{ a.appointment.bookingDate|date('d/m/Y') }}
+                            {% if a.bookingHistory is not null %}
+                                {{ a.bookingHistory.bookingDate|date('d/m/Y') }}
                             {% else %}
                                 -
                             {% endif %}
                         </td>
                         <td>
-                            {% if a.appointment is not null %}
-                                {{ a.appointment.bookingStart|date('H:i') }}
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if a.appointment is not null %}
-                                {{ a.appointment.bookingEnd|date('H:i') }}
+                            {% if a.bookingHistory is not null %}
+                                {{ a.bookingHistory.bookingStart|date('H:i') }}
                             {% else %}
                                 -
                             {% endif %}
                         </td>
                         <td>{{ a.therapist.firstName }} {{ a.therapist.lastName }}</td>
                         <td>
-                            {% if a.appointment is not null %}
-                                {{ constant('App\\Entity\\Appointment::STATUS')[a.appointment.status] }}
+                            {% if a.bookingHistory is not null %}
+                                {{ constant('App\\Entity\\Appointment::STATUS')[a.bookingHistory.status] }}
                             {% endif %}
                         </td>
                         <td>
