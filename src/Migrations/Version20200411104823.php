@@ -22,9 +22,9 @@ final class Version20200411104823 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE appointment DROP discriminator');
-        $this->addSql('ALTER TABLE history DROP FOREIGN KEY FK_27BA704BBF396750');
-        $this->addSql('ALTER TABLE history ADD booked TINYINT(1) NOT NULL, ADD booking_date DATE NOT NULL, ADD location VARCHAR(255) NOT NULL, ADD booking_start TIME NOT NULL, ADD booking_end TIME NOT NULL, ADD cancelled TINYINT(1) NOT NULL, ADD cancel_message LONGTEXT DEFAULT NULL, CHANGE id id INT AUTO_INCREMENT NOT NULL');
+        //$this->addSql('ALTER TABLE appointment DROP discriminator');
+        //$this->addSql('ALTER TABLE history DROP FOREIGN KEY FK_27BA704BBF396750');
+        //$this->addSql('ALTER TABLE history ADD booked TINYINT(1) NOT NULL, ADD booking_date DATE NOT NULL, ADD location VARCHAR(255) NOT NULL, ADD booking_start TIME NOT NULL, ADD booking_end TIME NOT NULL, ADD cancelled TINYINT(1) NOT NULL, ADD cancel_message LONGTEXT DEFAULT NULL, CHANGE id id INT AUTO_INCREMENT NOT NULL');
     }
 
     public function down(Schema $schema) : void

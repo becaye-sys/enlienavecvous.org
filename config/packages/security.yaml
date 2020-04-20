@@ -27,7 +27,7 @@ security:
             logout:
                 path: app_logout
                 # where to redirect after logout
-                target: app_login
+                target: 'https://%env(resolve:PROJECT_ADDR)%/login'
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -39,5 +39,4 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
          - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-         - { path: '^/', roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
         # - { path: ^/profile, roles: ROLE_USER }

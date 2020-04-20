@@ -1,7 +1,7 @@
 import './../public/css/bootstrap.min.css';
 import './../public/css/jquery-ui.min.css';
 import './../public/css/animate.css';
-import './../public/css/css-plugin-collections.css';
+//import './../public/css/css-plugin-collections.css';
 import './../public/css/menuzord-skins/menuzord-rounded-boxed.css';
 import './../public/css/style-main.css';
 import './../public/css/preloader.css';

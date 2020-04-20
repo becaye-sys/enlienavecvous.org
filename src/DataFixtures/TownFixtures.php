@@ -24,9 +24,9 @@ class TownFixtures extends Fixture implements FixtureGroupInterface, DependentFi
 
     public function load(ObjectManager $manager)
     {
-        $this->loadFrenchTowns($manager);
+        //$this->loadFrenchTowns($manager);
         $this->loadLuxembourgTowns($manager);
-        $this->loadSwissTowns($manager);
+        //$this->loadSwissTowns($manager);
 
         $manager->flush();
     }

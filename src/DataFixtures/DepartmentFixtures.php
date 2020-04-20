@@ -48,7 +48,6 @@ class DepartmentFixtures extends Fixture implements FixtureGroupInterface
     private function loadBelgiumDepartments(ObjectManager $manager)
     {
         $departmentArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/departments/departements_be.json");
-        $faker = Factory::create("fr");
         // for each region -> create Region and persist
         foreach ($departmentArray as $value) {
             $department = new Department();

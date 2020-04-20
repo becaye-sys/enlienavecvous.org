@@ -17,7 +17,9 @@ class AppointmentFixtures extends Fixture implements DependentFixtureInterface
     public const APPOINT_REFERENCE = "appoint_";
     public function load(ObjectManager $manager)
     {
-        $faker = Factory::create("fr");
+        if ($_SERVER['APP_ENV'] === 'dev') {
+            $faker = Factory::create("fr");
+        }
 
         for ($i = 1; $i <= 80; $i++) {
             $therapistId = random_int(1,8);
@@ -29,14 +31,8 @@ class AppointmentFixtures extends Fixture implements DependentFixtureInterface
             $patient = $this->getReference(PatientFixtures::PATIENT_USER_REFERENCE."_$patientId");
             $appointment = new Appointment();
             $appointment->setTherapist($therapist);
-            if ($i%2 === 0) {
-                $appointment->setPatient($patient);
-                $this->addReference(self::APPOINT_REFERENCE.$i, $appointment);
-                $appointment->setStatus(Appointment::STATUS_BOOKED);
-            } else {
-                $appointment->setStatus(Appointment::STATUS_AVAILABLE);
-            }
-            $appointment->setLocation($faker->city);
+            $appointment->setStatus(Appointment::STATUS_AVAILABLE);
+            $appointment->setLocation($faker ? $faker->city : "Lyon");
             $randomDate = $this->getRandomDate();
             $date = $randomDate['start'];
             $start = new \DateTime($date);
