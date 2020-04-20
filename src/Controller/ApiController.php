@@ -187,9 +187,21 @@ class ApiController extends AbstractController
     /**
      * @Route(path="/get-ip", name="api_get_ip")
      */
-    public function getIp(SerializerInterface $serializer) {
+    public function getIp(SerializerInterface $serializer, Request $request) {
         $client = HttpClient::create();
-        $url = "http://ip-api.com/json/";
+        $url = "https://api.ipify.org/?format=json";
+        $response = $client->request('GET', $url);
+        $data = $serializer->serialize($response, 'json');
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
+    }
+
+    /**
+     * @Route(path="/get-localisation", name="api_get_localisation")
+     */
+    public function getLocalisation(SerializerInterface $serializer, Request $request) {
+        $client = HttpClient::create();
+        $ip = $request->query->get('ip');
+        $url = "http://ip-api.com/json/$ip";
         $response = $client->request('GET', $url);
         $data = $serializer->serialize($response, 'json');
         return new JsonResponse($data, Response::HTTP_OK, [], true);
