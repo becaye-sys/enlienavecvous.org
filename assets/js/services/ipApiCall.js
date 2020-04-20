@@ -1,8 +1,9 @@
 import $ from "jquery";
+import {API_URL} from "../config";
 
 export function ajaxCallIpAPI(callback, $country, $department, $town) {
     $.ajax({
-        url: `https://127.0.0.1:8000/api/get-ip`,
+        url: `${API_URL}get-ip`,
         async: false,
         method: 'GET',
         success: function (result) {
