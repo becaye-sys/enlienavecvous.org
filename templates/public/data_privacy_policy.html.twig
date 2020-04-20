@@ -1,34 +1,54 @@
 {% extends "public_layout.html.twig" %}
 
 {% block body %}
-    <div class="container text-center">
-        <h1>Politique de Protection des données</h1>
-        <p>
-            En accord avec le Règlement Général sur la Protection des Données, enlienavecvous.org collecte des
-            données uniquement à des fins de mise en relation de Gestalt-thérapeutes et Gestalt-praticiennes avec des
-            personnes ressentant le besoin d’un soutien psychologique.
-        </p>
-        <p>
-            Les données collectées par onestlapourvous-psy.com sont uniquement celles renseignées par les utilisateurs
-            du site internet onestlapourvous-psy.com. Aucune autre donnée personnelle n'est collectée, notamment
-            grâce à l'utilisation d'une technologie anonyme et sans cookie de mesure d'usage.
-        </p>
-        <p>
-            Les données collectées dans le cadre du traitement de mise en relation de Gestalt-thérapeutes et Gestalt-
-            praticiennes avec des personnes ressentant le besoin d’un soutien psychologique sont utilisées uniquement
-            pour cet objectif. Elles sont supprimées automatiquement 2 mois après la mise en relation, ou sur simple
-            demande à mail@xxx.com.
-        </p>
-        <p>
-            Les données collectées correspondent à des données à caractères personnelles mais ne sont pas des
-            données particulières dites à caractère sensible de par la nature de la collecte (anonymisation des
-            informations partout où cela est possible, utilisation d'intervalles d'âges, mise en relation simple par e-mail,
-            ...).
-        </p>
-        <p>
-            Vous disposez d'un droit d'accès, de rectification, d’effacement et de portabilité de vos données ainsi que
-            d’un droit d'opposition et d'un droit de limitation du traitement des données vous concernant. Vous pouvez
-            exercer vos droits en nous contactant à l'adresse suivante : mail@xxx.com
-        </p>
-    </div>
+    <!-- Section: inner-header -->
+    <section class="inner-header divider layer-overlay" data-bg-img="{{ asset('images/enlien_mains.jpg') }}">
+        <div class="container pt-30 pb-30">
+            <!-- Section Content -->
+            <div class="section-content text-center">
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3 text-center">
+                        <h1 class="text-uppercase text-white font-30">Politique de Protection des données</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10 col-md-push-1">
+                    <div id="section-one" class="mb-50">
+                        <p class="mb-20">
+                            En accord avec le Règlement Général sur la Protection des Données, enlienavecvous.org collecte des données uniquement à
+                            des fins de mise en relation des praticien.ne.s de la Gestalt-thérapie avec des personnes ressentant le besoin d’un soutien
+                            psychologique dans le cadre de la crise du Covid 19 en France, Belgique, Suisse et au Luxembourg.
+                        </p>
+                        <p>
+                            Les données collectées par enlienavecvous.org sont uniquement celles renseignées par les personnes utilisant le site
+                            internet enlienavecvous.org. Aucune autre donnée personnelle n'est collectée. Le site utilise des cookies pour la création de
+                            votre session utilisateur/trice et à l’utilisation de la mémorisation de vos identifiants ("se souvenir de moi").
+                        </p>
+                        <p>
+                            Afin de protéger vos données, nous avons mis en place une base de donnée uniquement accessible depuis l'application
+                            Symfony. Le site utilise une fonction de hachage cryptographique afin de protéger votre mot de passe et l’accès à votre
+                            compte.
+                        </p>
+                        <p>
+                            Les données collectées dans le cadre du traitement de mise en relation de praticien.ne.s de la Gestalt-thérapie avec des
+                            personnes ressentant le besoin d’un soutien psychologique sont utilisées uniquement pour cet objectif. Elles seront
+                            supprimées soit à la fermeture du site, une fois la crise passée, soit au moment de votre désinscription, ou sur simple
+                            demande à accueil@enlienavecvous.org.
+                        </p>
+                        <p>
+                            Vous disposez d'un droit d'accès, de rectification, d’effacement et de portabilité de vos données ainsi que d’un droit
+                            d'opposition et d'un droit de limitation du traitement des données vous concernant. Vous pouvez exercer vos droits en nous
+                            contactant à l'adresse suivante : accueil@enlienavecvous.org
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}

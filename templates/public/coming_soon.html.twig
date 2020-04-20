@@ -1,0 +1,57 @@
+{% extends "public_layout.html.twig" %}
+
+{% block header %}{% endblock %}
+
+{% block body %}
+    <!-- start main-content -->
+    <section id="home" class="bg-lightest fullscreen">
+        <div class="display-table text-center">
+            <div class="display-table-cell">
+                <div class="container pt-0 pb-0">
+                    <div class="row">
+                        <div class="col-md-10 col-md-offset-1">
+                            <h1 class="text-theme-colored font-weight-300 font-64">We Are Coming Soon</h1>
+
+                            <div id="countdown17" class="ClassyCountdownDemo"></div>
+
+                            <p class="font-14">Sorry.... We are improving and fixing problems of our website.<br>We will be back very soon....</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- end main-content -->
+{% endblock %}
+
+{% block footer %}
+    <!-- Footer -->
+    <footer id="footer" class="footer text-center bg-black-222">
+        <div class="container pt-10 pb-10">
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="text-white mb-0">Copyright &copy;2020 Enlienavecvous.org. All Rights Reserved</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <!-- jQuery Classy Countdown Scripts and CSS -->
+    <link href="{{ asset('js/classycountdown/css/jquery.classycountdown.css') }}" rel="stylesheet" type="text/css">
+    <script src="{{ asset('js/classycountdown/js/jquery.knob.js') }}"></script>
+    <script src="{{ asset('js/classycountdown/js/jquery.throttle.js') }}"></script>
+    <script src="{{ asset('js/classycountdown/js/jquery.classycountdown.js') }}"></script>
+
+    <!-- Classy Countdown Script -->
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#countdown17').ClassyCountdown({
+                theme: "flat-colors-very-wide",
+                end: $.now() + 500000
+            });
+        });
+    </script>
+{% endblock %}

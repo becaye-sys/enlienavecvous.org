@@ -1,33 +1,102 @@
 {% extends "public_layout.html.twig" %}
 
 {% block body %}
-    <div class="container text-center">
-        <h1>Le projet</h1>
-        <div class="row">
-            <div class="col-lg-12">
-                <p>
-                    Depuis déjà plusieurs semaines nous vivons une situation sanitaire inédite. Les périodes de crise sont une perte de repères et peuvent
-                    accroitre maintes difficultés. Consciente des répercussions et des changements dus à la crise du Covid-19 au sein des familles et de la
-                    société, et portée par des valeurs d’entraide et de solidarité, l’<a href="">équipe de enlienavecvous.org</a> a eu à cœur de se rendre utile.
-                </p>
-                <p>
-                    Enlienavecvous.org a été pensé pour mettre en relation de manière coordonnée et gratuite des praticien.ne.s de la Gestalt-thérapie avec des
-                    personnes ayant <a href="">besoin d’un soutien psychologique</a> durant cette période.
-                </p>
-                <p>
-                    Cette plateforme est ouverte à l’ensemble de la population francophone de France, Suisse, Belgique et du Luxembourg.
-                </p>
-                <p>
-                    L’<a href="">équipe de enlienavecvous.org</a> est constituée de gestaltistes d’horizons différents et a élaboré ce projet pour permettre à chacun.e de
-                    l’ensemble des praticien.ne.s de <a href="">la Gestalt-thérapie</a> de <a href="">prendre part</a> à l’élan incroyable de solidarité actuel.
-                </p>
-                <p>
-                    Notre plateforme est gratuite, sans publicité, open-source, et ne garde pas vos données.
-                </p>
-                <p>
-                    <a href="{{ path('how_it_works') }}">En savoir plus sur Comment ça marche ?</a>
-                </p>
+    <!-- Section: inner-header -->
+    <section class="inner-header divider layer-overlay" data-bg-img="{{ asset('images/enlien_mains.jpg') }}">
+        <div class="container pt-30 pb-30">
+            <!-- Section Content -->
+            <div class="section-content text-center">
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3 text-center">
+                        <h1 class="text-uppercase text-white font-30">Le projet</h1>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Section: About Us -->
+    <section id="about">
+        <div class="container">
+            <div class="section-content">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2 class="text-uppercase font-18">
+                        METTRE EN RELATION DE MANIÈRE COORDONNÉE ET GRATUITE DES PRATICIEN.NE.S DE
+                            <a href="{{ path('who_are_we') }}"><span class="text-theme-colored">la gestalt-thérapie</span></a> AVEC DES PERSONNES AYANT
+                            <a href="{{ path('ask_for_help') }}"><span class="text-theme-colored">besoin d'un soutien psychologique</span></a>
+                        </h2>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>
+                                    Depuis plusieurs semaines nous vivons une situation sanitaire inédite. Les périodes de crise sont une perte de repères et peuvent
+                                    accroitre maintes difficultés. Consciente des répercussions et des changements dus à la crise du Covid-19 au sein des familles et de
+                                    la société, et portée par des valeurs d’entraide et de solidarité, l’équipe de enlienavecvous.org a eu à cœur de se rendre utile.
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p>
+                                    Enlienavecvous.org a été pensé pour mettre en relation de manière coordonnée et gratuite des praPcien.ne.s de la Gestalt-thérapie avec
+                                    des personnes ayant besoin d’un souPen psychologique durant cette période.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="donate-thumb">
+                            <img src="https://placehold.it/350x300" class="img-fullwidth" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: -->
+    <section>
+        <div class="container">
+            <div class="section-content">
+                <div class="row mt-40">
+                    <div class="col-md-4">
+                        <div class="icon-box p-0 flex-column">
+                            <a class="icon-border-effect effect-circled  icon icon-circled mb-0 mr-0 pull-left icon-lg" href="">
+                                <i class="flaticon-charity-food-donation text-theme-colored font-54"></i>
+                            </a>
+                            <div class="ml-120">
+                                <p class="text-gray">
+                                    Cette plateforme est ouverte à l’ensemble de la population francophone de France, Suisse, Belgique et du Luxembourg.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="icon-box p-0 d-flex flex-column">
+                            <a class="icon-border-effect effect-circled  icon icon-circled mb-0 mr-0 pull-left icon-lg" href="">
+                                <i class="flaticon-charity-person-inside-a-heart text-theme-colored font-54"></i>
+                            </a>
+                            <div class="ml-120">
+                                <p class="text-gray">
+                                    L’équipe de enlienavecvous.org est constituée de gestaltistes d’horizons différents et a élaboré ce projet pour permettre à chacun.e de
+                                    l’ensemble des praticien.ne.s de la Gestalt-thérapie de prendre part à l’élan incroyable de solidarité actuel.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="icon-box p-0 d-flex flex-column">
+                            <a class="icon-border-effect effect-circled  icon icon-circled mb-0 mr-0 pull-left icon-lg" href="">
+                                <i class="flaticon-charity-shelter text-theme-colored font-54"></i>
+                            </a>
+                            <div class="ml-120">
+                                <p class="text-gray">
+                                    Notre plateforme est gratuite, sans publicité, open-source, et respecte votre vie privée.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}

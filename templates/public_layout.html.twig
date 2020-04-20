@@ -1,56 +1,49 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>{% block title %}On est là pour vous !{% endblock %}</title>
-    <!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <title>{% block title %}En lien avec vous !{% endblock %}</title>
+    <meta name="description" content="ngopress - Nonprofit, Crowdfunding & Charity HTML5 Template" />
+    <meta name="keywords" content="charity,crowdfunding,nonprofit,orphan,Poor,funding,fundrising,ngo,children" />
+    <meta name="author" content="ThemeMascot" />
+    <!-- Stylesheet -->
+    <!-- <link href="css/style.css" rel="stylesheet" type="text/css"> -->
     {% block stylesheets %}
-        {{ encore_entry_link_tags('app') }}
+        {{ encore_entry_link_tags('public_layout') }}
     {% endblock %}
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>-->
 </head>
 <body>
-<header>
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-        <h5 class="my-0 mr-md-auto font-weight-normal">On est là pour vous !</h5>
-        <nav class="my-2 my-md-0 mr-md-3">
-            <a class="p-2 text-dark" href="{{ path('index') }}">Accueil</a>
-            <a class="p-2 text-dark" href="{{ path('ask_for_help') }}">Demander de l'aide</a>
-            <a class="p-2 text-dark" href="{{ path('therapist_register') }}">Proposer mon aide</a>
-            <a class="p-2 text-dark" href="{{ path('how_it_works') }}">Comment ça marche ?</a>
-            <a class="p-2 text-dark" href="{{ path('emergency_numbers') }}">Numéros d'urgence</a>
-        </nav>
-        {% if is_granted('ROLE_USER') %}
-            {% if is_granted('ROLE_THERAPIST') %}
-                <a class="btn btn-outline-primary" href="{{ path('therapist_dashboard') }}">Mon compte</a>
-            {% else %}
-                <a class="btn btn-outline-primary" href="{{ path('patient_dashboard') }}">Mon compte</a>
-            {% endif %}
-            <a class="btn btn-outline-primary" href="{{ path('app_logout') }}">Déconnexion</a>
-        {% else %}
-            <a class="btn btn-outline-primary" href="{{ path('app_login') }}">Connexion</a>
-        {% endif %}
+<div id="wrapper" class="clearfix">
+    {% block preloader %}
+        {#{% include "common/_preloader.html.twig" %}#}
+    {% endblock %}
+    {% block header %}
+        {% include "common/_header.html.twig" %}
+    {% endblock %}
+    <div class="main-content">
+        {% block body %}{% endblock %}
     </div>
-</header>
-{% block body %}{% endblock %}
-<footer class="container">
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-        <nav class="my-2 my-md-0 mr-md-3">
-            <a class="p-2 text-dark" href="{{ path('the_project') }}">Le projet</a>
-            <a class="p-2 text-dark" href="{{ path('who_are_we') }}">Qui sommes-nous ?</a>
-            <a class="p-2 text-dark" href="{{ path('data_privacy_policy') }}">Politique de Protection des données</a>
-            <a class="p-2 text-dark" href="{{ path('terms_of_use') }}">Conditions d'utilisation</a>
-            <a class="p-2 text-dark" href="{{ path('legal_notices') }}">Mentions légales</a>
-        </nav>
-    </div>
-</footer>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    {% block footer %}
+        {% include "common/_footer.html.twig" %}
+    {% endblock %}
+    <a class="scrollToTop" href="#"><i class="fa fa-angle-up"></i></a>
+</div>
+
 {% block javascripts %}
-    {{ encore_entry_script_tags('app') }}
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>-->
+    <script src="{{ asset('js/jquery-2.2.4.min.js') }}"></script>
+    <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/jquery-plugin-collection.js') }}"></script>
+    <script src="{{ asset('js/defaultCustom.js') }}"></script>
+    {#{{ encore_entry_script_tags('public_layout') }}#}
 {% endblock %}
 </body>
 </html>
