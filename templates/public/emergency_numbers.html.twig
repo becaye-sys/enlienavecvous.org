@@ -1,57 +1,69 @@
 {% extends "public_layout.html.twig" %}
 
 {% block body %}
-    <div class="container text-center">
-        <h1>Numéros d'urgence</h1>
-        <h2>En cas d'urgence physique ou psychologique, si votre vie ou celle d'autrui est en danger :</h2>
-        
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="text-center">
-                        <a>France</a>
-                    </div>
-                    <div class="text-left">
-                        <p>Si vous êtes victimes ou témoins de violences sexistes et sexuelles, vous n’êtes pas seul.es.</p>
-                        <p>
-                            En cas d’urgence, contactez le 17 ou envoyez un SMS au 114. Vous pouvez également contacter le 3919 et le tchat
-                            (https://commentonsaime.fr) de En Avant Toutes.
-                        </p>
-                        <p>Si vous avez un doute concernant des maltraitances sur des enfants, vous pouvez contacter le 119.</p>
-                        <p>Numéro vert du service d’entraide et de soutien psychologique de la Croix Rouge française :</p>
-                        <p><strong>09 70 28 30 00 ou 0800 858 858</strong></p>
-                        <p>Retrouvez tous les numéros utiles ici :</p>
-                        <a target="_blank" href="https://destinationsante.com/vous-avez-un-probleme-trouvez-le-bon-numero.html">https://destinationsante.com/vous-avez-un-probleme-trouvez-le-bon-numero.html</a>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="text-center">
-                        <a>Suisse</a>
-                    </div>
-                    <div class="text-left">
-                        <p>Retrouvez tous les numéros utiles ici :</p>
-                        <a target="_blank" href="http://www.educh.ch/prevention/hotline-de-soutien-psychologique-gratuite-suisse-france-quebec-a1493.html">http://www.educh.ch/prevention/hotline-de-soutien-psychologique-gratuite-suisse-france-quebec-a1493.html</a>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="text-center">
-                        <a>Belgique</a>
-                    </div>
-                    <div class="text-left">
-                        <p>Retrouvez tous les numéros utiles ici :</p>
-                        <a target="_blank" href="https://www.belgium.be/fr/sante/soins_de_sante/urgences">https://www.belgium.be/fr/sante/soins_de_sante/urgences</a>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="text-center">
-                        <a>Luxembourg</a>
-                    </div>
-                    <div class="text-left">
-                        <p>Retrouvez tous les numéros utiles ici :</p>
-                        <a target="_blank" href="https://sante.public.lu/fr/urgences-gardes/autres-urgences/index.html">https://sante.public.lu/fr/urgences-gardes/autres-urgences/index.html</a>
+    <!-- Section: inner-header -->
+    <section class="inner-header divider layer-overlay overlay-dark" data-bg-img="{{ asset('images/enlien_mains.jpg') }}">
+        <div class="container pt-30 pb-30">
+            <!-- Section Content -->
+            <div class="section-content text-center">
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3 text-center">
+                        <h1 class="text-white text-uppercase font-36">Numéros d'urgence</h1>
+                        <h2 class="text-white text-uppercase font-20">En cas d'urgence physique ou psychologique, si votre vie ou celle d-autrui est en danger</h2>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Section: Features -->
+    <section class="bg-lighter">
+        <div class="container">
+            <div class="section-content">
+                <div class="row mtli-row-clearfix">
+                    <div class="col-xs-12 col-sm-6 col-md-3 pb-sm-20">
+                        <div class="icon-box text-center p-10">
+                            <a href="#" class="icon icon-gray icon-bordered icon-rounded icon-border-effect effect-rounded mb-10">
+                                <i class="fa fa-user-plus font-30 text-theme-colored"></i>
+                            </a>
+                            <h4 class="icon-box-title"><a href="#">France</a></h4>
+                            <p class="text-gray">
+                                Violences sexistes et sexuelles : contactez le 17 ou le 3919, ou envoyez un SMS au 114.
+                                Maltraitances sur des enfants : contactez le 119.
+                                Service de soutien psychologique de la Croix Rouge française : 09 70 28 30 00 ou 0800 858 858
+                            </p>
+                            <a href="https://destinationsante.com/vous-avez-un-probleme-trouvez-le-bon-numero.html" target="_blank" class="btn btn-danger">Numéros d'urgence</a>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-3 pb-sm-20">
+                        <div class="icon-box text-center p-10">
+                            <a href="#" class="icon icon-gray icon-bordered icon-rounded icon-border-effect effect-rounded mb-10">
+                                <i class="fa fa-magic font-30 text-theme-colored"></i>
+                            </a>
+                            <h4 class="icon-box-title"><a href="#">Suisse</a></h4>
+                            <a href="http://www.educh.ch/prevention/hotline-de-soutien-psychologique-gratuite-suisse-france-quebec-a1493.html" target="_blank" class="btn btn-danger">Numéros d'urgence</a>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-3 pb-sm-20">
+                        <div class="icon-box text-center p-10">
+                            <a href="#" class="icon icon-gray icon-bordered icon-rounded icon-border-effect effect-rounded mb-10">
+                                <i class="fa fa-globe font-30 text-theme-colored"></i>
+                            </a>
+                            <h4 class="icon-box-title"><a href="#">Belgique</a></h4>
+                            <a href="https://www.belgium.be/fr/sante/soins_de_sante/urgences" target="_blank" class="btn btn-danger">Numéros d'urgence</a>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-3 pb-sm-20">
+                        <div class="icon-box text-center p-10">
+                            <a href="#" class="icon icon-gray icon-bordered icon-rounded icon-border-effect effect-rounded mb-10">
+                                <i class="fa fa-life-ring font-30 text-theme-colored"></i>
+                            </a>
+                            <h4 class="icon-box-title"><a href="#">Luxembourg</a></h4>
+                            <a href="https://sante.public.lu/fr/urgences-gardes/autres-urgences/index.html" target="_blank" class="btn btn-danger">Numéros d'urgence</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}

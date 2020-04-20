@@ -1,65 +1,246 @@
 {% extends "public_layout.html.twig" %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <!-- Revolution Slider 5.x CSS settings -->
+    <link  href="{{ asset('js/revolution-slider/css/settings.css') }}" rel="stylesheet" type="text/css"/>
+    <link  href="{{ asset('js/revolution-slider/css/layers.css') }}" rel="stylesheet" type="text/css"/>
+    <link  href="{{ asset('js/revolution-slider/css/navigation.css') }}" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
 {% block body %}
-    <div class="container jumbotron text-center">
-        <h1>onestlapourvous.org</h1>
-        <h2>Réseau de soutien psychologique durant la crise du Covid-19</h2>
-        <h2>L'approche de la Gestalt-thérapie au service du plus grand nombre</h2>
-    </div>
-    <div class="container text-center">
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <a href="">Je partage l'initiative</a>
-                <a href="">Facebook</a>
-                <a href="">Twitter</a>
-                <a href="">Telegram</a>
-                <a href="">WhatsApp</a>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-6 jumbotron bg-light">
-                <h3>J'ai besoin d'aide</h3>
-                <p class="text-left">La crise actuelle vous confronte à des situations déstabilisantes :</p>
-                <p class="text-left">
-                    Perte de repères et de rythme, manque d’intimité,
-                    présence constante des enfants, inquiétudes quant à
-                    l’avenir, solitude, peur du virus. Nombreuses sont les
-                    peurs ou le mal-être qui peuvent émerger. Ne restez pas
-                    seul.e face à ces difficultés. Contactez-nous.
-                </p>
-                <div class="row">
-                    <div class="col-md-6">
-                        <a href="{{ path('ask_for_help') }}">Demander de l'aide</a>
-                    </div>
-                    <div class="col-md-6">
-                        <a href="{{ path('how_it_works') }}">Comment ça marche ?</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 jumbotron bg-light">
-                <h3>Je suis thérapeute gestalt et je rejoins le mouvement</h3>
-                <p class="text-left">Vous êtes thérapeute ou praticien.ne Gestalt ?</p>
-                <p class="text-left">
-                    Dans un élan de solidarité nationale, face à cette
-                    crise sanitaire sans précédent qui bouleverse nos
-                    vies, vous avez à cœur de vous rendre utile en
-                    mettant vos compétences au service du plus grand
-                    nombre. Rejoignez-nous !
-                </p>
-                <div class="row">
-                    <div class="col-md-6">
-                        <a href="{{ path('therapist_register') }}">Proposer mon aide</a>
-                    </div>
-                    <div class="col-md-6">
-                        <a href="{{ path('how_it_works') }}">Comment ça marche ?</a>
+    {% include "common/_rev_slider.html.twig" %}
+    <!-- Section: divider -->
+    <section data-margin-top="-80px">
+        <div class="container pt-0 pb-0">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="call-to-action bg-theme-colored border-radius-5px p-30">
+                        <div class="col-md-12 text-center">
+                            <h3 class="text-white mt-15">Réseau de soutien psychologique durant la crise du Covid-19</h3>
+                            <h3 class="text-white mt-15">L’approche de la Gestalt-thérapie au service du plus grand nombre</h3>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <h2 class="text-center">En cas d'urgence, si votre vie ou celle d'autrui est en danger, <a href="{{ path('emergency_numbers') }}">contactez les numéros d'urgence de votre pays.</a></h2>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="call-to-action align-items-center pt-20 pb-20">
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-2">
+                        <h3 class="mt-0 text-black">Je partage l'initiative</h3>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="" class="btn btn-default btn-sm">
+                            <i class="fa fa-facebook"></i> Facebook
+                        </a>
+                        <a href="" class="btn btn-default btn-sm">
+                            <i class="fa fa-twitter"></i> Twitter
+                        </a>
+                        <a href="" class="btn btn-default btn-sm">
+                            <i class="fa fa-instagram"></i> Instagram
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Section: home-boxes -->
+    <section>
+        <div class="container mt-20">
+            <div class="section-content">
+                <div class="row equal-height-inner home-boxes">
+                    <div class="col-sm-12 col-md-6 pr-0 pr-sm-15 sm-height-auto mt-sm-0 wow fadeInUp" data-wow-duration="0.6s" data-wow-delay="0.1s">
+                        <div class="sm-height-auto bg-theme-colored p-25">
+                            <div class="p-30 mb-sm-30">
+                                <h3 class="text-uppercase text-white mt-0">J'ai besoin d'aide</h3>
+                                <p class="text-white">La crise actuelle vous confronte à des situations déstabilisantes :</p>
+                                <p class="text-white">
+                                    Perte de repères et de rythme, manque d’intimité,
+                                    présence constante des enfants, inquiétudes quant à
+                                    l’avenir, solitude, peur du virus.
+                                </p>
+                                <p class="text-white">
+                                    Nombreuses sont les
+                                    peurs ou le mal-être qui peuvent émerger. Ne restez pas
+                                    seul.e face à ces difficultés. Contactez-nous.
+                                </p>
+                                <a href="{{ path('ask_for_help') }}" class="btn btn-border btn-circled btn-transparent btn-sm">Demander de l'aide</a>
+                            </div>
+                            <i class="flaticon-charity-shaking-hands-inside-a-heart bg-icon"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 pr-0 pr-sm-15 sm-height-auto mt-sm-0 wow fadeInUp" data-wow-duration="0.6s" data-wow-delay="0.1s">
+                        <div class="sm-height-auto bg-theme-colored p-25">
+                            <div class="p-30 mb-sm-30">
+                                <h3 class="text-uppercase text-white mt-0">Je suis thérapeute gestalt et je rejoins le mouvement</h3>
+                                <p class="text-white">Vous êtes thérapeute ou praticien.ne Gestalt ?</p>
+                                <p class="text-white">
+                                    Dans un élan de solidarité nationale, face à cette
+                                    crise sanitaire sans précédent qui bouleverse nos
+                                    vies, vous avez à cœur de vous rendre utile en
+                                    mettant vos compétences au service du plus grand
+                                    nombre. Rejoignez-nous !
+                                </p>
+                                <a href="{{ path('therapist_register') }}" class="btn btn-border btn-circled btn-transparent btn-sm">Proposer mon aide</a>
+                            </div>
+                            <i class="flaticon-charity-home-insurance bg-icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="divider call-to-action text-center pt-50 pb-50">
+                    <a href="{{ path('how_it_works') }}" class="btn btn-danger btn-lg mr-10">Comment ça marche ?</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider: Become a Volunteer -->
+    <section class="divider parallax" data-bg-img="{{ asset('images/enlien_mains.jpg') }}" data-parallax-ratio="0.7">
+        <div class="container pt-110 pb-110">
+            <div class="row">
+                <div class="col-md-8">
+                    <h3 class="text-black font-24 font-weight-600 mb-5">Une urgence ?</h3>
+                    <h2 class="text-black font-36 text-uppercase font-weight-600 mt-0 text-uppercase">
+                        <span class="text-theme-colored">Ne restez pas seul.e</span> face à une situation difficile
+                    </h2>
+                    <p class="text-black">si votre vie ou celle d’autrui est en danger, contactez les numéros d’urgence de votre pays.</p>
+                    <a href="{{ path('emergency_numbers') }}" class="btn btn-lg btn-danger mt-20 text-uppercase">Contacts d'urgence</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider: Funfact -->
+    <section class="divider parallax layer-overlay overlay-theme-colored-9" data-bg-img="" data-parallax-ratio="0.7">
+        <div class="container pt-90 pb-90">
+            <div class="row">
+                <div class="col-xs-12 col-sm-4 col-md-4 mb-md-50">
+                    <div class="funfact text-center">
+                        <i class="pe-7s-smile mt-5 text-white"></i>
+                        <h2 data-animation-duration="2000" data-value="754" class="animate-number text-white font-42 font-weight-500 mt-0 mb-0">{{ fun_facts['happy_helped'] }}</h2>
+                        <h5 class="text-white text-uppercase font-weight-600">Personnes aidées</h5>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4 mb-md-50">
+                    <div class="funfact text-center">
+                        <i class="pe-7s-rocket mt-5 text-white"></i>
+                        <h2 data-animation-duration="2000" data-value="675" class="animate-number text-white font-42 font-weight-500 mt-0 mb-0">0</h2>
+                        <h5 class="text-white text-uppercase font-weight-600">Rendez-vous honorés</h5>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4 mb-md-50">
+                    <div class="funfact text-center">
+                        <i class="pe-7s-add-user mt-5 text-white"></i>
+                        <h2 data-animation-duration="2000" data-value="1248" class="animate-number text-white font-42 font-weight-500 mt-0 mb-0">0</h2>
+                        <h5 class="text-white text-uppercase font-weight-600">Praticiens volontaires</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <!-- Revolution Slider 5.x SCRIPTS-->
+    <script src="{{ asset('js/revolution-slider/js/jquery.themepunch.tools.min.js') }}"></script>
+    <script src="{{ asset('js/revolution-slider/js/jquery.themepunch.revolution.min.js') }}"></script>
+    <script>
+        $(document).ready(function(e) {
+            $(".rev_slider_default").revolution({
+                sliderType:"standard",
+                sliderLayout: "auto",
+                dottedOverlay: "none",
+                delay: 5000,
+                navigation: {
+                    keyboardNavigation: "on",
+                    keyboard_direction: "horizontal",
+                    mouseScrollNavigation: "off",
+                    onHoverStop: "on",
+                    touch: {
+                        touchenabled: "on",
+                        swipe_threshold: 75,
+                        swipe_min_touches: 1,
+                        swipe_direction: "horizontal",
+                        drag_block_vertical: false
+                    },
+                    arrows: {
+                        style:"zeus",
+                        enable:false,
+                        hide_onmobile:true,
+                        hide_under:600,
+                        hide_onleave:true,
+                        hide_delay:200,
+                        hide_delay_mobile:1200,
+                        tmp:'<div class="tp-title-wrap">    <div class="tp-arr-imgholder"></div> </div>',
+                        left: {
+                            h_align:"left",
+                            v_align:"center",
+                            h_offset:30,
+                            v_offset:0
+                        },
+                        right: {
+                            h_align:"right",
+                            v_align:"center",
+                            h_offset:30,
+                            v_offset:0
+                        }
+                    },
+                    bullets: {
+                        enable:false,
+                        hide_onmobile:true,
+                        hide_under:600,
+                        style:"metis",
+                        hide_onleave:true,
+                        hide_delay:200,
+                        hide_delay_mobile:1200,
+                        direction:"horizontal",
+                        h_align:"center",
+                        v_align:"bottom",
+                        h_offset:0,
+                        v_offset:30,
+                        space:5,
+                        tmp:'<span class="tp-bullet-img-wrap">  <span class="tp-bullet-image"></span></span><span class="tp-bullet-title">Titre</span>'
+                    }
+                },
+                responsiveLevels: [1240, 1024, 778],
+                visibilityLevels: [1240, 1024, 778],
+                gridwidth: [1170, 1024, 778, 480],
+                gridheight: [550, 600, 700, 720],
+                lazyType: "none",
+                parallax: {
+                    origo: "slidercenter",
+                    speed: 1000,
+                    levels: [5, 10, 15, 20, 25, 30, 35, 40, 45, 46, 47, 48, 49, 50, 100, 55],
+                    type: "scroll"
+                },
+                shadow: 0,
+                spinner: "off",
+                stopLoop: "on",
+                stopAfterLoops: 0,
+                stopAtSlide: -1,
+                shuffle: "off",
+                autoHeight: "off",
+                fullScreenAutoWidth: "off",
+                fullScreenAlignForce: "off",
+                fullScreenOffsetContainer: "",
+                fullScreenOffset: "0",
+                hideThumbsOnMobile: "off",
+                hideSliderAtLimit: 0,
+                hideCaptionAtLimit: 0,
+                hideAllCaptionAtLilmit: 0,
+                debugMode: false,
+                fallbacks: {
+                    simplifyAll: "off",
+                    nextSlideOnWindowFocus: "off",
+                    disableFocusListener: false,
+                }
+            });
+        });
+    </script>
 {% endblock %}

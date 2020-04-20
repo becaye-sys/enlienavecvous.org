@@ -2,89 +2,180 @@
 
 {% set form = patient_register_form %}
 
-{% block body %}
-    <div class="container text-center">
-        <h1>Demander de l'aide</h1>
-        <p>La crise actuelle vous confronte à des situations déstabilisantes.</p>
-        <p>
-            Durant cette période inédite de crise, nous sommes confronté.e.s à un changement de style de vie qui peut être source de difficultés au
-            quotidien. La perte de notre routine peut nous impacter de diverses manières, que l’on doive travailler ou que l’on soit confiné : irritabilité,
-            angoisse, peur du virus, pertes financières, isolement, manque d’intimité, ennui, manque de contact physique, tensions familiales, violences,
-            difficultés à s’occuper des enfants, perte d’un proche, etc. Le soutien dont vous avez besoin est à quelques clics.
-        </p>
-        <p>La Gestalt thérapie, en tant que thérapie humaniste et relationnelle, est tout particulièrement adaptée à ces situations.</p>
-        <p>
-            Un.e thérapeute est une personne avec des compétences professionnelles qui offre un cadre sécurisant pour vous accompagner dans ce que
-            vous vivez en ce moment. Être en lien avec un.e thérapeute peut vous aider à vous sen1r moins seul.e, être accueilli.e et entendu.e dans vos
-            émo1ons, prendre de la distance et retrouver du discernement.
-        </p>
-        <p>
-            Parler, échanger, être accompagné.e, même sans difficultés aiguës, vous permet de mieux prendre soin de vous et des autres.
-        </p>
-        <p>
-            Le soutien dont vous avez besoin est à quelques clics.
-        </p>
-        <p>
-            Remplissez le formulaire ci-dessous afin de vous enregistrer et accéder à notre calendrier de prise de rendez-vous.
-        </p>
-        <p>
-            <i>
-                Attention ce service est réservé aux personnes majeures (18 ans et +). Si vous êtes mineur, <a href="{{ path('emergency_numbers') }}">appelez la ligne dédiée aux mineur.e.s.</a>
-            </i>
-        </p>
-        <p>
-            <i>
-                Tou.te.s les thérapeutes inscrit.e.s sur la plateforme sont des professionnel.le.s certifié.e.s respectant un code de déontologie.
-                Cela les engage notamment au respect de la confidentialité, à la bienveillance et au non-jugement.
-            </i>
-        </p>
-        <p>
-            <a href="{{ path('how_it_works') }}">En savoir plus le fonctionnement de la plateforme</a> {# renvoie à la page comment ça marche #}
-        </p>
-        <h2>Formulaire d'inscription</h2>
-        {{ form_start(form) }}
-        <fieldset>
-            {{ form_widget(form.firstName, {'attr': {'placeholder': "Votre prénom"}}) }}
-            {{ form_widget(form.lastName, {'attr': {'placeholder': "Votre nom"}}) }}
-        </fieldset>
-        <fieldset>
-            {{ form_widget(form.country) }}
-            {{ form_widget(form.scalarDepartment) }}
-            {{ form_widget(form.scalarTown) }}
-        </fieldset>
-        <fieldset>
-            {{ form_widget(form.phoneNumber, {'attr': {'placeholder': "Votre numéro de téléphone"}}) }}
-            {{ form_widget(form.email, {'attr': {'placeholder': "Votre email"}}) }}
-        </fieldset>
-        <fieldset>
-            {{ form_label(form.password.first) }}
-            {{ form_widget(form.password.first, {'attr': {'placeholder': "Votre mot de passe"}}) }}
-            {{ form_label(form.password.second) }}
-            {{ form_widget(form.password.second, {'attr': {'placeholder': "Confirmez votre mot de passe"}}) }}
-        </fieldset>
-        <fieldset>
-            {{ form_widget(form.isMajor) }} Je certifie être majeur.e
-        </fieldset>
-        <fieldset>
-            {{ form_widget(form.hasAcceptedTermsAndPolicies) }} J'ai lu et j'accepte la <a>Politique de Confidentialité</a> et les <a>Conditions d'utilisation</a> de Onestlapourvous.org
-        </fieldset>
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
 
-        <button type="submit">Valider</button>
-        {{ form_end(form) }}
-        <p>
-            (Un email vous sera envoyé afin de confirmer votre compte et vous permettra de vous connecter)
-        </p>
-        <p>
-            (Vous ne pourrez pas vous connecter avant d'avoir confirmé votre compte par email)
-        </p>
-        <div class="row">
-            <div class="col-lg-12">
-                <h2 class="text-center">En cas d'urgence, si votre vie ou celle d'autrui est en danger, <a href="{{ path('emergency_numbers') }}">contactez les numéros d'urgence de votre pays.</a></h2>
+{% block body %}
+    <!-- Section: inner-header -->
+    <section class="inner-header divider layer-overlay" data-bg-img="{{ asset('images/enlien_mains.jpg') }}">
+        <div class="container pt-30 pb-30">
+            <!-- Section Content -->
+            <div class="section-content text-center">
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3 text-center">
+                        <h1 class="text-uppercase text-white font-30">Demander de l'aide</h1>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Section: Features -->
+    <section class="bg-lighter">
+        <div class="container">
+            <div class="section-content">
+                <div class="row mtli-row-clearfix">
+                    <div class="col-xs-12 col-sm-6 col-md-6 pb-sm-20">
+                        <div class="icon-box text-center p-10">
+                            <a href="#" class="icon icon-gray icon-bordered icon-rounded icon-border-effect effect-rounded mb-10">
+                                <i class="fa fa-user-plus font-30 text-theme-colored"></i>
+                            </a>
+                            <h4 class="icon-box-title"><a href="#">La crise actuelle</a></h4>
+                            <p class="text-gray">La crise actuelle vous confronte à des situations déstabilisantes.</p>
+                            <p>
+                                Durant cette période inédite de crise, nous sommes confronté.e.s à un changement de style de vie qui peut être source de difficultés au
+                                quotidien. La perte de notre routine peut nous impacter de diverses manières, que l’on doive travailler ou que l’on soit confiné : irritabilité,
+                                angoisse, peur du virus, pertes financières, isolement, manque d’intimité, ennui, manque de contact physique, tensions familiales, violences,
+                                difficultés à s’occuper des enfants, perte d’un proche, etc. Le soutien dont vous avez besoin est à quelques clics.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 pb-sm-20">
+                        <div class="icon-box text-center p-10">
+                            <a href="#" class="icon icon-gray icon-bordered icon-rounded icon-border-effect effect-rounded mb-10">
+                                <i class="fa fa-life-ring font-30 text-theme-colored"></i>
+                            </a>
+                            <h4 class="icon-box-title"><a href="#">La gestalt-thérapie</a></h4>
+                            <p class="text-gray">La Gestalt thérapie, en tant que thérapie humaniste et relationnelle, est tout particulièrement adaptée à ces situations.</p>
+                            <p>
+                                Un.e thérapeute est une personne avec des compétences professionnelles qui offre un cadre sécurisant pour vous accompagner dans ce que
+                                vous vivez en ce moment. Être en lien avec un.e thérapeute peut vous aider à vous sen1r moins seul.e, être accueilli.e et entendu.e dans vos
+                                émo1ons, prendre de la distance et retrouver du discernement.
+                            </p>
+                            <p>
+                                Parler, échanger, être accompagné.e, même sans difficultés aiguës, vous permet de mieux prendre soin de vous et des autres.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: About Us -->
+    <section id="about">
+        <div class="container">
+            <div class="section-content">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h2>Trouver du soutien</h2>
+                        <p class="lead text-theme-colored">
+                            Le soutien dont vous avez besoin est à quelques clics.
+                        </p>
+                        <p>
+                            Remplissez le formulaire ci-dessous afin de vous enregistrer et accéder à notre calendrier de prise de rendez-vous.
+                        </p>
+                        <p>
+                            <i>
+                                Attention ce service est réservé aux personnes majeures (18 ans et +). Si vous êtes mineur, <a href="{{ path('emergency_numbers') }}">appelez la ligne dédiée aux mineur.e.s.</a>
+                            </i>
+                        </p>
+                        <p>
+                            <i>
+                                Tou.te.s les thérapeutes inscrit.e.s sur la plateforme sont des professionnel.le.s certifié.e.s respectant un code de déontologie.
+                                Cela les engage notamment au respect de la confidentialité, à la bienveillance et au non-jugement.
+                            </i>
+                        </p>
+                        <p>
+                            <a href="{{ path('how_it_works') }}">En savoir plus sur le fonctionnement de la plateforme</a>
+                        </p>
+                    </div>
+                    <div class="col-md-8">
+                        {{ form_start(form, {
+                            'attr': {
+                                'name': "reg-form",
+                                'class': 'register-form'
+                            }
+                        }) }}
+                            <div class="icon-box mb-0 p-0">
+                                <a href="#" class="icon icon-bordered icon-rounded icon-sm pull-left mb-0 mr-10">
+                                    <i class="pe-7s-users"></i>
+                                </a>
+                                <h4 class="text-gray pt-10 mt-0 mb-30">Demander de l'aide</h4>
+                            </div>
+                            <hr>
+                            <p class="text-gray">
+                                Un email vous sera envoyé afin de confirmer votre compte et vous permettra de vous connecter
+                            </p>
+                            <p class="text-danger">
+                                Vous ne pourrez pas vous connecter avant d'avoir confirmé votre compte par email
+                            </p>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label>Prénom</label>
+                                    {{ form_widget(form.firstName, {'attr': {'placeholder': "Votre prénom", 'class': "form-control"}}) }}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Nom</label>
+                                    {{ form_widget(form.lastName, {'attr': {'placeholder': "Votre nom", 'class': "form-control"}}) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="">Numéro de téléphone</label>
+                                    {{ form_widget(form.phoneNumber, {'attr': {'placeholder': "Votre numéro de téléphone", 'class': "form-control"}}) }}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="form_choose_username">Email</label>
+                                    {{ form_widget(form.email, {'attr': {'placeholder': "Votre email", 'class': "form-control"}}) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="">Votre pays</label>
+                                    {{ form_widget(form.country, {'attr': {'placeholder': "Votre pays", 'class': "form-control"}}) }}
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="">Votre Région</label>
+                                    {{ form_widget(form.scalarDepartment, {'attr': {'placeholder': "Votre région", 'class': "form-control"}}) }}
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="">Votre ville</label>
+                                    {{ form_widget(form.scalarTown, {'attr': {'placeholder': "Votre commune/ville", 'class': "form-control"}}) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="form_choose_password">Mot de passe</label>
+                                    {{ form_widget(form.password.first, {'attr': {'placeholder': "Votre mot de passe", 'class': "form-control"}}) }}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Confirmez votre mot de passe</label>
+                                    {{ form_widget(form.password.second, {'attr': {'placeholder': "Confirmez votre mot de passe", 'class': "form-control"}}) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    {{ form_widget(form.isMajor) }} Je certifie être majeur.e
+                                </div>
+                                <div class="form-group col-md-6">
+                                    {{ form_widget(form.hasAcceptedTermsAndPolicies) }} J'ai lu et j'accepte la <a href="{{ path('data_privacy_policy') }}">Politique de Confidentialité</a> et les <a href="{{ path('terms_of_use') }}">Conditions d'utilisation</a> de enlienavecvous.org
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-dark btn-lg btn-block mt-15" type="submit">Valider mon inscription</button>
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
     {{ encore_entry_script_tags('patient_geoloc') }}
 {% endblock %}
