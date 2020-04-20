@@ -13,7 +13,6 @@
                 <th>Date action</th>
                 <th>Date</th>
                 <th>Début</th>
-                <th>Fin</th>
                 <th>Malus</th>
                 <th>Statut réservation</th>
             </tr>
@@ -26,27 +25,25 @@
                         <td>{{ h.action }}</td>
                         <td>{{ h.actionedAt|date('d/m/Y H:i') }}</td>
                         <td>
-                            {% if h.appointment is not null %}
-                                {{ h.appointment.bookingDate|date('d/m/Y') }}
+                            {% if h.bookingHistory is not null %}
+                                {{ h.bookingHistory.bookingDate|date('d/m/Y') }}
                             {% else %}
                                 -
                             {% endif %}
                         </td>
                         <td>
-                            {% if h.appointment is not null %}
-                                {{ h.appointment.bookingStart|date('H:i') }}
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if h.appointment is not null %}
-                                {{ h.appointment.bookingEnd|date('H:i') }}
+                            {% if h.bookingHistory is not null %}
+                                {{ h.bookingHistory.bookingStart|date('H:i') }}
                             {% else %}
                                 -
                             {% endif %}
                         </td>
                         <td>{{ h.patient.malus }}</td>
+                        <td>
+                            {% if h.bookingHistory is not null %}
+                                {{ constant('App\\Entity\\Appointment::STATUS')[h.bookingHistory.status] }}
+                            {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>

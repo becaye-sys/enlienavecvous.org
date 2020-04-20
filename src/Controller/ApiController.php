@@ -46,6 +46,7 @@ class ApiController extends AbstractController
         $appoints = $appointmentRepository->findAvailableAppointments();
         dump($appoints);
         $data = $serializer->serializeByGroups($appoints, ['create_booking']);
+        //$data = $serializer->serialize($appoints, ['patient','histories']);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
