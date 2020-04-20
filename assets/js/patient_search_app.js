@@ -179,7 +179,6 @@ function PatientSearch(props) {
                                     <th>Thérapeute</th>
                                     <th>Date</th>
                                     <th>Début</th>
-                                    <th>Fin</th>
                                     <th>Lieu</th>
                                     <th></th>
                                 </tr>
@@ -196,10 +195,9 @@ function PatientSearch(props) {
                                                         Réserver
                                                     </button>
                                                 </td>
-                                                <td>{a.therapist?.displayName ?? a.therapist?.firstName + " " + a.therapist?.lastName} - {a.therapist?.email}</td>
+                                                <td>{a.therapist?.displayName ?? a.therapist?.firstName + " " + a.therapist?.lastName}</td>
                                                 <td>{formatDateForTable(a.bookingDate)}</td>
                                                 <td>{formatTime(a.bookingStart)}</td>
-                                                <td>{formatTime(a.bookingEnd)}</td>
                                                 <td>{a.location}</td>
                                             </tr>
                                         )
