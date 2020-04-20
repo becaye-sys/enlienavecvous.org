@@ -70,7 +70,7 @@ class PublicController extends AbstractController
                 $mailerFactory->createAndSend(
                     "Validation de votre inscription",
                     $user->getEmail(),
-                    'no-reply@onestlapourvous.org',
+                    'accueil@enlienavecvous.org',
                     $this->renderView(
                         'email/patient_registration.html.twig',
                         ['email_token' => $emailToken, 'project_url' => $_ENV['PROJECT_URL']]
@@ -124,7 +124,7 @@ class PublicController extends AbstractController
                 $mailer->createAndSend(
                     "Validation de votre inscription",
                     $user->getEmail(),
-                    'no-reply@onestlapourvous.org',
+                    'accueil@enlienavecvous.org',
                     $this->renderView(
                         'email/therapist_registration.html.twig',
                         ['email_token' => $emailToken, 'project_url' => $_ENV['PROJECT_URL']]
