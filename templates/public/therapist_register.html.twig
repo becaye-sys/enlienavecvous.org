@@ -106,7 +106,7 @@
                             Vous êtes libre de définir la durée des séances. Une fois la
                             séance passée, vous avez la possibilité de renseigner dans l’historique si elle a bien été honorée.
                         </p>
-                        <img src="{{ asset('images/enlien_sil.jpg') }}"/>
+                        <img src="{{ asset('images/enlien_sil_2.png') }}"/>
                     </div>
                     <div class="col-md-8">
                         {{ form_start(form, {
@@ -152,20 +152,6 @@
                             </div>
                         </div>
                         <div id="geolocation"></div>
-                        <div class="row">
-                            <div class="form-group col-md-4">
-                                <label for="">Votre pays</label>
-                                {{ form_widget(form.country, {'attr': {'placeholder': "Votre pays", 'class': "form-control"}}) }}
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="">Votre Région</label>
-                                {{ form_widget(form.scalarDepartment, {'attr': {'placeholder': "Votre région", 'class': "form-control"}}) }}
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="">Votre ville</label>
-                                {{ form_widget(form.scalarTown, {'attr': {'placeholder': "Votre commune/ville", 'class': "form-control"}}) }}
-                            </div>
-                        </div>
                         <div class="row">
                             <div class="form-group col-md-12">
                                 <label for="">Le code de déontologie auquel j'adhère est celui de :</label>
