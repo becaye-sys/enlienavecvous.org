@@ -144,7 +144,6 @@ class ApiController extends AbstractController
             ['country' => $request->query->get('country')],
             ['code' => 'ASC']
         );
-        dump($departments);
         $data = $serializer->serialize($departments, ['towns']);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
@@ -170,8 +169,31 @@ class ApiController extends AbstractController
     }
 
     /**
+     * @Route(path="/bookings-filtered", name="api_bookings_filtered", methods={"POST"})
+     * @return JsonResponse
+     */
+    public function bookingSearchByFilters(
+        Request $request,
+        CustomSerializer $serializer,
+        AppointmentRepository $appointmentRepository
+    )
+    {
+        $params = [];
+        foreach ($request->request as $key => $value) {
+            if ($value !== "") {
+                $params[$key] = $value;
+            }
+        }
+
+        $appointments = $appointmentRepository->findAvailableBookingsByFilters($params);
+        $data = $serializer->serializeByGroups($appointments, ['create_booking']);
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
+    }
+
+    /**
      * @Route(path="/get-cities", name="api_get_cities_react_select", methods={"GET"})
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     * not used
      */
     public function getCitiesForReactSelect(Request $request, SerializerInterface $serializer)
     {
@@ -188,6 +210,7 @@ class ApiController extends AbstractController
 
     /**
      * @Route(path="/get-ip", name="api_get_ip")
+     * not used
      */
     public function getIp(SerializerInterface $serializer, Request $request) {
         $client = HttpClient::create();
@@ -199,6 +222,7 @@ class ApiController extends AbstractController
 
     /**
      * @Route(path="/get-localisation", name="api_get_localisation")
+     * not used
      */
     public function getLocalisation(SerializerInterface $serializer, Request $request) {
         $client = HttpClient::create();

@@ -8,7 +8,7 @@
   {
     "cantonId": "2",
     "cantonAbbreviation": "BE",
-    "cantonLongName": "Bern / Berne",
+    "cantonLongName": "Bern",
     "cantonDateOfChange": "1960-01-01"
   },
   {
@@ -56,7 +56,7 @@
   {
     "cantonId": "10",
     "cantonAbbreviation": "FR",
-    "cantonLongName": "Fribourg / Freiburg",
+    "cantonLongName": "Fribourg",
     "cantonDateOfChange": "1960-01-01"
   },
   {
@@ -98,13 +98,13 @@
   {
     "cantonId": "17",
     "cantonAbbreviation": "SG",
-    "cantonLongName": "St. Gallen",
+    "cantonLongName": "Sankt Gallen",
     "cantonDateOfChange": "1960-01-01"
   },
   {
     "cantonId": "18",
     "cantonAbbreviation": "GR",
-    "cantonLongName": "Graubünden / Grigioni / Grischun",
+    "cantonLongName": "Graubünden",
     "cantonDateOfChange": "1960-01-01"
   },
   {
@@ -134,7 +134,7 @@
   {
     "cantonId": "23",
     "cantonAbbreviation": "VS",
-    "cantonLongName": "Valais / Wallis",
+    "cantonLongName": "Valais",
     "cantonDateOfChange": "1960-01-01"
   },
   {

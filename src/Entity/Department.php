@@ -11,6 +11,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Department
 {
+    const COUNTRIES = [
+        "fr" => "France",
+        "be" => "Belgique",
+        "lu" => "Luxembourg",
+        "ch" => "Suisse"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

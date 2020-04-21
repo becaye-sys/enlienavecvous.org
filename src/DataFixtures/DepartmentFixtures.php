@@ -55,8 +55,9 @@ class DepartmentFixtures extends Fixture implements FixtureGroupInterface
             $department->setCountry("be");
             $department->setName($value["dp"]);
             $department->setCode($value["cp"]);
-            $department->setSlug($this->getSlug($value["dp"]));
-            $this->addReference(self::DEPARTMENT_BE_REFERENCE . "_" . $value["cp"], $department);
+            $slug = $this->getSlug($value["dp"]);
+            $department->setSlug($slug);
+            $this->addReference(self::DEPARTMENT_BE_REFERENCE . "_" . $slug, $department);
             $manager->persist($department);
         }
     }
@@ -71,7 +72,7 @@ class DepartmentFixtures extends Fixture implements FixtureGroupInterface
             $department->setName($value["CANTON"]);
             $department->setCode($value["LAU2"]);
             $department->setSlug($this->getSlug($value["CANTON"]));
-            $this->addReference(self::DEPARTMENT_LU_REFERENCE . "_" . $value["LAU2"], $department);
+            $this->addReference(self::DEPARTMENT_LU_REFERENCE . "_" . substr($value["LAU2"], 0, 2), $department);
             $manager->persist($department);
         }
     }
@@ -85,8 +86,9 @@ class DepartmentFixtures extends Fixture implements FixtureGroupInterface
             $department->setCountry("ch");
             $department->setName($value["cantonLongName"]);
             $department->setCode($value["cantonId"]);
-            $department->setSlug($this->getSlug($value["cantonLongName"]));
-            $this->addReference(self::DEPARTMENT_CH_REFERENCE . "_" . $value["cantonId"], $department);
+            $slug = $this->getSlug($value["cantonLongName"]);
+            $department->setSlug($slug);
+            $this->addReference(self::DEPARTMENT_CH_REFERENCE . "_" . $slug, $department);
             $manager->persist($department);
         }
     }

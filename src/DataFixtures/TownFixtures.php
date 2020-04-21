@@ -25,9 +25,9 @@ class TownFixtures extends Fixture implements FixtureGroupInterface, DependentFi
     public function load(ObjectManager $manager)
     {
         $this->loadFrenchTowns($manager);
+        $this->loadBelgiumTowns($manager);
         $this->loadLuxembourgTowns($manager);
         $this->loadSwissTowns($manager);
-        $this->loadBelgiumTowns($manager);
 
         $manager->flush();
     }
@@ -60,6 +60,25 @@ class TownFixtures extends Fixture implements FixtureGroupInterface, DependentFi
         }
     }
 
+    private function loadBelgiumTowns(ObjectManager $manager)
+    {
+        $townsArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/communes/communes_be.json");
+
+        foreach ($townsArray as $key => $item) {
+            if (array_key_exists("province", $item) && $item["province"] !== "") {
+                $town = new Town();
+                $town->setCode($item["code_postal"]);
+                $town->setName($item["localite"]);
+                $depart = $this->getSlug($item["province"]);
+                /** @var Department $department */
+                $department = $this->getReference(DepartmentFixtures::DEPARTMENT_BE_REFERENCE . "_" . $depart);
+                $town->setDepartment($department);
+                $town->setScalarDepart($depart);
+                $manager->persist($town);
+            }
+        }
+    }
+
     private function loadLuxembourgTowns(ObjectManager $manager)
     {
         $townsArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/communes/communes_lu.json");
@@ -70,7 +89,10 @@ class TownFixtures extends Fixture implements FixtureGroupInterface, DependentFi
                 $town->setName($item["COMMUNE"]);
             }
             if (array_key_exists("LAU2", $item)) {
+                /** @var Department $department */
+                $department = $this->getReference(DepartmentFixtures::DEPARTMENT_LU_REFERENCE."_".substr($item["LAU2"],0,2));
                 $town->setCode($item["LAU2"]);
+                $town->setDepartment($department);
             }
             if (array_key_exists("CANTON", $item)) {
                 $town->setScalarDepart($this->getSlug($item["CANTON"]));
@@ -87,19 +109,18 @@ class TownFixtures extends Fixture implements FixtureGroupInterface, DependentFi
     {
         $townsArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/communes/communes_ch.json");
         $cantonsArray = $this->getSwissCantons();
-        // for each region -> create Region and persist
         foreach ($townsArray as $key => $item) {
             $town = new Town();
             if (array_key_exists("city", $item)) {
                 $town->setName($item["city"]);
             }
             if (array_key_exists("admin", $item)) {
-                foreach ($cantonsArray as $i => $canton) {
-                    if (strpos($canton["cantonLongName"], $item["admin"])) {
-                        $town->setScalarDepart($this->getSlug($cantonsArray["cantonId"]));
-                        $town->setCode($cantonsArray["cantonId"]);
-                    }
-                }
+                $slug = $this->getSlug($item["admin"]);
+                /** @var Department $department */
+                $department = $this->getReference(DepartmentFixtures::DEPARTMENT_CH_REFERENCE . "_" . $slug);
+                $town->setScalarDepart($slug);
+                $town->setDepartment($department);
+                $town->setCode($department->getCode());
             }
 
             $manager->persist($town);
@@ -109,21 +130,6 @@ class TownFixtures extends Fixture implements FixtureGroupInterface, DependentFi
     private function getSwissCantons()
     {
         return $this->getDecodedArrayFromFile(__DIR__."/../../public/data/cantons_suisse.json");
-    }
-
-    public function loadBelgiumTowns(ObjectManager $manager)
-    {
-        $townsArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/communes/communes_be.json");
-
-        foreach ($townsArray as $key => $item) {
-            $town = new Town();
-            $town->setCode($item["Code postal"]);
-            $town->setName($item["Localité"]);
-            $depart = $this->getSlug($item["Province"]);
-            $town->setScalarDepart($depart);
-
-            $manager->persist($town);
-        }
     }
 
     public static function getGroups(): array
