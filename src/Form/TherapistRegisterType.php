@@ -58,18 +58,6 @@ class TherapistRegisterType extends AbstractType
                 TextType::class
             )
             ->add(
-                'country',
-                TextType::class
-            )
-            ->add(
-                'scalarDepartment',
-                TextType::class
-            )
-            ->add(
-                'scalarTown',
-                TextType::class
-            )
-            ->add(
                 'phoneNumber',
                 TelType::class
             )

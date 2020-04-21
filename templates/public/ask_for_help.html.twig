@@ -133,20 +133,6 @@
                         </div>
                         <div id="geolocation"></div>
                         <div class="row">
-                            <div class="form-group col-md-4">
-                                <label for="">Votre pays</label>
-                                {{ form_widget(form.country, {'attr': {'placeholder': "Votre pays", 'class': "form-control"}}) }}
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="">Votre Région</label>
-                                {{ form_widget(form.scalarDepartment, {'attr': {'placeholder': "Votre région", 'class': "form-control"}}) }}
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="">Votre ville</label>
-                                {{ form_widget(form.scalarTown, {'attr': {'placeholder': "Votre commune/ville", 'class': "form-control"}}) }}
-                            </div>
-                        </div>
-                        <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="form_choose_password">Mot de passe</label>
                                 {{ form_widget(form.password.first, {'attr': {'placeholder': "Votre mot de passe", 'class': "form-control"}}) }}

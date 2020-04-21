@@ -41,18 +41,6 @@ class PatientRegisterType extends AbstractType
             )
             ->add('firstName', TextType::class)
             ->add('lastName', TextType::class)
-            ->add(
-                'country',
-                TextType::class
-            )
-            ->add(
-                'scalarDepartment',
-                TextType::class
-            )
-            ->add(
-                'scalarTown',
-                TextType::class
-            )
             ->add('phoneNumber', TextType::class)
             ->add('hasAcceptedTermsAndPolicies', CheckboxType::class)
             ->add('isMajor', CheckboxType::class)
