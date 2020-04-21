@@ -44,14 +44,36 @@ class AppointmentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findAvailableAppointmentsByParams(array $params, Therapist $therapist)
+    public function findAvailableBookingsByFilters(array $params)
     {
         $query = $this->createQueryBuilder('a')
             ->where('a.status = :status')
-            ->andWhere('a.therapist = :therapist')
             ->setParameter('status', Appointment::STATUS_AVAILABLE)
-            ->setParameter('therapist', $therapist)
+        ;
+
+        if (isset($params['bookingDate'])) {
+            $query->andWhere("a.bookingDate = :bookingDate")
+                ->setParameter('bookingDate', $params['date_filter']);
+        }
+
+        if (isset($params['aroundMe'])) {
+            $query->innerJoin('a.therapist', '$alias')
+                ->setParameter('bookingDate', $params['date_filter']);
+        }
+
+        return $query
             ->orderBy('a.bookingDate', 'asc')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAvailableBookingsByParams(array $params, Therapist $therapist)
+    {
+        $query = $this->createQueryBuilder('a')
+            ->where('a.status = :status')
+            ->setParameter('status', Appointment::STATUS_AVAILABLE)
+            ->andWhere('a.therapist = :therapist')
+            ->setParameter('therapist', $therapist);
         ;
 
         if (isset($params['date_filter'])) {
@@ -60,6 +82,7 @@ class AppointmentRepository extends ServiceEntityRepository
         }
 
         return $query
+            ->orderBy('a.bookingDate', 'asc')
             ->getQuery()
             ->getResult();
     }

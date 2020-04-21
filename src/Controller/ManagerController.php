@@ -45,10 +45,15 @@ class ManagerController extends AbstractController
             $from = $request->request->get('date_from');
             $to = $request->request->get('date_to');
             $newUsers = $userRepository->findRecentlyRegistered($from, $to);
+            $paginated = $paginator->paginate(
+                $newUsers,
+                $request->query->getInt('page', 1),
+                10
+            );
             return $this->render(
                 'manager/new_users.html.twig',
                 [
-                    'new_users' => $newUsers
+                    'new_users' => $paginated
                 ]
             );
         }
@@ -251,7 +256,7 @@ class ManagerController extends AbstractController
         $paginated = $paginator->paginate(
             $departments,
             $request->query->getInt('page', 1),
-            10
+            15
         );
 
         return $this->render(
@@ -295,12 +300,13 @@ class ManagerController extends AbstractController
     public function bookingsWaitingToBeDeleted(AppointmentRepository $appointmentRepository, EntityManagerInterface $entityManager)
     {
         $appoints = $appointmentRepository->findBy(['status' => Appointment::STATUS_TO_DELETE]);
+        $i = 0;
         foreach ($appoints as $appoint) {
-            $appoint->emptyHistories();
+            $i++;
             $entityManager->remove($appoint);
         }
         $entityManager->flush();
-        $this->addFlash('success', "Rendez-vous en attente de suppression correctement supprimés.");
+        $this->addFlash('success', "$i Rendez-vous en attente de suppression correctement supprimés.");
         return $this->redirectToRoute('manager_new_users');
     }
 }

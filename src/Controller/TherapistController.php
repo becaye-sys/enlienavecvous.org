@@ -215,9 +215,9 @@ class TherapistController extends AbstractController
         }
 
         if (count($params) === 0) {
-            $appointments = $appointmentRepository->findAvailableAppointmentsByParams($params, $currentUser);
+            $appointments = $appointmentRepository->findAvailableBookingsByParams($params, $currentUser);
         } else {
-            $appointments = $appointmentRepository->findAvailableAppointmentsByParams($params, $currentUser);
+            $appointments = $appointmentRepository->findAvailableBookingsByParams($params, $currentUser);
         }
 
         $paginated = $paginator->paginate(

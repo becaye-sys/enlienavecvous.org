@@ -34,8 +34,7 @@ Encore
     .addEntry('patient_search_app', './assets/js/patient_search_app.js')
     .addEntry('therapist_availabilities', './assets/js/therapist_availabilities.js')
     .addEntry('manage_members', './assets/js/manage_members.js')
-    .addEntry('therapist_geoloc', './assets/js/therapist_geoloc.js')
-    .addEntry('patient_geoloc', './assets/js/patient_geoloc.js')
+    .addEntry('geolocation', './assets/js/geolocation.jsx')
     .addEntry('manage_geolocalisation', './assets/js/manage_geolocalisation.js')
     //.addEntry('page2', './assets/js/page2.js')
 

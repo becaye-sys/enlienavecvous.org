@@ -3,9 +3,10 @@ import ReactDOM from "react-dom";
 import axios from "axios";
 import {API_URL, customHeaders} from "./config";
 import Pagination from "./components/Pagination";
-import { formatDate, formatDateForTable, formatTime, getArrayDate, getArrayTime } from "./utils/DateUtils";
-import moment, {now} from "moment";
+import { formatDate, getArrayTime } from "./utils/DateUtils";
+import moment from "moment";
 import BookingConfirmation from "./components/BookingConfirmation";
+import BookingRow from "./components/BookingRow";
 
 function PatientSearch(props) {
     const [currentPage, setCurrentPage] = useState(1);
@@ -18,6 +19,8 @@ function PatientSearch(props) {
     const [booking, setBooking] = useState({});
     const [search, setSearch] = useState({
         bookingDate: undefined,
+        aroundMe: "myTown",
+        department: undefined,
         location: undefined
     });
 
@@ -42,12 +45,10 @@ function PatientSearch(props) {
     const filterWithTherapistDelay = (appoints) => {
         return appoints.filter(a => {
             const nowDate = moment().format('YYYY-MM-DD');
-            //console.log('nowDate:',nowDate);
             if (nowDate === formatDate(a.bookingDate)) {
                 const arrayTime = getArrayTime(a.bookingStart);
                 const nowTime = moment();
                 const targetTime = moment().hours(arrayTime[0]).minutes(arrayTime[1]);
-                let startTime = moment([arrayTime[0], arrayTime[1]]).format('HH:mm');
                 const delay = targetTime.diff(nowTime, 'hours');
                 if ((targetTime > nowTime) && delay >= 12) {
                     return a;
@@ -62,7 +63,9 @@ function PatientSearch(props) {
     }
 
     const getAppointments = async () => {
-        const res = await axios.get(`${API_URL}appointments`).then(response => {return response.data});
+        const res = await axios
+            .get(`${API_URL}appointments`)
+            .then(response => {return response.data});
         if (res.length > 0) {
             console.log('res:',res.length);
             const appoints = filterWithTherapistDelay(res);
@@ -104,14 +107,27 @@ function PatientSearch(props) {
             });
             setFiltered(updatedAppoints);
         } else if ((search.bookingDate === undefined || search.bookingDate === '') && search.location !== undefined) {
-            //console.log('location only changed');
-            const updatedAppoints = appoints.filter(a => {return a.location.toLowerCase().includes(search.location.toLowerCase())});
+            const updatedAppoints = appoints.filter(a => {
+                return a.location.toLowerCase().includes(search.location.toLowerCase())
+            });
             setFiltered(updatedAppoints);
         } else {
             const updatedAppoints = appoints.filter(function (a) {
-                return formatDate(a.bookingDate) === search.bookingDate && a.location.toLowerCase().includes(search.location.toLowerCase())
+                return formatDate(a.bookingDate) === search.bookingDate
+                    && a.location.toLowerCase().includes(search.location.toLowerCase())
             });
             setFiltered(updatedAppoints);
+        }
+    }
+
+    const updateBookingsByFilters = async () => {
+        const bookings = await axios
+            .post(`${API_URL}bookings-filtered`, {...search})
+            .then(response => {
+                return response.data;
+            });
+        if (bookings.length > 0) {
+            console.log(bookings);
         }
     }
 
@@ -132,6 +148,10 @@ function PatientSearch(props) {
         updateAppointsByUserFilters();
     },[search]);
 
+    useEffect(() => {
+        updateBookingsByFilters();
+    },[search.aroundMe, search.department]);
+
     return (
         <div>
             <div className="container-fluid mb-3">
@@ -145,23 +165,23 @@ function PatientSearch(props) {
                         </div>
                         <div className="col-lg-3 col-md-6 col-sm-6">
                             <fieldset className="form-group">
+                                <label htmlFor="aroundMe">Autour de moi</label>
+                                <select name="aroundMe" onChange={handleChange} id="aroundMe" className="form-control">
+                                    <option value="myTown">Ma commune</option>
+                                    <option value="myDepartment">Mon département</option>
+                                </select>
+                            </fieldset>
+                        </div>
+                        <div className="col-lg-3 col-md-6 col-sm-6">
+                            <fieldset className="form-group">
                                 <label htmlFor="department">Département</label>
-                                <input value={""} type="text" name={"department"} id={"department"} className={"form-control"}/>
+                                <input value={search.department} type="text" name={"department"} id={"department"} className={"form-control"}/>
                             </fieldset>
                         </div>
                         <div className="col-lg-3 col-md-6 col-sm-6">
                             <fieldset className="form-group">
                                 <label htmlFor="location">Code postal / Commune</label>
                                 <input onChange={(event) => handleChange(event)} value={search.location} type="text" name={"location"} id={"location"} className={"form-control"}/>
-                            </fieldset>
-                        </div>
-                        <div className="col-lg-3 col-md-6 col-sm-6">
-                            <fieldset className="form-group">
-                                <label htmlFor="aroundMe">Autour de moi</label>
-                                <select name="aroundMe" id="aroundMe" className="form-control">
-                                    <option value="department">Mon département</option>
-                                    <option value="town">Ma commune</option>
-                                </select>
                             </fieldset>
                         </div>
                     </div>
@@ -189,17 +209,7 @@ function PatientSearch(props) {
                                     {paginatedAppoints.map(a => {
 
                                         return (
-                                            <tr key={a.id}>
-                                                <td>
-                                                    <button onClick={() => createPatientBooking(a.id, user.userId)} className={"btn btn-outline-primary"}>
-                                                        Réserver
-                                                    </button>
-                                                </td>
-                                                <td>{a.therapist?.displayName ?? a.therapist?.firstName + " " + a.therapist?.lastName}</td>
-                                                <td>{formatDateForTable(a.bookingDate)}</td>
-                                                <td>{formatTime(a.bookingStart)}</td>
-                                                <td>{a.location}</td>
-                                            </tr>
+                                            <BookingRow booking={a} createPatientBooking={createPatientBooking} user={user} />
                                         )
                                     })}
                                     </tbody>

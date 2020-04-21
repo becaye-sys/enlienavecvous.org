@@ -16,6 +16,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class User implements UserInterface
 {
+    const USER_ROLE = [
+        'ROLE_PATIENT' => "Demandeur",
+        'ROLE_THERAPIST' => "Praticien",
+        'ROLE_MANAGER' => "Manager"
+    ];
 
     /**
      * @ORM\Id()
