@@ -1,4 +1,7 @@
 {
+    "cocur/slugify": {
+        "version": "v4.0.0"
+    },
     "cron/cron": {
         "version": "1.4.2"
     },

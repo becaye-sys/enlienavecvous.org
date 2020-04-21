@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Membres actif</h1>
     </div>
-    <div class="container-fluid mt-5 mb-5">
+    {#<div class="container-fluid mt-5 mb-5">
         <div class="row">
             <form class="form-inline" action="{{ path('manager_manage_users') }}" method="get" id="table_filter_form">
                 <fieldset class="form-group">
@@ -22,7 +22,7 @@
                 <a href="{{ path('manager_manage_users') }}" class="btn btn-primary ml-2">Réinitaliser les filtres</a>
             </form>
         </div>
-    </div>
+    </div>#}
     <div class="container-fluid">
         <div class="table-responsive">
             <table class="table table-striped table-sm">
@@ -35,7 +35,7 @@
                     <th>Nom</th>
                     <th>Prénom</th>
                     <th>Validé</th>
-                    <th></th>
+                    <th>Changer le role</th>
                 </tr>
                 </thead>
                 {% if users|length %}
@@ -46,14 +46,13 @@
                             <td>{{ u.email }}</td>
                             <td>{{ u.createdAt|date('d/m/Y') }}</td>
                             <td>
-                                {{ u.roles|last }}
+                                {{ constant('App\\Entity\\User::USER_ROLE')[u.roles|last] }}
                             </td>
                             <td>{{ u.lastName }}</td>
                             <td>{{ u.firstName }}</td>
                             <td>{{ u.isActive }}</td>
                             <td>
                                 <form action="{{ path('manager_manage_users') }}" method="post">
-                                    <label for="user_role">Changer le rôle</label>
                                     <select name="user_role" id="user_role">
                                         {% if u.roles|last == 'ROLE_THERAPIST' %}
                                             <option value="ROLE_THERAPIST">Thérapeute</option>

@@ -11,6 +11,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Department
 {
+    const COUNTRIES = [
+        "fr" => "France",
+        "be" => "Belgique",
+        "lu" => "Luxembourg",
+        "ch" => "Suisse"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -37,6 +44,11 @@ class Department
      * @ORM\OneToMany(targetEntity="App\Entity\Town", mappedBy="department")
      */
     private $towns;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $slug;
 
     public function __construct()
     {
@@ -111,6 +123,18 @@ class Department
                 $town->setDepartment(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }

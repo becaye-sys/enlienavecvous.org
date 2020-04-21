@@ -151,6 +151,7 @@
                                 {{ form_widget(form.email, {'attr': {'placeholder': "Votre email", 'class': "form-control"}}) }}
                             </div>
                         </div>
+                        <div id="geolocation"></div>
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label for="">Votre pays</label>
@@ -221,5 +222,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('therapist_geoloc') }}
+    {{ encore_entry_script_tags('geolocation') }}
 {% endblock %}

@@ -131,7 +131,7 @@ class ApiController extends AbstractController
     }
 
     /**
-     * @Route(path="/departments-by-country", name="api_get_departments_by_country", methods={"POST"})
+     * @Route(path="/departments-by-country", name="api_get_departments_by_country", methods={"GET"})
      * @return JsonResponse
      */
     public function getDepartmentsByCountry(
@@ -141,7 +141,7 @@ class ApiController extends AbstractController
     )
     {
         $departments = $departmentRepository->findBy(
-            ['country' => $request->request->get('country')],
+            ['country' => $request->query->get('country')],
             ['code' => 'ASC']
         );
         $data = $serializer->serialize($departments, ['towns']);
@@ -149,7 +149,7 @@ class ApiController extends AbstractController
     }
 
     /**
-     * @Route(path="/towns-by-departments", name="api_get_towns_by_department", methods={"POST"})
+     * @Route(path="/towns-by-department", name="api_get_towns_by_department", methods={"GET"})
      * @return JsonResponse
      */
     public function getTownsByDepartments(
@@ -159,7 +159,7 @@ class ApiController extends AbstractController
         CustomSerializer $serializer
     )
     {
-        $department = $departmentRepository->find($request->request->get('department'));
+        $department = $departmentRepository->find($request->query->get('department'));
         $towns = $townRepository->findBy(
             ['department' => $department],
             ['code' => 'ASC']
@@ -169,8 +169,31 @@ class ApiController extends AbstractController
     }
 
     /**
+     * @Route(path="/bookings-filtered", name="api_bookings_filtered", methods={"POST"})
+     * @return JsonResponse
+     */
+    public function bookingSearchByFilters(
+        Request $request,
+        CustomSerializer $serializer,
+        AppointmentRepository $appointmentRepository
+    )
+    {
+        $params = [];
+        foreach ($request->request as $key => $value) {
+            if ($value !== "") {
+                $params[$key] = $value;
+            }
+        }
+
+        $appointments = $appointmentRepository->findAvailableBookingsByFilters($params);
+        $data = $serializer->serializeByGroups($appointments, ['create_booking']);
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
+    }
+
+    /**
      * @Route(path="/get-cities", name="api_get_cities_react_select", methods={"GET"})
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     * not used
      */
     public function getCitiesForReactSelect(Request $request, SerializerInterface $serializer)
     {
@@ -187,6 +210,7 @@ class ApiController extends AbstractController
 
     /**
      * @Route(path="/get-ip", name="api_get_ip")
+     * not used
      */
     public function getIp(SerializerInterface $serializer, Request $request) {
         $client = HttpClient::create();
@@ -198,6 +222,7 @@ class ApiController extends AbstractController
 
     /**
      * @Route(path="/get-localisation", name="api_get_localisation")
+     * not used
      */
     public function getLocalisation(SerializerInterface $serializer, Request $request) {
         $client = HttpClient::create();
