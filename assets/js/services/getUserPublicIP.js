@@ -16,7 +16,6 @@ export async function getPublicIp(callback, $ipDiv, $selectCountry, $selectDepar
 
 export function publicIpCallback(response, $ipDiv, $selectCountry, $selectDepartment, $selectTown) {
     const parsedResponse = JSON.parse(response?.data?.content);
-    console.log('parsed response:',parsedResponse);
     const ip = parsedResponse.ip;
     console.log('ip:',ip);
     if (ip !== undefined) {
