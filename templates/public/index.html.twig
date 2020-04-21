@@ -34,14 +34,11 @@
                         <h3 class="mt-0 text-black">Je partage l'initiative</h3>
                     </div>
                     <div class="col-md-6">
-                        <a href="" class="btn btn-default btn-sm">
+                        <a class="btn btn-default btn-sm" href="https://www.facebook.com/sharer/sharer.php?u={{ url('index')|url_encode }}" title="Partager sur Facebook" target="_blank" rel="noreferrer noopener">
                             <i class="fa fa-facebook"></i> Facebook
                         </a>
-                        <a href="" class="btn btn-default btn-sm">
+                        <a class="btn btn-default btn-sm" href="https://twitter.com/intent/tweet?text={{ url('index') }}" title="Partager sur Twitter" target="_blank" rel="noreferrer noopener">
                             <i class="fa fa-twitter"></i> Twitter
-                        </a>
-                        <a href="" class="btn btn-default btn-sm">
-                            <i class="fa fa-instagram"></i> Instagram
                         </a>
                     </div>
                 </div>
@@ -150,6 +147,7 @@
     <!-- Revolution Slider 5.x SCRIPTS-->
     <script src="{{ asset('js/revolution-slider/js/jquery.themepunch.tools.min.js') }}"></script>
     <script src="{{ asset('js/revolution-slider/js/jquery.themepunch.revolution.min.js') }}"></script>
+    <script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>
     <script>
         $(document).ready(function(e) {
             $(".rev_slider_default").revolution({
@@ -240,6 +238,22 @@
                     nextSlideOnWindowFocus: "off",
                     disableFocusListener: false,
                 }
+            });
+            window.fbAsyncInit = function() {
+                FB.init({
+                    appId            : '580312176175308',
+                    autoLogAppEvents : true,
+                    xfbml            : true,
+                    version          : 'v6.0'
+                });
+            };
+            $("button#facebook_share").on('click', function (e) {
+                FB.ui({
+                    method: 'share',
+                    href: window.location.href
+                }, function (response) {
+                    console.log(response);
+                });
             });
         });
     </script>
