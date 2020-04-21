@@ -251,7 +251,7 @@ class ManagerController extends AbstractController
         $paginated = $paginator->paginate(
             $departments,
             $request->query->getInt('page', 1),
-            10
+            15
         );
 
         return $this->render(

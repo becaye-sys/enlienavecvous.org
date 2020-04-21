@@ -24,9 +24,10 @@ class TownFixtures extends Fixture implements FixtureGroupInterface, DependentFi
 
     public function load(ObjectManager $manager)
     {
-        //$this->loadFrenchTowns($manager);
+        $this->loadFrenchTowns($manager);
         $this->loadLuxembourgTowns($manager);
-        //$this->loadSwissTowns($manager);
+        $this->loadSwissTowns($manager);
+        $this->loadBelgiumTowns($manager);
 
         $manager->flush();
     }
@@ -69,11 +70,10 @@ class TownFixtures extends Fixture implements FixtureGroupInterface, DependentFi
                 $town->setName($item["COMMUNE"]);
             }
             if (array_key_exists("LAU2", $item)) {
-                /** @var Department $department */
-                $department = $this->getReference(DepartmentFixtures::DEPARTMENT_LU_REFERENCE."_".substr($item["LAU2"], 0, 2));
-                $town->setDepartment($department);
-                $town->setScalarDepart($item["CANTON"]);
                 $town->setCode($item["LAU2"]);
+            }
+            if (array_key_exists("CANTON", $item)) {
+                $town->setScalarDepart($this->getSlug($item["CANTON"]));
             }
             if (array_key_exists("LAU2", $item)) {
                 $town->setZipCodes([$item["LAU2"]]);
@@ -96,10 +96,9 @@ class TownFixtures extends Fixture implements FixtureGroupInterface, DependentFi
             if (array_key_exists("admin", $item)) {
                 foreach ($cantonsArray as $i => $canton) {
                     if (strpos($canton["cantonLongName"], $item["admin"])) {
-                        $town->setScalarDepart($cantonsArray["cantonId"]);
+                        $town->setScalarDepart($this->getSlug($cantonsArray["cantonId"]));
                         $town->setCode($cantonsArray["cantonId"]);
                     }
-                    //if (array_key_exists("cantonLongName", $canton))
                 }
             }
 
@@ -114,7 +113,17 @@ class TownFixtures extends Fixture implements FixtureGroupInterface, DependentFi
 
     public function loadBelgiumTowns(ObjectManager $manager)
     {
+        $townsArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/communes/communes_be.json");
 
+        foreach ($townsArray as $key => $item) {
+            $town = new Town();
+            $town->setCode($item["Code postal"]);
+            $town->setName($item["Localité"]);
+            $depart = $this->getSlug($item["Province"]);
+            $town->setScalarDepart($depart);
+
+            $manager->persist($town);
+        }
     }
 
     public static function getGroups(): array

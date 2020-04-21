@@ -61,9 +61,17 @@ class PublicController extends AbstractController
         $patientForm->handleRequest($request);
 
         if ($request->isMethod('POST') && $patientForm->isSubmitted() && $patientForm->isValid()) {
+            $selectedCountry = $request->request->get('country');
+            $selectedDepartment = $request->request->get('department');
+            $selectedTown = $request->request->get('town');
+            $department = $departmentRepository->findOneBy(['country' => $selectedCountry, 'id' => $selectedDepartment]);
+            $town = $townRepository->find($selectedTown);
+            $town->setDepartment($department);
             if ($patientForm->getData() instanceof Patient) {
                 /** @var Patient $user */
                 $user = $patientForm->getData();
+                $user->setCountry($selectedCountry);
+                $user->setTown($town);
                 $user = $user->setUniqueEmailToken();
                 $user = $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
                 $emailToken = $user->getEmailToken();
@@ -108,16 +116,17 @@ class PublicController extends AbstractController
         $therapistForm->handleRequest($request);
 
         if ($request->isMethod('POST') && $therapistForm->isSubmitted() && $therapistForm->isValid()) {
-            $townId = $request->request->get('therapist_register_town');
-            $departmentId = $request->request->get('therapist_register_department');
-            $town = $townRepository->find($townId);
+            $selectedCountry = $request->request->get('country');
+            $selectedDepartment = $request->request->get('department');
+            $selectedTown = $request->request->get('town');
+            $department = $departmentRepository->findOneBy(['country' => $selectedCountry, 'id' => $selectedDepartment]);
+            $town = $townRepository->find($selectedTown);
+            $town->setDepartment($department);
             if ($therapistForm->getData() instanceof Therapist) {
                 /** @var Therapist $user */
                 $user = $therapistForm->getData();
-                if ($town instanceof Town) {
-                    $user->setTown($town);
-                    $user->setScalarDepartment($departmentId);
-                }
+                $user->setCountry($selectedCountry);
+                $user->setTown($town);
                 $user = $user->setUniqueEmailToken();
                 $user = $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
                 $emailToken = $user->getEmailToken();

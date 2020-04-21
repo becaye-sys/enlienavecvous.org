@@ -40,6 +40,7 @@ class DepartmentFixtures extends Fixture implements FixtureGroupInterface
             $department->setCountry("fr");
             $department->setName($value["nom"]);
             $department->setCode($value["code"]);
+            $department->setSlug($this->getSlug($value["nom"]));
             $this->addReference(self::DEPARTMENT_FR_REFERENCE . "_" . $value["code"], $department);
             $manager->persist($department);
         }
@@ -54,6 +55,7 @@ class DepartmentFixtures extends Fixture implements FixtureGroupInterface
             $department->setCountry("be");
             $department->setName($value["dp"]);
             $department->setCode($value["cp"]);
+            $department->setSlug($this->getSlug($value["dp"]));
             $this->addReference(self::DEPARTMENT_BE_REFERENCE . "_" . $value["cp"], $department);
             $manager->persist($department);
         }
@@ -68,6 +70,7 @@ class DepartmentFixtures extends Fixture implements FixtureGroupInterface
             $department->setCountry("lu");
             $department->setName($value["CANTON"]);
             $department->setCode($value["LAU2"]);
+            $department->setSlug($this->getSlug($value["CANTON"]));
             $this->addReference(self::DEPARTMENT_LU_REFERENCE . "_" . $value["LAU2"], $department);
             $manager->persist($department);
         }
@@ -75,14 +78,15 @@ class DepartmentFixtures extends Fixture implements FixtureGroupInterface
 
     private function loadSwissDepartments(ObjectManager $manager)
     {
-        $departmentArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/departments/departements_ch.json");
+        $departmentArray = $this->getDecodedArrayFromFile(__DIR__ . "/../../public/data/cantons_suisse.json");
         // for each region -> create Region and persist
         foreach ($departmentArray as $value) {
             $department = new Department();
             $department->setCountry("ch");
-            $department->setName($value["dp"]);
-            $department->setCode($value["cp"]);
-            $this->addReference(self::DEPARTMENT_CH_REFERENCE . "_" . $value["cp"], $department);
+            $department->setName($value["cantonLongName"]);
+            $department->setCode($value["cantonId"]);
+            $department->setSlug($this->getSlug($value["cantonLongName"]));
+            $this->addReference(self::DEPARTMENT_CH_REFERENCE . "_" . $value["cantonId"], $department);
             $manager->persist($department);
         }
     }

@@ -131,7 +131,7 @@ class ApiController extends AbstractController
     }
 
     /**
-     * @Route(path="/departments-by-country", name="api_get_departments_by_country", methods={"POST"})
+     * @Route(path="/departments-by-country", name="api_get_departments_by_country", methods={"GET"})
      * @return JsonResponse
      */
     public function getDepartmentsByCountry(
@@ -141,15 +141,16 @@ class ApiController extends AbstractController
     )
     {
         $departments = $departmentRepository->findBy(
-            ['country' => $request->request->get('country')],
+            ['country' => $request->query->get('country')],
             ['code' => 'ASC']
         );
+        dump($departments);
         $data = $serializer->serialize($departments, ['towns']);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
     /**
-     * @Route(path="/towns-by-departments", name="api_get_towns_by_department", methods={"POST"})
+     * @Route(path="/towns-by-department", name="api_get_towns_by_department", methods={"GET"})
      * @return JsonResponse
      */
     public function getTownsByDepartments(
@@ -159,7 +160,7 @@ class ApiController extends AbstractController
         CustomSerializer $serializer
     )
     {
-        $department = $departmentRepository->find($request->request->get('department'));
+        $department = $departmentRepository->find($request->query->get('department'));
         $towns = $townRepository->findBy(
             ['department' => $department],
             ['code' => 'ASC']
