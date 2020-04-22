@@ -17,6 +17,11 @@ DirectoryIndex index.php
     Options -MultiViews
 </IfModule>
 
+php_value post_max_size 10M
+php_value upload_max_filesize 10M
+php_value max_execution_time 60
+php_value memory_limit 128M
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
