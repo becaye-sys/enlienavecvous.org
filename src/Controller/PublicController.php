@@ -197,6 +197,16 @@ class PublicController extends AbstractController
     }
 
     /**
+     * @Route(path="/la-gestalt-therapie", name="gestalt_therapy")
+     */
+    public function whatIsGestalt()
+    {
+        return $this->render(
+            'public/gestalt_therapy.html.twig'
+        );
+    }
+
+    /**
      * @Route(path="/numeros-d-urgence", name="emergency_numbers")
      */
     public function emergencyNumbers()
