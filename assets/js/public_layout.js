@@ -7,4 +7,5 @@ import './../public/css/style-main.css';
 import './../public/css/preloader.css';
 import './../public/css/custom-bootstrap-margin-padding.css';
 import './../public/css/responsive.css';
-import './../public/css/colors/theme-skin-blue.css';
+import './../public/css/colors/theme-skin-red.css';
+import './../public/css/style.css';
