@@ -131,6 +131,11 @@ function PatientSearch(props) {
         }
     }
 
+    const resetBooking = () => {
+        setBooking({});
+        localStorage.getItem('booking') && localStorage.removeItem('booking');
+    }
+
     const appointsToDisplay = filtered.length ? filtered : appoints;
 
     const paginatedAppoints = appointsToDisplay.length > itemsPerPage ? Pagination.getData(
@@ -147,10 +152,6 @@ function PatientSearch(props) {
     useEffect(() => {
         updateAppointsByUserFilters();
     },[search]);
-
-    useEffect(() => {
-        updateBookingsByFilters();
-    },[search.aroundMe, search.department]);
 
     return (
         <div>
@@ -181,7 +182,7 @@ function PatientSearch(props) {
                         <div className="col-lg-3 col-md-6 col-sm-6">
                             <fieldset className="form-group">
                                 <label htmlFor="location">Code postal / Commune</label>
-                                <input onChange={(event) => handleChange(event)} value={search.location} type="text" name={"location"} id={"location"} className={"form-control"}/>
+                                <input onChange={handleChange} value={search.location} type="text" name={"location"} id={"location"} className={"form-control"}/>
                             </fieldset>
                         </div>
                     </div>
@@ -189,7 +190,7 @@ function PatientSearch(props) {
             </div>
             {
                 localStorage.getItem('booking') ?
-                    <BookingConfirmation /> :
+                    <BookingConfirmation booking={booking} resetBooking={resetBooking} /> :
                     <div className="container">
                         <div className="table-responsive js-rep-log-table">
                             <table className="table table-striped table-sm">

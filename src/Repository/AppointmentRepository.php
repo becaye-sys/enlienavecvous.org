@@ -90,11 +90,11 @@ class AppointmentRepository extends ServiceEntityRepository
     public function findAvailableAppointments()
     {
         $query = $this->createQueryBuilder('a')
-            ->orderBy('a.bookingDate', 'asc')
             ->where('a.status = :status')
             ->setParameter('status', Appointment::STATUS_AVAILABLE)
             ->andWhere('a.bookingDate >= :now')
-            ->setParameter('now', new \DateTime('now'));
+            ->setParameter('now', new \DateTime('now'))
+            ->orderBy('a.bookingDate', 'asc');
         return $query
             ->getQuery()
             ->getResult();

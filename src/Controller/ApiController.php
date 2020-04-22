@@ -86,12 +86,19 @@ class ApiController extends AbstractController
         $appointment->setStatus(Appointment::STATUS_BOOKING);
         $patient->addAppointment($appointment);
         $entityManager->flush();
-        $data = $serializer->serializeByGroups($appointment, ['create_booking']);
+        $dataToSerialize = [
+            'bookingId' => $appointment->getId(),
+            'bookingDate' => $appointment->getBookingDate(),
+            'bookingStart' => $appointment->getBookingStart(),
+            'therapistFirstName' => $appointment->getTherapist()->getFirstName(),
+            'therapistLastName' => $appointment->getTherapist()->getLastName()
+        ];
+        $data = $serializer->serializeByGroups($dataToSerialize, ['create_booking']);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
     /**
-     * @Route(path="/confirm/booking/{id}", name="api_confirm_booking", methods={"POST"})
+     * @Route(path="/confirm/booking/{id}", name="api_confirm_booking", methods={"GET"})
      * @ParamConverter(name="id", class="App\Entity\Appointment")
      * @return JsonResponse
      */
@@ -103,6 +110,11 @@ class ApiController extends AbstractController
         HistoryHelper $historyHelper
     ): JsonResponse
     {
+        //$appointId = $request->query->get('id');
+        //$appointment = $appointmentRepository->findOneBy(['id' => $appointId, 'status' => Appointment::STATUS_BOOKING]);
+        if (!$appointment || !$appointment instanceof Appointment) {
+            return new JsonResponse("Pas de rendez-vous enregistré.", 500, [], true);
+        }
         $appointment->setBooked(true);
         $appointment->setStatus(Appointment::STATUS_BOOKED);
         // add booking history
