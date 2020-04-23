@@ -67,15 +67,6 @@ class PublicController extends AbstractController
             $selectedCountry = $request->request->get('country');
             $selectedDepartment = $request->request->get('department');
             $city = get_object_vars(json_decode($request->request->get('city')));
-            if ($selectedCountry === 'fr') {
-                $town = $this->createFrCity($city);
-            } elseif ($selectedCountry === 'be') {
-                $town = $this->createBeCity($city);
-            } elseif ($selectedCountry === 'lu') {
-                $town = $this->createLuCity($city);
-            } elseif ($selectedCountry === 'ch') {
-                $town = $this->createChCity($city);
-            }
 
             $slugger = new Slugify();
             $departSlug = $slugger->slugify($selectedDepartment);
@@ -84,13 +75,38 @@ class PublicController extends AbstractController
                 $departmentRepository->findOneBy(['country' => $selectedCountry, 'slug' => $departSlug])
             ;
 
-            $department->addTown($town);
-            $entityManager->persist($town);
+            if ($selectedCountry === 'fr') {
+                $existingTown = $townRepository->findOneBy(['department' => $department, 'name' => $city["nom"]]);
+            } elseif ($selectedCountry === 'be') {
+                $existingTown = $townRepository->findOneBy(['department' => $department, 'name' => $city["localite"]]);
+            } elseif ($selectedCountry === 'lu') {
+                $existingTown = $townRepository->findOneBy(['department' => $department, 'name' => $city["COMMUNE"]]);
+            } elseif ($selectedCountry === 'ch') {
+                $existingTown = $townRepository->findOneBy(['department' => $department, 'name' => $city["city"]]);
+            }
+
+            if (!$existingTown instanceof Town) {
+                if ($selectedCountry === 'fr') {
+                    $town = $this->createFrCity($city);
+                } elseif ($selectedCountry === 'be') {
+                    $town = $this->createBeCity($city);
+                } elseif ($selectedCountry === 'lu') {
+                    $town = $this->createLuCity($city);
+                } elseif ($selectedCountry === 'ch') {
+                    $town = $this->createChCity($city);
+                }
+            }
+
+            $userCity = $existingTown ?? $town;
+
+
+            $department->addTown($userCity);
+            $entityManager->persist($userCity);
             if ($patientForm->getData() instanceof Patient) {
                 /** @var Patient $user */
                 $user = $patientForm->getData();
                 $user->setCountry($selectedCountry);
-                $user->setTown($town);
+                $user->setTown($userCity);
                 $user = $user->setUniqueEmailToken();
                 $user = $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
                 $emailToken = $user->getEmailToken();
@@ -138,15 +154,6 @@ class PublicController extends AbstractController
             $selectedCountry = $request->request->get('country');
             $selectedDepartment = $request->request->get('department');
             $city = get_object_vars(json_decode($request->request->get('city')));
-            if ($selectedCountry === 'fr') {
-                $town = $this->createFrCity($city);
-            } elseif ($selectedCountry === 'be') {
-                $town = $this->createBeCity($city);
-            } elseif ($selectedCountry === 'lu') {
-                $town = $this->createLuCity($city);
-            } elseif ($selectedCountry === 'ch') {
-                $town = $this->createChCity($city);
-            }
 
             $slugger = new Slugify();
             $departSlug = $slugger->slugify($selectedDepartment);
@@ -155,13 +162,38 @@ class PublicController extends AbstractController
                 $departmentRepository->findOneBy(['country' => $selectedCountry, 'slug' => $departSlug])
             ;
 
-            $department->addTown($town);
-            $entityManager->persist($town);
+            if ($selectedCountry === 'fr') {
+                $existingTown = $townRepository->findOneBy(['department' => $department, 'name' => $city["nom"]]);
+            } elseif ($selectedCountry === 'be') {
+                $existingTown = $townRepository->findOneBy(['department' => $department, 'name' => $city["localite"]]);
+            } elseif ($selectedCountry === 'lu') {
+                $existingTown = $townRepository->findOneBy(['department' => $department, 'name' => $city["COMMUNE"]]);
+            } elseif ($selectedCountry === 'ch') {
+                $existingTown = $townRepository->findOneBy(['department' => $department, 'name' => $city["city"]]);
+            }
+
+            if (!$existingTown instanceof Town) {
+                if ($selectedCountry === 'fr') {
+                    $town = $this->createFrCity($city);
+                } elseif ($selectedCountry === 'be') {
+                    $town = $this->createBeCity($city);
+                } elseif ($selectedCountry === 'lu') {
+                    $town = $this->createLuCity($city);
+                } elseif ($selectedCountry === 'ch') {
+                    $town = $this->createChCity($city);
+                }
+            }
+
+            $userCity = $existingTown ?? $town;
+
+
+            $department->addTown($userCity);
+            $entityManager->persist($userCity);
             if ($therapistForm->getData() instanceof Therapist) {
                 /** @var Therapist $user */
                 $user = $therapistForm->getData();
                 $user->setCountry($selectedCountry);
-                $user->setTown($town);
+                $user->setTown($userCity);
                 $user = $user->setUniqueEmailToken();
                 $user = $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
                 $emailToken = $user->getEmailToken();
