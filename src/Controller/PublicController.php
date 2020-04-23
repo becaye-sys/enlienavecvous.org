@@ -79,7 +79,13 @@ class PublicController extends AbstractController
                 /** @var Patient $user */
                 $user = $patientForm->getData();
                 $user->setCountry($selectedCountry);
-                $user->setDepartment($department);
+                if ($department instanceof Department) {
+                    $user->setDepartment($department);
+                    $user->setScalarDepartment($departSlug);
+                } else {
+                    $user->setDepartment(null);
+                    $user->setScalarDepartment($departSlug);
+                }
                 $user = $user->setUniqueEmailToken();
                 $user = $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
                 $emailToken = $user->getEmailToken();
