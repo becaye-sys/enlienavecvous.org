@@ -3,7 +3,7 @@
 {% block body %}
     <p>Bonjour,</p>
     <p>Vous avez rendez-vous :</p>
-    <p>Le {{ appointment.bookingDate|date('dd/MM/YYYY') }}</p>
+    <p>Le {{ appointment.bookingDate|date('d/M/Y') }}</p>
     <p>À {{ appointment.bookingStart|date('H:i') }}</p>
     <p>Avec {{ appointment.patient.displayName }}</p>
     <p>Tel: {{ appointment.patient.phoneNumber }}, email: {{ appointment.patient.email }}</p>
@@ -16,5 +16,5 @@
         d’annulation, respectez autant que possible un délai d’au moins 24h.</p>
 
     <p>Cordialement,</p>
-    <p>L'équipe de Onestlapourvous.org</p>
+    <p>L'équipe de Enlienavecvous.org</p>
 {% endblock %}
