@@ -84,6 +84,7 @@ Encore
 ;
 Encore.configureDefinePlugin(options => {
     options["process.env"].API_URL = process.env.API_URL;
+    console.log(options["process.env"].API_URL);
 });
 
 module.exports = Encore.getWebpackConfig();
