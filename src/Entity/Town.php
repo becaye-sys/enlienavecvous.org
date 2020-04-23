@@ -11,6 +11,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Town
 {
+    const TOWN_JSON_FILE = [
+        'fr' => __DIR__ . "./../../public/data/communes/communes_fr.json",
+        'be' => __DIR__ . "./../../public/data/communes/communes_be.json",
+        'lu' => __DIR__ . "./../../public/data/communes/communes_lu.json",
+        'ch' => __DIR__ . "./../../public/data/communes/communes_ch.json"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

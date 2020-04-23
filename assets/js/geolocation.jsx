@@ -2,6 +2,17 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
 import {API_URL} from "./config";
+import FrenchCities from "./../../public/data/communes/communes_fr.json";
+import BelgiumCities from "./../../public/data/communes/communes_be.json";
+import LuxembourgCities from "./../../public/data/communes/communes_lu.json";
+import SwissCities from "./../../public/data/communes/communes_ch.json";
+
+const CITY_FILE = {
+    fr: FrenchCities,
+    be: BelgiumCities,
+    lu: LuxembourgCities,
+    ch: SwissCities
+};
 
 export function Geolocation() {
     const [selection, setSelection] = useState({
@@ -17,7 +28,24 @@ export function Geolocation() {
 
     const handleChange = ({currentTarget}) => {
         const { name, value } = currentTarget;
-        setSelection({...selection, [name]: value});
+        if (name === 'department') {
+            setSelection({...selection, [name]: value, city: ""})
+        } else {
+            setSelection({...selection, [name]: value});
+        }
+    };
+
+    const handleCitySelect = ({currentTarget}) => {
+        const { value } = currentTarget;
+        const searchingFile = CITY_FILE[selection.country];
+        const filter = getKeyForTown();
+        const city = searchingFile.filter(
+            c => c[filter] === value
+        );
+        console.log('citySearch:',selection.citySearch);
+        setSelection({...selection, city: JSON.stringify(city[0]) })
+        console.log('city selected:',city[0]);
+        console.log('citySearch:',selection.citySearch);
     };
 
     const getDepartmentsByCountry = async () => {
@@ -40,14 +68,69 @@ export function Geolocation() {
         setCities(cities.length > 0 && cities);
     }
 
+    const getCityFromJson = async () => {
+        setCities([]);
+        setSelection({...selection, city: "", citySearch: ""});
+        const searchingFile = CITY_FILE[selection.country];
+        const filters = getCityFiltersFromCountry();
+        const cities = searchingFile.filter(
+            c => c[filters[0]] === selection.department
+        );
+
+        console.log('cities found:',cities);
+        setCities(cities.length > 0 && cities);
+    }
+
     const getFilteredCities = () => {
         setFilteredCities([]);
+        const arrKey = getKeyForTown();
         const filtered = cities.filter(c =>
-            c.name.toLowerCase().includes(selection.citySearch)
-            || c.code.includes(selection.citySearch)
+            c[arrKey].toLowerCase().includes(selection.citySearch.toLowerCase())
         );
         console.log(filtered);
         setFilteredCities(filtered);
+    }
+
+    const getKeyForDepartment = () => {
+        if (selection.country === 'fr') {
+            return "code";
+        } else if (selection.country === 'be') {
+            return "name";
+        } else if (selection.country === 'ch') {
+            return "name";
+        }  else if (selection.country === 'lu') {
+            return "name";
+        } else {
+            return "code";
+        }
+    }
+
+    const getKeyForTown = () => {
+        if (selection.country === 'fr') {
+            return "nom";
+        } else if (selection.country === 'be') {
+            return "localite";
+        } else if (selection.country === 'ch') {
+            return "city";
+        }  else if (selection.country === 'lu') {
+            return "COMMUNE";
+        } else {
+            return "nom";
+        }
+    }
+
+    const getCityFiltersFromCountry = () => {
+        if (selection.country === 'fr') {
+            return ["codeDepartement"];
+        } else if (selection.country === 'be') {
+            return ["province"];
+        } else if (selection.country === 'lu') {
+            return ["CANTON"];
+        } else if (selection.country === 'ch') {
+            return ["admin"];
+        } else {
+            return ["codeDepartement"];
+        }
     }
 
     useEffect(() => {
@@ -55,7 +138,7 @@ export function Geolocation() {
     }, [selection.country]);
 
     useEffect(() => {
-        getCitiesByDepartment();
+        getCityFromJson();
     }, [selection.department]);
 
     useEffect(() => {
@@ -79,8 +162,9 @@ export function Geolocation() {
                         <option value="">Sélectionnez votre département</option>
                         {departments &&
                         departments.map((depart, key) => {
+                            const arrKey = getKeyForDepartment();
                             return (
-                                <option key={key} value={depart.id}>{depart.name}</option>
+                                <option key={key} value={depart[arrKey]}>{depart.name}</option>
                             )
                         })
                         }
@@ -89,19 +173,23 @@ export function Geolocation() {
             </div>
             <div className="row">
                 <div className="form-group col-md-6">
-                    <label htmlFor="citySearch">Recherchez votre ville/commune/code postal</label>
-                    <input onChange={handleChange} type="text" name={"citySearch"} id={"citySearch"} className={"form-control"}/>
+                    <label htmlFor="citySearch">Saisissez le nom de votre commune</label>
+                    <input onChange={handleChange} value={selection.citySearch} type="text" name={"citySearch"} id={"citySearch"} className={"form-control"}/>
+                    <input type="hidden" name="city" value={selection.citySearch !== undefined && selection.city}/>
                 </div>
                 {
                     selection.citySearch.length >= 2 &&
                     <div className="form-group col-md-6">
                         <label htmlFor="town">Sélectionnez ensuite votre localisation</label>
-                        <select name="town" id="town" className={"form-control"}>
+                        <select onChange={handleCitySelect} name="town" id="town" className={"form-control"}>
                             <option value="">Sélectionnez votre localisation</option>
                             {
-                                filteredCities.length && filteredCities.map((city, key) => (
-                                    <option key={key} value={city.id}>{city.name}</option>
-                                ))
+                                filteredCities.length && filteredCities.map((city, key) => {
+                                    const arrKey = getKeyForTown();
+                                    return (
+                                        <option key={key} value={city[arrKey]}>{city[arrKey]}</option>
+                                    )
+                                })
                             }
                         </select>
                     </div>
