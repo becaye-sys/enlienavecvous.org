@@ -129,14 +129,6 @@ export function Geolocation() {
         getDepartmentsByCountry();
     }, [selection.country]);
 
-    useEffect(() => {
-        getCityFromJson();
-    }, [selection.department]);
-
-    useEffect(() => {
-        getFilteredCities();
-    }, [selection.citySearch]);
-
     return (
         <>
             <div className="row">
@@ -163,6 +155,7 @@ export function Geolocation() {
                     </select>
                 </div>
             </div>
+            {/*
             <div className="row">
                 <div className="form-group col-md-6">
                     <label htmlFor="citySearch">Saisissez le nom de votre commune</label>
@@ -187,6 +180,7 @@ export function Geolocation() {
                     </div>
                 }
             </div>
+            */}
         </>
     )
 }

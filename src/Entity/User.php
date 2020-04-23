@@ -109,9 +109,10 @@ class User implements UserInterface
     protected $scalarDepartment;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Town", inversedBy="users")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="users")
+     * @ORM\JoinColumn(nullable=true)
      */
-    protected $town;
+    protected $department;
 
     public function __construct()
     {
@@ -341,14 +342,14 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getTown(): ?Town
+    public function getDepartment(): Department
     {
-        return $this->town;
+        return $this->department;
     }
 
-    public function setTown(?Town $town): self
+    public function setDepartment(Department $department): self
     {
-        $this->town = $town;
+        $this->department = $department;
 
         return $this;
     }

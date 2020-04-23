@@ -1,6 +1,6 @@
 [
     {
-        "city": "Geneva", 
+        "city": "Genève", 
         "admin": "Genève",
         "country": "Switzerland", 
         "population_proper": "192385", 
@@ -33,8 +33,8 @@
         "population": "830000"
     },
     {
-        "city": "Bern",
-        "admin": "Bern",
+        "city": "Berne",
+        "admin": "Berne",
         "country": "Switzerland",
         "population_proper": "121631",
         "iso2": "CH",
@@ -56,7 +56,7 @@
     },
     {
         "city": "Lucerne",
-        "admin": "Luzern",
+        "admin": "Lucerne",
         "country": "Switzerland",
         "population_proper": "77491",
         "iso2": "CH",
@@ -67,7 +67,7 @@
     },
     {
         "city": "Lugano",
-        "admin": "Ticino",
+        "admin": "Tessin",
         "country": "Switzerland",
         "population_proper": "26365",
         "iso2": "CH",
@@ -78,7 +78,7 @@
     },
     {
         "city": "Sankt Fiden",
-        "admin": "Sankt Gallen",
+        "admin": "Saint-Gall",
         "country": "Switzerland",
         "population_proper": "70572",
         "iso2": "CH",
@@ -143,8 +143,8 @@
         "population": "28045"
     },
     {
-        "city": "Zug",
-        "admin": "Zug",
+        "city": "Zoug",
+        "admin": "Zoug",
         "country": "Switzerland",
         "population_proper": "23435",
         "iso2": "CH",
@@ -166,7 +166,7 @@
     },
     {
         "city": "Bellinzona",
-        "admin": "Ticino",
+        "admin": "Tessin",
         "country": "Switzerland",
         "population_proper": "16572",
         "iso2": "CH",
@@ -342,7 +342,7 @@
     },
     {
         "city": "Aarberg",
-        "admin": "Bern",
+        "admin": "Berne",
         "country": "Switzerland",
         "population_proper": "",
         "iso2": "CH",
@@ -397,7 +397,7 @@
     },
     {
         "city": "Lichtensteig",
-        "admin": "Sankt Gallen",
+        "admin": "Saint-Gall",
         "country": "Switzerland",
         "population_proper": "",
         "iso2": "CH",
@@ -529,7 +529,7 @@
     },
     {
         "city": "Rapperswil-Jona",
-        "admin": "Sankt Gallen",
+        "admin": "Saint-Gall",
         "country": "Switzerland",
         "population_proper": "",
         "iso2": "CH",
@@ -561,8 +561,8 @@
         "population": ""
     },
     {
-        "city": "Sankt Gallen",
-        "admin": "Sankt Gallen",
+        "city": "Saint-Gall",
+        "admin": "Saint-Gall",
         "country": "Switzerland",
         "population_proper": "",
         "iso2": "CH",
@@ -573,7 +573,7 @@
     },
     {
         "city": "Wil",
-        "admin": "Sankt Gallen",
+        "admin": "Saint-Gall",
         "country": "Switzerland",
         "population_proper": "",
         "iso2": "CH",
@@ -683,7 +683,7 @@
     },
     {
         "city": "Thun",
-        "admin": "Bern",
+        "admin": "Berne",
         "country": "Switzerland",
         "population_proper": "",
         "iso2": "CH",
@@ -749,7 +749,7 @@
     },
     {
         "city": "Ostermundigen",
-        "admin": "Bern",
+        "admin": "Berne",
         "country": "Switzerland",
         "population_proper": "",
         "iso2": "CH",
@@ -771,7 +771,7 @@
     },
     {
         "city": "Frutigen",
-        "admin": "Bern",
+        "admin": "Berne",
         "country": "Switzerland",
         "population_proper": "",
         "iso2": "CH",
@@ -826,7 +826,7 @@
     },
     {
         "city": "Schüpfheim",
-        "admin": "Luzern",
+        "admin": "Lucerne",
         "country": "Switzerland",
         "population_proper": "",
         "iso2": "CH",
@@ -837,7 +837,7 @@
     },
     {
         "city": "Saanen",
-        "admin": "Bern",
+        "admin": "Berne",
         "country": "Switzerland",
         "population_proper": "",
         "iso2": "CH",
@@ -892,7 +892,7 @@
     },
     {
         "city": "Willisau",
-        "admin": "Luzern",
+        "admin": "Lucerne",
         "country": "Switzerland",
         "population_proper": "",
         "iso2": "CH",
@@ -903,7 +903,7 @@
     },
     {
         "city": "Rorschach",
-        "admin": "Sankt Gallen",
+        "admin": "Saint-Gall",
         "country": "Switzerland",
         "population_proper": "",
         "iso2": "CH",
@@ -925,7 +925,7 @@
     },
     {
         "city": "Interlaken",
-        "admin": "Bern",
+        "admin": "Berne",
         "country": "Switzerland",
         "population_proper": "",
         "iso2": "CH",
@@ -936,7 +936,7 @@
     },
     {
         "city": "Sursee",
-        "admin": "Luzern",
+        "admin": "Lucerne",
         "country": "Switzerland",
         "population_proper": "",
         "iso2": "CH",
@@ -991,7 +991,7 @@
     },
     {
         "city": "Langnau",
-        "admin": "Bern",
+        "admin": "Berne",
         "country": "Switzerland",
         "population_proper": "",
         "iso2": "CH",
@@ -1013,7 +1013,7 @@
     },
     {
         "city": "Nidau",
-        "admin": "Bern",
+        "admin": "Berne",
         "country": "Switzerland",
         "population_proper": "",
         "iso2": "CH",
@@ -1057,7 +1057,7 @@
     },
     {
         "city": "Wangen",
-        "admin": "Bern",
+        "admin": "Berne",
         "country": "Switzerland",
         "population_proper": "",
         "iso2": "CH",
@@ -1079,7 +1079,7 @@
     },
     {
         "city": "Hochdorf",
-        "admin": "Luzern",
+        "admin": "Lucerne",
         "country": "Switzerland",
         "population_proper": "",
         "iso2": "CH",
@@ -1189,7 +1189,7 @@
     }, 
     {
         "city": "Altstätten", 
-        "admin": "Sankt Gallen", 
+        "admin": "Saint-Gall", 
         "country": "Switzerland", 
         "population_proper": "", 
         "iso2": "CH", 
@@ -1200,7 +1200,7 @@
     }, 
     {
         "city": "Courtelary", 
-        "admin": "Bern", 
+        "admin": "Berne", 
         "country": "Switzerland", 
         "population_proper": "", 
         "iso2": "CH", 
