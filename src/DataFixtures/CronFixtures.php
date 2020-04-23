@@ -13,13 +13,22 @@ class CronFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $cron = new CronJob();
-        $cron->setName("test");
-        $cron->setDescription("test");
-        $cron->setCommand("bookings:clean:past");
-        $cron->setSchedule("30 * * * *");
-        $cron->setEnabled(true);
-        $manager->persist($cron);
+        $cronDeletePastAppointments = new CronJob();
+        $cronDeletePastAppointments->setName("Delete past appointments");
+        $cronDeletePastAppointments->setDescription("Daily delete past appointments");
+        $cronDeletePastAppointments->setCommand("bookings:clean:past");
+        $cronDeletePastAppointments->setSchedule("30 * * * *");
+        $cronDeletePastAppointments->setEnabled(true);
+        $manager->persist($cronDeletePastAppointments);
+
+        $cronDeleteAppointmentsByWaitingStatus = new CronJob();
+        $cronDeleteAppointmentsByWaitingStatus->setName("Delete appointments");
+        $cronDeleteAppointmentsByWaitingStatus->setDescription("Daily delete waiting to delete appointments");
+        $cronDeleteAppointmentsByWaitingStatus->setCommand("bookings:clean:status:delete");
+        $cronDeleteAppointmentsByWaitingStatus->setSchedule("30 * * * *");
+        $cronDeleteAppointmentsByWaitingStatus->setEnabled(true);
+        $manager->persist($cronDeleteAppointmentsByWaitingStatus);
+
         $manager->flush();
     }
 

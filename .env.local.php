@@ -12,6 +12,7 @@ return array (
   'CORS_ALLOW_ORIGIN_IPIFY_API' => '^https://api.ipify.org/?format=json$',
   'MAILER_URL' => 'smtp://mail.gandi.net:465?encryption=ssl&auth_mod=login&username=accueil@enlienavecvous.org&password=Gestalthost2020',
   'API_LOGIN' => 'onestlapourvous',
+  'SENTRY_DSN' => 'https://13cbde40e40b44989821c2d5e9b8bafb@o346982.ingest.sentry.io/5211266',
   'MAILER_DSN' => 'smtp://mail.gandi.net:465?encryption=ssl&auth_mod=login&username=accueil@enlienavecvous.org&password=Gestalthost2020',
   'PROJECT_ADDR' => 'enlienavecvous.org',
   'API_KEY' => 'so4c0d00de65b6aae5842f3e6f4a32040c0f5f7058',

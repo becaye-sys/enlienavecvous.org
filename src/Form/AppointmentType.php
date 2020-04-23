@@ -22,7 +22,8 @@ class AppointmentType extends AbstractType
                 'bookingDate',
                 DateType::class,
                 [
-                    'widget' => 'single_text'
+                    'widget' => 'single_text',
+                    'label' => "Sélectionnez une date"
                 ]
             )
             ->add(
@@ -31,6 +32,7 @@ class AppointmentType extends AbstractType
                 [
                     'input'  => 'datetime',
                     'widget' => 'choice',
+                    'label' => "Heure de début"
                 ]
             )
             ->add(
@@ -39,11 +41,8 @@ class AppointmentType extends AbstractType
                 [
                     'input'  => 'datetime',
                     'widget' => 'choice',
+                    'label' => "Heure de fin"
                 ]
-            )
-            ->add(
-                'location',
-                TextType::class
             )
         ;
     }

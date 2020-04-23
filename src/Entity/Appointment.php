@@ -52,7 +52,6 @@ class Appointment implements AppointmentInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Therapist", inversedBy="appointments")
-     * @ORM\JoinColumn(nullable=true)
      * @Groups({"create_booking"})
      */
     protected $therapist;
@@ -63,7 +62,7 @@ class Appointment implements AppointmentInterface
     protected $patient;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"create_booking"})
      */
     protected $location;
