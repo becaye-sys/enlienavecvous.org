@@ -49,6 +49,7 @@ export function Geolocation() {
     };
 
     const getDepartmentsByCountry = async () => {
+        console.log(selection.country);
         const departs = await axios
             .get(`${API_URL}departments-by-country?country=${selection.country}`)
             .then(response => {
