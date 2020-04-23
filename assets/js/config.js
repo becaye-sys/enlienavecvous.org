@@ -2,7 +2,7 @@ const API_ENV_URL = process.env.API_URL;
 
 function apiUrlRegex(URL) {
     console.log('url:',URL);
-    return URL.replace("'", "");
+    return URL.replace(/'/g, "");
 }
 
 export const API_URL = apiUrlRegex(API_ENV_URL);
