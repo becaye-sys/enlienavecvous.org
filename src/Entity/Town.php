@@ -11,6 +11,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Town
 {
+    const TOWN_JSON_FILE = [
+        'fr' => __DIR__ . "./../../public/data/communes/communes_fr.json",
+        'be' => __DIR__ . "./../../public/data/communes/communes_be.json",
+        'lu' => __DIR__ . "./../../public/data/communes/communes_lu.json",
+        'ch' => __DIR__ . "./../../public/data/communes/communes_ch.json"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -44,14 +51,8 @@ class Town
      */
     private $scalarDepart;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="town")
-     */
-    private $users;
-
     public function __construct()
     {
-        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -115,37 +116,6 @@ class Town
     public function setScalarDepart(string $scalarDepart): self
     {
         $this->scalarDepart = $scalarDepart;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|User[]
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
-    public function addUser(User $user): self
-    {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->setTown($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): self
-    {
-        if ($this->users->contains($user)) {
-            $this->users->removeElement($user);
-            // set the owning side to null (unless already changed)
-            if ($user->getTown() === $this) {
-                $user->setTown(null);
-            }
-        }
 
         return $this;
     }

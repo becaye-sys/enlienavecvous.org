@@ -31,6 +31,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"confirm_booking"})
      */
     protected $email;
 
@@ -62,13 +63,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string")
-     * @Groups({"create_booking"})
+     * @Groups({"create_booking", "get_bookings"})
      */
     protected $firstName;
 
     /**
      * @ORM\Column(type="string")
-     * @Groups({"create_booking"})
+     * @Groups({"create_booking", "get_bookings"})
      */
     protected $lastName;
 
@@ -94,7 +95,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"create_booking"})
+     * @Groups({"create_booking", "get_bookings"})
      */
     protected $displayName;
 
@@ -109,9 +110,10 @@ class User implements UserInterface
     protected $scalarDepartment;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Town", inversedBy="users")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="users")
+     * @ORM\JoinColumn(nullable=true)
      */
-    protected $town;
+    protected $department;
 
     public function __construct()
     {
@@ -341,14 +343,14 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getTown(): ?Town
+    public function getDepartment(): ?Department
     {
-        return $this->town;
+        return $this->department;
     }
 
-    public function setTown(?Town $town): self
+    public function setDepartment(?Department $department): self
     {
-        $this->town = $town;
+        $this->department = $department;
 
         return $this;
     }

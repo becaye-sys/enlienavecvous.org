@@ -12,24 +12,22 @@
     <div class="container-fluid" style="margin-top: 80px;">
         {{ form_start(form) }}
         <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="col-lg-4 col-md-6 col-sm-6">
                 <fieldset class="form-group">
+                    {{ form_label(form.bookingDate) }}
                     {{ form_widget(form.bookingDate, {'attr': {'class': 'form-control'}}) }}
                 </fieldset>
             </div>
-            <div class="col-md-6 col-sm-6">
+            <div class="col-md-4 col-sm-6">
                 <fieldset class="form-group">
+                    {{ form_label(form.bookingStart) }}
                     {{ form_widget(form.bookingStart, {'attr': {'class': 'booking_start_picker'}}) }}
                 </fieldset>
             </div>
-            <div class="col-md-6 col-sm-6">
+            <div class="col-md-4 col-sm-6">
                 <fieldset class="form-group">
+                    {{ form_label(form.bookingEnd) }}
                     {{ form_widget(form.bookingEnd, {'attr': {'class': 'booking_end_picker'}}) }}
-                </fieldset>
-            </div>
-            <div class="col-md-6 col-sm-6">
-                <fieldset class="form-group">
-                    {{ form_widget(form.location, {'attr': {'value': app.user.zipCode, 'class': 'booking_location' }}) }}
                 </fieldset>
             </div>
             <div class="col-md-12 col-sm-6">

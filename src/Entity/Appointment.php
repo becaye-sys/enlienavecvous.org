@@ -35,7 +35,7 @@ class Appointment implements AppointmentInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"create_booking"})
+     * @Groups({"create_booking", "get_bookings"})
      */
     protected $id;
 
@@ -46,14 +46,13 @@ class Appointment implements AppointmentInterface
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"create_booking"})
+     * @Groups({"create_booking", "get_bookings"})
      */
     protected $bookingDate;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Therapist", inversedBy="appointments")
-     * @ORM\JoinColumn(nullable=true)
-     * @Groups({"create_booking"})
+     * @Groups({"create_booking", "get_bookings"})
      */
     protected $therapist;
 
@@ -63,19 +62,19 @@ class Appointment implements AppointmentInterface
     protected $patient;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"create_booking"})
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $location;
 
     /**
      * @ORM\Column(type="time")
-     * @Groups({"create_booking"})
+     * @Groups({"create_booking", "get_bookings"})
      */
     protected $bookingStart;
 
     /**
      * @ORM\Column(type="time")
+     * @Groups({"create_booking", "get_bookings"})
      */
     protected $bookingEnd;
 

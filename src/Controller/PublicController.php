@@ -15,8 +15,10 @@ use App\Repository\DepartmentRepository;
 use App\Repository\TherapistRepository;
 use App\Repository\TownRepository;
 use App\Repository\UserRepository;
+use App\Services\FixturesTrait;
 use App\Services\MailerFactory;
 use App\Services\StatisticTrait;
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +30,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class PublicController extends AbstractController
 {
     use StatisticTrait;
+    use FixturesTrait;
 
     /**
      * @Route(path="/", name="index")
@@ -63,15 +66,26 @@ class PublicController extends AbstractController
         if ($request->isMethod('POST') && $patientForm->isSubmitted() && $patientForm->isValid()) {
             $selectedCountry = $request->request->get('country');
             $selectedDepartment = $request->request->get('department');
-            $selectedTown = $request->request->get('town');
-            $department = $departmentRepository->findOneBy(['country' => $selectedCountry, 'id' => $selectedDepartment]);
-            $town = $townRepository->find($selectedTown);
-            $town->setDepartment($department);
+            //$city = get_object_vars(json_decode($request->request->get('city')));
+
+            $slugger = new Slugify();
+            $departSlug = $slugger->slugify($selectedDepartment);
+            $department = $selectedCountry === 'fr' ?
+                $departmentRepository->findOneBy(['country' => $selectedCountry, 'code' => $selectedDepartment]) :
+                $departmentRepository->findOneBy(['country' => $selectedCountry, 'slug' => $departSlug])
+            ;
+
             if ($patientForm->getData() instanceof Patient) {
                 /** @var Patient $user */
                 $user = $patientForm->getData();
                 $user->setCountry($selectedCountry);
-                $user->setTown($town);
+                if ($department instanceof Department) {
+                    $user->setDepartment($department);
+                    $user->setScalarDepartment($departSlug);
+                } else {
+                    $user->setDepartment(null);
+                    $user->setScalarDepartment($departSlug);
+                }
                 $user = $user->setUniqueEmailToken();
                 $user = $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
                 $emailToken = $user->getEmailToken();
@@ -99,6 +113,36 @@ class PublicController extends AbstractController
         );
     }
 
+    private function getOrCreateCity(
+        string $selectedCountry,
+        TownRepository $townRepository,
+        Department $department,
+        array $city
+    ): Town
+    {
+        if ($selectedCountry === 'fr') {
+            $existingTown = $townRepository->findOneBy(['department' => $department, 'name' => $city["nom"]]);
+        } elseif ($selectedCountry === 'be') {
+            $existingTown = $townRepository->findOneBy(['department' => $department, 'name' => $city["localite"]]);
+        } elseif ($selectedCountry === 'lu') {
+            $existingTown = $townRepository->findOneBy(['department' => $department, 'name' => $city["COMMUNE"]]);
+        } elseif ($selectedCountry === 'ch') {
+            $existingTown = $townRepository->findOneBy(['department' => $department, 'name' => $city["city"]]);
+        }
+
+        if (!$existingTown instanceof Town) {
+            if ($selectedCountry === 'fr') {
+                $town = $this->createFrCity($city);
+            } elseif ($selectedCountry === 'be') {
+                $town = $this->createBeCity($city);
+            } elseif ($selectedCountry === 'lu') {
+                $town = $this->createLuCity($city);
+            } elseif ($selectedCountry === 'ch') {
+                $town = $this->createChCity($city);
+            }
+        }
+    }
+
     /**
      * @Route(path="/proposer-mon-aide", name="therapist_register")
      */
@@ -118,15 +162,25 @@ class PublicController extends AbstractController
         if ($request->isMethod('POST') && $therapistForm->isSubmitted() && $therapistForm->isValid()) {
             $selectedCountry = $request->request->get('country');
             $selectedDepartment = $request->request->get('department');
-            $selectedTown = $request->request->get('town');
-            $department = $departmentRepository->findOneBy(['country' => $selectedCountry, 'id' => $selectedDepartment]);
-            $town = $townRepository->find($selectedTown);
-            $town->setDepartment($department);
+            //$city = get_object_vars(json_decode($request->request->get('city')));
+
+            $slugger = new Slugify();
+            $departSlug = $slugger->slugify($selectedDepartment);
+            $department = $selectedCountry === 'fr' ?
+                $departmentRepository->findOneBy(['country' => $selectedCountry, 'code' => $selectedDepartment]) :
+                $departmentRepository->findOneBy(['country' => $selectedCountry, 'slug' => $departSlug])
+            ;
             if ($therapistForm->getData() instanceof Therapist) {
                 /** @var Therapist $user */
                 $user = $therapistForm->getData();
                 $user->setCountry($selectedCountry);
-                $user->setTown($town);
+                if ($department instanceof Department) {
+                    $user->setDepartment($department);
+                    $user->setScalarDepartment($departSlug);
+                } else {
+                    $user->setDepartment(null);
+                    $user->setScalarDepartment($departSlug);
+                }
                 $user = $user->setUniqueEmailToken();
                 $user = $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
                 $emailToken = $user->getEmailToken();

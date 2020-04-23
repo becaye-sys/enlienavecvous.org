@@ -1,5 +1,10 @@
-export const API_URL = process.env.API_URL;
-export const PROJECT_ADDR = process.env.PROJECT_ADDR;
+const API_ENV_URL = process.env.API_URL;
+
+function apiUrlRegex(URL) {
+    return URL.replace(/'/g, "");
+}
+
+export const API_URL = apiUrlRegex(API_ENV_URL);
 
 export const customHeaders = {
     'content-type': 'application/json',

@@ -123,6 +123,15 @@ class AppointmentRepository extends ServiceEntityRepository
             ->getQuery()->getResult();
     }
 
+    public function cleanDailyWaitingToDeleteStatus()
+    {
+        return $this->createQueryBuilder('a')
+            ->delete()
+            ->where('a.status = :status')
+            ->setParameter('status', Appointment::STATUS_TO_DELETE)
+            ->getQuery()->getResult();
+    }
+
     public function getDailyPastAppointments()
     {
         return $this->createQueryBuilder('a')
