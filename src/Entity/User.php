@@ -31,6 +31,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"confirm_booking"})
      */
     protected $email;
 
@@ -62,13 +63,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string")
-     * @Groups({"create_booking"})
+     * @Groups({"create_booking", "get_bookings"})
      */
     protected $firstName;
 
     /**
      * @ORM\Column(type="string")
-     * @Groups({"create_booking"})
+     * @Groups({"create_booking", "get_bookings"})
      */
     protected $lastName;
 
@@ -94,7 +95,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"create_booking"})
+     * @Groups({"create_booking", "get_bookings"})
      */
     protected $displayName;
 
@@ -342,12 +343,12 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getDepartment(): Department
+    public function getDepartment(): ?Department
     {
         return $this->department;
     }
 
-    public function setDepartment(Department $department): self
+    public function setDepartment(?Department $department): self
     {
         $this->department = $department;
 

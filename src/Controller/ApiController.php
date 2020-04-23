@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Appointment;
 use App\Entity\History;
+use App\Entity\Patient;
 use App\Repository\AppointmentRepository;
 use App\Repository\DepartmentRepository;
 use App\Repository\PatientRepository;
@@ -40,13 +41,11 @@ class ApiController extends AbstractController
      */
     public function getAvailableAppointments(
         AppointmentRepository $appointmentRepository,
-        CustomSerializer $serializer
+        CustomSerializer $serializer, SerializerInterface $defaultSerializer
     ): JsonResponse
     {
         $appoints = $appointmentRepository->findAvailableAppointments();
-        dump($appoints);
-        $data = $serializer->serializeByGroups($appoints, ['create_booking']);
-        //$data = $serializer->serialize($appoints, ['patient','histories']);
+        $data = $defaultSerializer->serialize($appoints, 'json', ['groups' => ['get_bookings']]);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
@@ -68,7 +67,7 @@ class ApiController extends AbstractController
     }
 
     /**
-     * @Route(path="/create/booking/{appointment}/{user}", name="api_create_booking", methods={"POST"})
+     * @Route(path="/create/booking", name="api_create_booking", methods={"GET"})
      * @return JsonResponse
      */
     public function createBooking(
@@ -76,24 +75,22 @@ class ApiController extends AbstractController
         AppointmentRepository $appointmentRepository,
         PatientRepository $patientRepository,
         EntityManagerInterface $entityManager,
-        CustomSerializer $serializer
+        CustomSerializer $serializer, SerializerInterface $defaultSerializer
     ): JsonResponse
     {
-        $appointId = (int)$request->attributes->get('appointment');
-        $userId = (int)$request->attributes->get('user');
+        $appointId = $request->query->get('appoint');
+        $userId = $request->query->get('user');
+        //$appointId = (int)$request->attributes->get('appointment');
+        //$userId = (int)$request->attributes->get('user');
         $patient = $patientRepository->find($userId);
         $appointment = $appointmentRepository->find($appointId);
+        if (!$appointment instanceof Appointment || !$patient instanceof Patient) {
+            return new JsonResponse(['message' => "Requête incorrecte"], Response::HTTP_NOT_FOUND, [], true);
+        }
         $appointment->setStatus(Appointment::STATUS_BOOKING);
         $patient->addAppointment($appointment);
         $entityManager->flush();
-        $dataToSerialize = [
-            'bookingId' => $appointment->getId(),
-            'bookingDate' => $appointment->getBookingDate(),
-            'bookingStart' => $appointment->getBookingStart(),
-            'therapistFirstName' => $appointment->getTherapist()->getFirstName(),
-            'therapistLastName' => $appointment->getTherapist()->getLastName()
-        ];
-        $data = $serializer->serializeByGroups($dataToSerialize, ['create_booking']);
+        $data = $defaultSerializer->serialize($appointment, 'json', ['groups' => ['create_booking']]);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
@@ -110,8 +107,6 @@ class ApiController extends AbstractController
         HistoryHelper $historyHelper
     ): JsonResponse
     {
-        //$appointId = $request->query->get('id');
-        //$appointment = $appointmentRepository->findOneBy(['id' => $appointId, 'status' => Appointment::STATUS_BOOKING]);
         if (!$appointment || !$appointment instanceof Appointment) {
             return new JsonResponse("Pas de rendez-vous enregistré.", 500, [], true);
         }
@@ -143,6 +138,30 @@ class ApiController extends AbstractController
     }
 
     /**
+     * @Route(path="/cancel/booking", name="api_cancel_booking", methods={"GET"})
+     */
+    public function cancelBooking(
+        Request $request,
+        AppointmentRepository $appointmentRepository,
+        EntityManagerInterface $entityManager, SerializerInterface $serializer
+    ): JsonResponse
+    {
+        $appointId = $request->query->get('id');
+        $appointment = $appointmentRepository->find($appointId);
+        if ($appointment instanceof Appointment) {
+            $appointment->setStatus(Appointment::STATUS_AVAILABLE);
+            $appointment->setBooked(false);
+            $appointment->setPatient(null);
+            $entityManager->flush();
+            $data = $serializer->serialize(['message' => "Réservation annulée"], 'json');
+            return new JsonResponse($data, Response::HTTP_OK, [], true);
+        } else {
+            $data = $serializer->serialize(['message' => "Réservation non trouvée"], 'json');
+            return new JsonResponse($data, Response::HTTP_OK, [], true);
+        }
+    }
+
+    /**
      * @Route(path="/departments-by-country", name="api_get_departments_by_country", methods={"GET"})
      * @return JsonResponse
      */
@@ -156,7 +175,7 @@ class ApiController extends AbstractController
             ['country' => $request->query->get('country')],
             ['code' => 'ASC']
         );
-        $data = $serializer->serialize($departments, ['towns']);
+        $data = $serializer->serialize($departments, ['towns','users']);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
