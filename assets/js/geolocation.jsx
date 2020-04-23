@@ -2,17 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
 import {API_URL} from "./config";
-import FrenchCities from "./../../public/data/communes/communes_fr.json";
-import BelgiumCities from "./../../public/data/communes/communes_be.json";
-import LuxembourgCities from "./../../public/data/communes/communes_lu.json";
-import SwissCities from "./../../public/data/communes/communes_ch.json";
-
-const CITY_FILE = {
-    fr: FrenchCities,
-    be: BelgiumCities,
-    lu: LuxembourgCities,
-    ch: SwissCities
-};
+import {CITY_FILE} from "./utils/cityFiles";
 
 export function Geolocation() {
     const [selection, setSelection] = useState({
