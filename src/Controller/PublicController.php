@@ -10,7 +10,6 @@ use App\Entity\Therapist;
 use App\Entity\Town;
 use App\Form\PatientRegisterType;
 use App\Form\TherapistRegisterType;
-use App\Repository\AppointmentRepository;
 use App\Repository\DepartmentRepository;
 use App\Repository\TherapistRepository;
 use App\Repository\TownRepository;
@@ -36,8 +35,12 @@ class PublicController extends AbstractController
      * @Route(path="/", name="index")
      * @return Response
      */
-    public function index()
+    public function index(RequestContext $requestContext)
     {
+        dump($requestContext);
+        if ($requestContext->getScheme() === 'http') {
+            $requestContext->setScheme('https');
+        }
         $funFacts = $this->getFunFacts();
         return $this->render(
             'public/index.html.twig',
