@@ -48,8 +48,6 @@ DirectoryIndex index.php
     #   following RewriteCond (best solution)
     RewriteCond %{ENV:REDIRECT_STATUS} =""
     RewriteRule ^index\.php(?:/(.*)|$) %{ENV:BASE}/$1 [R=301,L]
-    RewriteCond %{HTTPS} off
-    RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
 
     # If the requested filename exists, simply serve it.
     # We only want to let Apache serve files and not directories.
