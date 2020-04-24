@@ -41,11 +41,11 @@ class ApiController extends AbstractController
      */
     public function getAvailableAppointments(
         AppointmentRepository $appointmentRepository,
-        CustomSerializer $serializer, SerializerInterface $defaultSerializer
+        SerializerInterface $serializer
     ): JsonResponse
     {
         $appoints = $appointmentRepository->findAvailableAppointments();
-        $data = $defaultSerializer->serialize($appoints, 'json', ['groups' => ['get_bookings']]);
+        $data = $serializer->serialize($appoints, 'json', ['groups' => ['get_bookings']]);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
@@ -75,7 +75,9 @@ class ApiController extends AbstractController
         AppointmentRepository $appointmentRepository,
         PatientRepository $patientRepository,
         EntityManagerInterface $entityManager,
-        CustomSerializer $serializer, SerializerInterface $defaultSerializer
+        HistoryHelper $historyHelper,
+        MailerFactory $mailer,
+        SerializerInterface $serializer
     ): JsonResponse
     {
         $appointId = $request->query->get('appoint');
@@ -87,10 +89,30 @@ class ApiController extends AbstractController
         if (!$appointment instanceof Appointment || !$patient instanceof Patient) {
             return new JsonResponse(['message' => "Requête incorrecte"], Response::HTTP_NOT_FOUND, [], true);
         }
-        $appointment->setStatus(Appointment::STATUS_BOOKING);
+        $appointment->setStatus(Appointment::STATUS_BOOKED);
         $patient->addAppointment($appointment);
+        // add booking history
+        $historyHelper->addHistoryItem(History::ACTIONS[History::ACTION_BOOKED], $appointment);
         $entityManager->flush();
-        $data = $defaultSerializer->serialize($appointment, 'json', ['groups' => ['create_booking']]);
+
+        $mailer->createAndSend(
+            "Confirmation de rendez-vous",
+            $appointment->getPatient()->getEmail(),
+            'no-reply@onestlapourvous.org',
+            $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment])
+        );
+
+        $mailer->createAndSend(
+            "Confirmation de rendez-vous",
+            $appointment->getTherapist()->getEmail(),
+            'no-reply@onestlapourvous.org',
+            $this->renderView('email/appointment_booked_therapist.html.twig', ['appointment' => $appointment])
+        );
+
+        $data = $serializer->serialize(
+            "Rendez-vous confirmé !",
+            'json'
+        );
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
@@ -139,6 +161,7 @@ class ApiController extends AbstractController
 
     /**
      * @Route(path="/cancel/booking", name="api_cancel_booking", methods={"GET"})
+     * // not used
      */
     public function cancelBooking(
         Request $request,

@@ -4,33 +4,30 @@ import {API_URL} from "../config";
 import {formatDateForTable, formatTime} from "../utils/DateUtils";
 import bookingApi from "../services/bookingApi";
 
-function BookingConfirmation(props) {
-    const [appoint, setAppoint] = useState({});
-    const [loading, setLoading] = useState(false);
-    const [isConfirmed, setIsConfirmed] = useState(false);
+function BookingConfirmation({ loading, isConfirmed, booking, handleSubmit }) {
+    const [isLoading, setIsLoading] = useState(loading);
+
+    const initBookingConfirmation = () => {
+        console.log('booking confirmation init');
+        console.log('booking:',booking);
+        const localBooking = JSON.parse(localStorage.getItem('booking'));
+        console.log('local booking:',localBooking);
+        setIsLoading(true);
+        if (booking !== {}) {
+            booking = JSON.parse(localStorage.getItem('booking'));
+            setIsLoading(false);
+        }
+    }
 
     useEffect(() => {
-        setLoading(true);
-        setAppoint(props.booking && props.booking);
-        setLoading(false);
-    },[]);
-
-    const handleSubmit = async event => {
-        event.preventDefault();
-        setLoading(true);
-        const status = await bookingApi.confirmBooking(appoint);
-        if (status === 200) {
-            localStorage.removeItem('booking');
-            setIsConfirmed(true);
-        }
-        setLoading(false);
-    }
+        initBookingConfirmation();
+    }, [isLoading]);
 
     return (
         <div>
-            {loading && <div className="container"><p>Chargement en cours...</p></div>}
+            {isLoading && <div className="container"><p>Chargement en cours...</p></div>}
             {
-                !loading &&
+                (!isLoading && booking !== []) &&
                 <div className="container">
                     {
                         isConfirmed ?
@@ -42,7 +39,7 @@ function BookingConfirmation(props) {
                             </div> :
                             <div>
                                 <h2>Demande de rendez-vous</h2>
-                                Le {appoint.bookingDate && formatDateForTable(appoint.bookingDate)} avec {appoint?.therapist?.firstName} {appoint?.therapist?.lastName}
+                                Le {booking.bookingDate && formatDateForTable(booking.bookingDate)} avec {booking?.therapist?.firstName} {booking?.therapist?.lastName}
                                 <div className="alert alert-warning">
                                     En cas d'annulation, merci de prévenir votre thérapeute au plus vite en cliquant sur le bouton d'annulation disponible dans vos rendez-vous.
                                 </div>

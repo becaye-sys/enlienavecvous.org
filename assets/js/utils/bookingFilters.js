@@ -18,6 +18,27 @@ function filterWithTherapistDelay(a) {
     }
 }
 
+function filterById(id, appoints) {
+    return appoints.filter(function (appoint, i) {
+        return appoint.id === id;
+    });
+}
+
+function setBookingToLocalStorage(booking) {
+    try {
+        if (localStorage.getItem('booking')) {
+            localStorage.removeItem('booking');
+            localStorage.setItem('booking', JSON.stringify(booking));
+        } else {
+            localStorage.setItem('booking', JSON.stringify(booking));
+        }
+        return true;
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+}
+
 function updateAppointsByFilters(appoints, search) {
     if (search.bookingDate === undefined && search.location === undefined) {
         return appoints;
@@ -39,5 +60,7 @@ function updateAppointsByFilters(appoints, search) {
 
 export default {
     filterWithTherapistDelay,
+    filterById,
+    setBookingToLocalStorage,
     updateAppointsByFilters
 }

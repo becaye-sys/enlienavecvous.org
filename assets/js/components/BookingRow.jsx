@@ -1,7 +1,7 @@
 import React from "react";
 import {formatDateForTable, formatTime} from "../utils/DateUtils";
 
-function BookingRow({ createPatientBooking, booking, user }) {
+function BookingRow({ createPatientBooking, booking }) {
     return (
         <>
             <td>
