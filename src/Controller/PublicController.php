@@ -32,7 +32,7 @@ class PublicController extends AbstractController
     use FixturesTrait;
 
     /**
-     * @Route(path="/", name="index", schemes={"https"})
+     * @Route(path="/", name="index")
      * @return Response
      */
     public function index()
