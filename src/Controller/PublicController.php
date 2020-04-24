@@ -32,15 +32,11 @@ class PublicController extends AbstractController
     use FixturesTrait;
 
     /**
-     * @Route(path="/", name="index")
+     * @Route(path="/", name="index", schemes={"https"})
      * @return Response
      */
-    public function index(RequestContext $requestContext)
+    public function index()
     {
-        dump($requestContext);
-        if ($requestContext->getScheme() === 'http') {
-            return $this->redirectToRoute('index', ['scheme' => 'https']);
-        }
         $funFacts = $this->getFunFacts();
         return $this->render(
             'public/index.html.twig',
