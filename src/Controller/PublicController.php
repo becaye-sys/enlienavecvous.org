@@ -39,7 +39,7 @@ class PublicController extends AbstractController
     {
         dump($requestContext);
         if ($requestContext->getScheme() === 'http') {
-            $requestContext->setScheme('https');
+            return $this->redirectToRoute('index', ['scheme' => 'https']);
         }
         $funFacts = $this->getFunFacts();
         return $this->render(
