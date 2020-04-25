@@ -1,8 +1,5 @@
 import React, {useEffect, useState} from "react";
-import axios from "axios";
-import {API_URL} from "../config";
 import {formatDateForTable, formatTime} from "../utils/DateUtils";
-import bookingApi from "../services/bookingApi";
 
 function BookingConfirmation({ loading, isConfirmed, booking, handleSubmit }) {
     const [isLoading, setIsLoading] = useState(loading);
@@ -39,7 +36,7 @@ function BookingConfirmation({ loading, isConfirmed, booking, handleSubmit }) {
                             </div> :
                             <div>
                                 <h2>Demande de rendez-vous</h2>
-                                Le {booking.bookingDate && formatDateForTable(booking.bookingDate)} avec {booking?.therapist?.firstName} {booking?.therapist?.lastName}
+                                Le {booking.bookingDate && formatDateForTable(booking.bookingDate)} à {booking.bookingStart && formatTime(booking.bookingStart)} avec {booking?.therapist?.firstName} {booking?.therapist?.lastName}
                                 <div className="alert alert-warning">
                                     En cas d'annulation, merci de prévenir votre thérapeute au plus vite en cliquant sur le bouton d'annulation disponible dans vos rendez-vous.
                                 </div>
