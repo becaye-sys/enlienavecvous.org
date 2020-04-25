@@ -65,10 +65,8 @@ class ApiController extends AbstractController
                 $params[$key] = $value;
             }
         }
-        dump($params);
 
         $appointments = $appointmentRepository->findAvailableBookingsByFilters($params);
-        dump($appointments);
         $data = $serializer->serialize($appointments, 'json', ['groups' => ['get_bookings']]);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
