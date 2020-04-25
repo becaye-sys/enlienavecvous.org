@@ -106,17 +106,16 @@ class ApiController extends AbstractController
     {
         $appointId = $request->query->get('appoint');
         $userId = $request->query->get('user');
-        //$appointId = (int)$request->attributes->get('appointment');
-        //$userId = (int)$request->attributes->get('user');
         $patient = $patientRepository->find($userId);
         $appointment = $appointmentRepository->find($appointId);
         if (!$appointment instanceof Appointment || !$patient instanceof Patient) {
             return new JsonResponse(['message' => "Requête incorrecte"], Response::HTTP_NOT_FOUND, [], true);
         }
+        $appointment->setBooked(true);
         $appointment->setStatus(Appointment::STATUS_BOOKED);
         $patient->addAppointment($appointment);
         // add booking history
-        $historyHelper->addHistoryItem(History::ACTIONS[History::ACTION_BOOKED], $appointment);
+        $historyHelper->addHistoryItem(History::ACTION_BOOKED, $appointment);
         $entityManager->flush();
 
         $mailer->createAndSend(
@@ -159,7 +158,7 @@ class ApiController extends AbstractController
         $appointment->setBooked(true);
         $appointment->setStatus(Appointment::STATUS_BOOKED);
         // add booking history
-        $historyHelper->addHistoryItem(History::ACTIONS[History::ACTION_BOOKED], $appointment);
+        $historyHelper->addHistoryItem(History::ACTION_BOOKED, $appointment);
         $entityManager->flush();
 
         $mailer->createAndSend(

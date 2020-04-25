@@ -13,6 +13,7 @@ function BookingRow({ createPatientBooking, booking }) {
             <td>{booking.bookingDate && formatDateForTable(booking.bookingDate)}</td>
             <td>{booking.bookingStart && formatTime(booking.bookingStart)}</td>
             <td>{booking.bookingEnd && formatTime(booking.bookingEnd)}</td>
+            <td>{booking.therapist?.department?.name}</td>
         </>
     )
 }

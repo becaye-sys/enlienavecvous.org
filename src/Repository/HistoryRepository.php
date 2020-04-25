@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\History;
 use App\Entity\Patient;
+use App\Entity\Therapist;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -22,7 +23,24 @@ class HistoryRepository extends ServiceEntityRepository
     
     public function findByPatient(Patient $patient)
     {
-        return $this->createQueryBuilder('h');
+        return $this->createQueryBuilder('h')
+            ->leftJoin('h.usersHistory', 'users_history')
+            ->where('users_history.patientId = :patientId')
+            ->setParameter('patientId', $patient->getId())
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function findByTherapist(Therapist $therapist)
+    {
+        return $this->createQueryBuilder('h')
+            ->leftJoin('h.usersHistory', 'users_history')
+            ->where('users_history.therapistId = :therapistId')
+            ->setParameter('therapistId', $therapist->getId())
+            ->getQuery()
+            ->getResult()
+            ;
     }
 
     // /**

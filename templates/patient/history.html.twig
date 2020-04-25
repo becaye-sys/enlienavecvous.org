@@ -23,7 +23,7 @@
                 {% for a in history %}
                     <tr>
                         <td>{{ a.id }}</td>
-                        <td>{{ a.action }}</td>
+                        <td>{{ constant('App\\Entity\\History::ACTIONS')[a.action] }}</td>
                         <td>{{ a.actionedAt|date('d/m/Y H:i') }}</td>
                         <td>
                             {% if a.bookingHistory is not null %}

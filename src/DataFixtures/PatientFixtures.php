@@ -47,7 +47,6 @@ class PatientFixtures extends Fixture implements DependentFixtureInterface, Fixt
                 $department = $this->getReference(DepartmentFixtures::DEPARTMENT_LU_REFERENCE . "_0" . $i);
             }
             $patient->setDepartment($department);
-            $patient->setZipCode($faker ? $faker->postcode : "01500");
             $patient->setPhoneNumber($faker ? $faker->phoneNumber : "0600000000");
             $patient->setHasAcceptedTermsAndPolicies(true);
             $this->addReference(self::PATIENT_USER_REFERENCE."_$i", $patient);

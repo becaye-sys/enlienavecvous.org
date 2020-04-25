@@ -215,7 +215,7 @@ class PatientController extends AbstractController
     {
         $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
         $currentUser = $this->getCurrentPatient();
-        $history = $historyRepository->findBy(['usersHistory' => $currentUser]);
+        $history = $historyRepository->findByPatient($currentUser);
         return $this->render(
             'patient/history.html.twig',
             [

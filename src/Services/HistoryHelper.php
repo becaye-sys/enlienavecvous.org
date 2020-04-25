@@ -25,7 +25,7 @@ class HistoryHelper
     {
         $history = new History();
         $history->setAction($action);
-        if ($action !== History::ACTIONS[History::ACTION_DELETED_BY_THERAPIST] && null !== $appointment) {
+        if ($action !== History::ACTION_DELETED_BY_THERAPIST && null !== $appointment) {
             $bookingHistory = $this->createBookingHistory($appointment);
             $bookingHistory->addHistory($history);
             $this->entityManager->persist($bookingHistory);

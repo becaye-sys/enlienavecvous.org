@@ -10,7 +10,7 @@ import geolocationApi from "./services/geolocationApi";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import * as Sentry from '@sentry/browser';
-//Sentry.init({dsn: "https://13cbde40e40b44989821c2d5e9b8bafb@o346982.ingest.sentry.io/5211266"});
+Sentry.init({dsn: "https://13cbde40e40b44989821c2d5e9b8bafb@o346982.ingest.sentry.io/5211266"});
 
 function PatientSearch() {
     const [currentPage, setCurrentPage] = useState(1);
@@ -57,6 +57,7 @@ function PatientSearch() {
         localStorage.getItem('booking') && localStorage.removeItem('booking');
         setIsConfirmed(false);
         setBooking({});
+        updateBookingsByApiFilters();
         setLoading(false);
     }
 
@@ -71,7 +72,6 @@ function PatientSearch() {
     const getCountryDepartments = async () => {
         const country = document.querySelector('div#patient_search_app').dataset.country;
         const departments = await geolocationApi.getDepartmentsByCountry(country);
-        console.log(departments);
         setDepartments(departments);
     }
 
@@ -94,7 +94,6 @@ function PatientSearch() {
     }
 
     const updateAppointsByUserFilters = () => {
-        console.log(search.bookingDate)
         const updatedAppoints = bookingFilters.updateAppointsByFilters(appoints, search);
         setFiltered(updatedAppoints);
     }
@@ -103,11 +102,13 @@ function PatientSearch() {
         setLoading(true);
         const bookings = await bookingApi.updateBookingsByFilters(search);
         if (bookings.length > 0) {
+            console.log(bookings);
             const appoints = filterWithTherapistDelay(bookings);
             setAppoints(appoints);
             setLoading(false);
             toast.info("Disponibilités mises à jour");
         } else {
+            setAppoints([]);
             setLoading(false);
             toast.info("Pas de disponibilité dans ce département");
         }
@@ -166,35 +167,37 @@ function PatientSearch() {
                         </div> :
                         <div className="container-fluid mb-3">
                             <BookingSearchForm departments={departments} search={search} handleChange={handleChange} />
-                            <div className="table-responsive js-rep-log-table">
-                                <table className="table table-striped table-sm">
-                                    <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Thérapeute</th>
-                                        <th>Date</th>
-                                        <th>Début</th>
-                                        <th>Fin</th>
-                                    </tr>
-                                    </thead>
-                                    {
-                                        paginatedAppoints.length > 0 &&
-                                        <tbody>
-                                        {paginatedAppoints.map(a => {
+                            {
+                                paginatedAppoints.length > 0 ?
+                                    <div className="table-responsive js-rep-log-table">
+                                        <table className="table table-striped table-sm">
+                                            <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Thérapeute</th>
+                                                <th>Date</th>
+                                                <th>Début</th>
+                                                <th>Fin</th>
+                                                <th>Département</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {paginatedAppoints.map(a => {
 
-                                            return (
-                                                <tr key={a.id}>
-                                                    <BookingRow
-                                                        booking={a}
-                                                        createPatientBooking={createPatientBooking}
-                                                    />
-                                                </tr>
-                                            )
-                                        })}
-                                        </tbody>
-                                    }
-                                </table>
-                            </div>
+                                                return (
+                                                    <tr key={a.id}>
+                                                        <BookingRow
+                                                            booking={a}
+                                                            createPatientBooking={createPatientBooking}
+                                                        />
+                                                    </tr>
+                                                )
+                                            })}
+                                            </tbody>
+                                        </table>
+                                    </div> :
+                                    <p>Aucune disponibilité dans ce département...</p>
+                            }
                             {itemsPerPage < appointsToDisplay.length &&
                             <Pagination
                                 currentPage={currentPage}

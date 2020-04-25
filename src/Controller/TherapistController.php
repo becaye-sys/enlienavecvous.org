@@ -302,12 +302,11 @@ class TherapistController extends AbstractController
     public function history(HistoryRepository $historyRepository)
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
-        /** @var Therapist $currentUser */
         $currentUser = $this->getCurrentTherapist();
         return $this->render(
             'therapist/history.html.twig',
             [
-                'history' => $historyRepository->findBy(['usersHistory' => $currentUser])
+                'history' => $historyRepository->findByTherapist($currentUser)
             ]
         );
     }

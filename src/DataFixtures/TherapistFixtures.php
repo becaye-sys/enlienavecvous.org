@@ -31,7 +31,7 @@ class TherapistFixtures extends Fixture implements DependentFixtureInterface, Fi
             $faker = Factory::create("fr");
         }
 
-        for ($i = 1; $i <= 8; $i ++) {
+        for ($i = 1; $i <= 4; $i ++) {
             $therapist = new Therapist();
             if ($i === 1) {
                 $therapist->upgradeToManager();
@@ -57,7 +57,6 @@ class TherapistFixtures extends Fixture implements DependentFixtureInterface, Fi
                 $department = $this->getReference(DepartmentFixtures::DEPARTMENT_LU_REFERENCE . "_0" . $i);
             }
             $therapist->setDepartment($department);
-            $therapist->setZipCode($faker ? $faker->randomElement(['01500', '01430', '69000']) : "01500");
             $therapist->setPhoneNumber($faker ? $faker->phoneNumber : "0600000001");
             $therapist->setHasAcceptedTermsAndPolicies(true);
             $this->addReference(self::THERAPIST_USER_REFERENCE."_$i", $therapist);
