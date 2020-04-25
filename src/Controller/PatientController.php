@@ -88,13 +88,13 @@ class PatientController extends AbstractController
     )
     {
         $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
-        if ($appointment instanceof Appointment && $appointment->getBooked() === true) {
+        if ($appointment instanceof Appointment && $appointment->getStatus() === Appointment::STATUS_BOOKED) {
             $appointment->setBooked(false);
             $appointment->setCancelled(true);
             // add booking cancel history
-            $historyHelper->addHistoryItem(History::ACTIONS[History::ACTION_CANCELLED_BY_PATIENT], $appointment);
+            $historyHelper->addHistoryItem(History::ACTION_CANCELLED_BY_PATIENT, $appointment);
             $appointment->setPatient(null);
-            $appointment->setStatus(Appointment::STATUS[Appointment::STATUS_AVAILABLE]);
+            $appointment->setStatus(Appointment::STATUS_AVAILABLE);
             $entityManager->flush();
             $mailerFactory->createAndSend(
                 "Annulation du rendez-vous",
@@ -146,7 +146,7 @@ class PatientController extends AbstractController
             $appoint = $appointmentRepository->find($request->request->get('booking_id'));
             if ($appoint instanceof Appointment) {
                 $appoint->setPatient($patient);
-                $appoint->setStatus(Appointment::STATUS_WAITING);
+                $appoint->setStatus(Appointment::STATUS_BOOKING);
                 $entityManager->flush();
                 return $this->redirectToRoute('patient_confirm_booking', ['id' => $appoint->getId()]);
             } else {
@@ -180,7 +180,7 @@ class PatientController extends AbstractController
         if ($request->isMethod("POST")) {
             $appointment = $appointmentRepository->find($request->request->get('booking_id'));
             $appointment->setBooked(true);
-            $historyHelper->addHistoryItem($appointment, History::ACTION_BOOKED);
+            $historyHelper->addHistoryItem(History::ACTION_BOOKED, $appointment);
             $entityManager->flush();
 
             $mailerFactory->createAndSend(

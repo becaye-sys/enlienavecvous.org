@@ -13,22 +13,13 @@ function BookingSearchForm({ handleChange, search }) {
                 <div className="col-lg-3 col-md-6 col-sm-6">
                     <fieldset className="form-group">
                         <label htmlFor="aroundMe">Autour de moi</label>
-                        <select name="aroundMe" onChange={handleChange} id="aroundMe" className="form-control">
-                            <option value="myTown">Ma commune</option>
-                            <option value="myDepartment">Mon département</option>
-                        </select>
+                        <input type="checkbox" name={"aroundMe"} checked={search?.aroundMe && 'checked'} id={"aroundMe"} onChange={handleChange} className={"form-control"} />
                     </fieldset>
                 </div>
                 <div className="col-lg-3 col-md-6 col-sm-6">
                     <fieldset className="form-group">
-                        <label htmlFor="department">Département</label>
+                        <label htmlFor="department">Aucune disponibilité dans votre département ? Cherchez dans un autre département :</label>
                         <input value={search.department} type="text" name={"department"} id={"department"} className={"form-control"}/>
-                    </fieldset>
-                </div>
-                <div className="col-lg-3 col-md-6 col-sm-6">
-                    <fieldset className="form-group">
-                        <label htmlFor="location">Code postal / Commune</label>
-                        <input onChange={handleChange} value={search.location} type="text" name={"location"} id={"location"} className={"form-control"}/>
                     </fieldset>
                 </div>
             </div>

@@ -21,9 +21,8 @@ function PatientSearch(props) {
     const [booking, setBooking] = useState({});
     const [search, setSearch] = useState({
         bookingDate: undefined,
-        aroundMe: "myTown",
-        department: undefined,
-        location: undefined
+        aroundMe: true,
+        department: "",
     });
 
     const handlePageChange = page => {
@@ -137,12 +136,9 @@ function PatientSearch(props) {
             {loading && <p>Chargement en cours...</p>}
             {!loading &&
             <div>
-                <div className="container-fluid mb-3">
-                    <BookingSearchForm search={search} handleChange={handleChange} />
-                </div>
                 {
                     (localStorage.getItem('booking') && booking !== {}) ?
-                        <div className={"container"}>
+                        <div className={"container mb-3"}>
                             <BookingConfirmation
                                 loading={loading}
                                 isConfirmed={isConfirmed}
@@ -152,7 +148,8 @@ function PatientSearch(props) {
                             <br/>
                             <button className={"btn btn-danger"} type="button" onClick={cancelBooking}>Annuler et prendre un autre rendez-vous</button>
                         </div> :
-                        <div className="container">
+                        <div className="container mb-3">
+                            <BookingSearchForm search={search} handleChange={handleChange} />
                             <div className="table-responsive js-rep-log-table">
                                 <table className="table table-striped table-sm">
                                     <thead>

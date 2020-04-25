@@ -46,11 +46,13 @@ class History
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Patient", inversedBy="histories")
+     * @ORM\Column(nullable=true)
      */
     private $patient;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Therapist", inversedBy="histories")
+     * @ORM\Column(nullable=true)
      */
     private $therapist;
 

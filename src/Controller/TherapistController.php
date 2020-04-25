@@ -163,7 +163,10 @@ class TherapistController extends AbstractController
                 $this->renderView(
                     'email/appointment_cancelled_from_therapist.html.twig',
                     [
-                        'appointment' => $appointment
+                        'appointment' => $appointment,
+                        'project_url' => getenv('project_url')
+                            ? getenv('project_url')
+                            : $this->getParameter('project_url')
                     ]
                 )
             );
@@ -424,6 +427,13 @@ class TherapistController extends AbstractController
                     'no-reply@onestlapourvous.org',
                     $this->renderView('email/user_delete_account.html.twig')
                 );
+                dd('clear history -> create relation entity (UserHistory to link User(Patient/therapist))');
+                if ($user->getHistories()->count() > 0) {
+                    foreach ($user->getHistories() as $history) {
+                        $history->setPatient(null);
+                    }
+                    $user->getHistories()->clear();
+                }
                 // delete user
                 $manager->remove($user);
                 $manager->flush();
