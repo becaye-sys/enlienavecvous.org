@@ -8,11 +8,12 @@ use App\Entity\Appointment;
 use App\Entity\Patient;
 use App\Entity\Therapist;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 
-class AppointmentFixtures extends Fixture implements DependentFixtureInterface
+class AppointmentFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     public const APPOINT_REFERENCE = "appoint_";
     public function load(ObjectManager $manager)
@@ -70,5 +71,10 @@ class AppointmentFixtures extends Fixture implements DependentFixtureInterface
         return [
             'start' => "$day-04-2020 $hour:$minute:00",
         ];
+    }
+
+    public static function getGroups(): array
+    {
+        return ['usable'];
     }
 }

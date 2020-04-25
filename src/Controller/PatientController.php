@@ -120,7 +120,7 @@ class PatientController extends AbstractController
         return $this->render(
             'patient/research.html.twig',
             [
-                'current_user' => $security->getUser()
+                'current_user' => $this->getCurrentPatient()
             ]
         );
     }
@@ -215,7 +215,7 @@ class PatientController extends AbstractController
     {
         $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
         $currentUser = $this->getCurrentPatient();
-        $history = $historyRepository->findBy(['patient' => $currentUser]);
+        $history = $historyRepository->findBy(['usersHistory' => $currentUser]);
         return $this->render(
             'patient/history.html.twig',
             [

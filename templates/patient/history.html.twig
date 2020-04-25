@@ -39,14 +39,14 @@
                                 -
                             {% endif %}
                         </td>
-                        <td>{{ a.therapist.firstName }} {{ a.therapist.lastName }}</td>
+                        <td>{{ a.usersHistory.therapistFirstName }} {{ a.usersHistory.therapistLastName }}</td>
                         <td>
                             {% if a.bookingHistory is not null %}
                                 {{ constant('App\\Entity\\Appointment::STATUS')[a.bookingHistory.status] }}
                             {% endif %}
                         </td>
                         <td>
-                            <a href="{{ path('patient_research_by_therapist', {'id': a.therapist.id}) }}" class="btn btn-primary">Disponibilités</a>
+                            <a href="{{ path('patient_research_by_therapist', {'id': a.usersHistory.therapistId}) }}" class="btn btn-primary">Disponibilités</a>
                         </td>
                     </tr>
                 {% endfor %}

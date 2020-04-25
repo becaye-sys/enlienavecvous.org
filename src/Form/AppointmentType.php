@@ -23,7 +23,8 @@ class AppointmentType extends AbstractType
                 DateType::class,
                 [
                     'widget' => 'single_text',
-                    'label' => "Sélectionnez une date"
+                    'label' => "Sélectionnez une date",
+                    'html5' => true
                 ]
             )
             ->add(

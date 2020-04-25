@@ -5,7 +5,7 @@
     <p>Vous avez rendez-vous :</p>
     <p>Le {{ appointment.bookingDate|date('d/m/Y') }}</p>
     <p>À {{ appointment.bookingStart|date('H:i') }}</p>
-    {% if appointment.patient.displayName is defined %}
+    {% if appointment.patient.displayName is not null %}
         <p>Avec {{ appointment.patient.displayName }}</p>
     {% else %}
         <p>

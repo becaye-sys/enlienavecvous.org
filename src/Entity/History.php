@@ -45,22 +45,15 @@ class History
     private $actionedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Patient", inversedBy="histories")
-     * @ORM\Column(nullable=true)
-     */
-    private $patient;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Therapist", inversedBy="histories")
-     * @ORM\Column(nullable=true)
-     */
-    private $therapist;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\BookingHistory", inversedBy="histories")
      * @ORM\JoinColumn(nullable=false)
      */
     private $bookingHistory;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\UsersHistory", inversedBy="histories", cascade={"persist"})
+     */
+    private $usersHistory;
 
     public function __construct()
     {
@@ -96,30 +89,6 @@ class History
         return $this;
     }
 
-    public function getPatient(): ?Patient
-    {
-        return $this->patient;
-    }
-
-    public function setPatient(?Patient $patient): self
-    {
-        $this->patient = $patient;
-
-        return $this;
-    }
-
-    public function getTherapist(): ?Therapist
-    {
-        return $this->therapist;
-    }
-
-    public function setTherapist(?Therapist $therapist): self
-    {
-        $this->therapist = $therapist;
-
-        return $this;
-    }
-
     public function getBookingHistory(): ?BookingHistory
     {
         return $this->bookingHistory;
@@ -128,6 +97,18 @@ class History
     public function setBookingHistory(?BookingHistory $bookingHistory): self
     {
         $this->bookingHistory = $bookingHistory;
+
+        return $this;
+    }
+
+    public function getUsersHistory(): ?UsersHistory
+    {
+        return $this->usersHistory;
+    }
+
+    public function setUsersHistory(?UsersHistory $usersHistory): self
+    {
+        $this->usersHistory = $usersHistory;
 
         return $this;
     }

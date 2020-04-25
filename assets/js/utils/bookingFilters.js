@@ -1,5 +1,5 @@
 import moment from "moment";
-import {formatDate, getArrayTime} from "./DateUtils";
+import {formatDate, formatDateReverse, getArrayTime} from "./DateUtils";
 
 function filterWithTherapistDelay(a) {
     const nowDate = moment().format('YYYY-MM-DD');
@@ -40,21 +40,12 @@ function setBookingToLocalStorage(booking) {
 }
 
 function updateAppointsByFilters(appoints, search) {
-    if (search.bookingDate === undefined && search.location === undefined) {
-        return appoints;
-    } else if (search.bookingDate !== undefined && (search.location === undefined || search.location === '')) {
+    if (search.bookingDate !== undefined) {
         return appoints.filter(function (a) {
-            return formatDate(a.bookingDate) === search.bookingDate;
-        });
-    } else if ((search.bookingDate === undefined || search.bookingDate === '') && search.location !== undefined) {
-        return appoints.filter(a => {
-            return a.location.toLowerCase().includes(search.location.toLowerCase())
+            return formatDateReverse(a.bookingDate) === search.bookingDate;
         });
     } else {
-        return appoints.filter(function (a) {
-            return formatDate(a.bookingDate) === search.bookingDate
-                && a.location.toLowerCase().includes(search.location.toLowerCase())
-        });
+        return appoints;
     }
 }
 

@@ -99,9 +99,9 @@ class TherapistController extends AbstractController
                 $malus = $patient->getMalus() + 1;
                 $patient->setMalus($malus);
             }
-            $historyHelper->addHistoryItem($appointment, History::ACTIONS[History::ACTION_DISHONORED]);
+            $historyHelper->addHistoryItem(History::ACTION_DISHONORED, $appointment);
         } else {
-            $historyHelper->addHistoryItem($appointment, History::ACTIONS[History::ACTION_HONORED]);
+            $historyHelper->addHistoryItem(History::ACTION_HONORED, $appointment);
         }
         if ($patient->getMalus() >= 3) {
             $mailerFactory->createAndSend(
@@ -153,7 +153,7 @@ class TherapistController extends AbstractController
         if ($request->isMethod("POST") && $form->isSubmitted() && $form->isValid()) {
             $appointment->setBooked(false);
             $patientEmail = $appointment->getPatient()->getEmail();
-            $appointment->setStatus(Appointment::STATUS[Appointment::STATUS_CANCELLED]);
+            $appointment->setStatus(Appointment::STATUS_CANCELLED);
             $appointment->setPatient(null);
             $appointment->setStatus(Appointment::STATUS_TO_DELETE);
             $mailer->createAndSend(
@@ -307,7 +307,7 @@ class TherapistController extends AbstractController
         return $this->render(
             'therapist/history.html.twig',
             [
-                'history' => $historyRepository->findBy(['therapist' => $currentUser])
+                'history' => $historyRepository->findBy(['usersHistory' => $currentUser])
             ]
         );
     }
@@ -427,13 +427,6 @@ class TherapistController extends AbstractController
                     'no-reply@onestlapourvous.org',
                     $this->renderView('email/user_delete_account.html.twig')
                 );
-                dd('clear history -> create relation entity (UserHistory to link User(Patient/therapist))');
-                if ($user->getHistories()->count() > 0) {
-                    foreach ($user->getHistories() as $history) {
-                        $history->setPatient(null);
-                    }
-                    $user->getHistories()->clear();
-                }
                 // delete user
                 $manager->remove($user);
                 $manager->flush();

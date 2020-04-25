@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import axios from "axios";
 import {API_URL} from "./config";
 import {CITY_FILE} from "./utils/cityFiles";
+import geolocationApi from "./services/geolocationApi";
 
 export function Geolocation() {
     const [selection, setSelection] = useState({
@@ -41,11 +42,7 @@ export function Geolocation() {
     const getDepartmentsByCountry = async () => {
         console.log(API_URL);
         console.log(`${API_URL}departments-by-country?country=${selection.country}`);
-        const departs = await axios
-            .get(`${API_URL}departments-by-country?country=${selection.country}`)
-            .then(response => {
-                return response.data;
-            });
+        const departs = await geolocationApi.getDepartmentsByCountry(selection.country);
         setDepartments([]);
         setDepartments(departs.length > 0 && departs);
     }

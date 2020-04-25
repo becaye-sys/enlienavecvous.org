@@ -34,10 +34,14 @@ async function cancelBooking(id) {
 
 async function updateBookingsByFilters(search) {
     return await axios
-        .post(`${API_URL}bookings-filtered`, {...search})
+        .get(`${API_URL}bookings-filtered?department=${search.department}`)
         .then(response => {
             return response.data;
-        });
+        })
+        .catch(err => {
+            console.log(err);
+        })
+        ;
 }
 
 export default {

@@ -6,6 +6,10 @@ export const formatDate = (srcDate) => {
     const date = srcDate.timestamp ? srcDate.timestamp * 1000 : srcDate;
     return new Date(date).toLocaleDateString("fr-FR");
 }
+export const formatDateReverse = (srcDate) => {
+    const date = srcDate.timestamp ? srcDate.timestamp * 1000 : srcDate;
+    return frDateFormat(date);
+}
 const frDateFormat = (date) => {
     let d = new Date(date),
         month = '' + (d.getMonth() + 1),

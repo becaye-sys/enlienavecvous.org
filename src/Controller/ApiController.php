@@ -50,6 +50,30 @@ class ApiController extends AbstractController
     }
 
     /**
+     * @Route(path="/bookings-filtered", name="api_bookings_filtered", methods={"POST","GET"})
+     * @return JsonResponse
+     */
+    public function bookingSearchByFilters(
+        Request $request,
+        SerializerInterface $serializer,
+        AppointmentRepository $appointmentRepository
+    )
+    {
+        $params = [];
+        foreach ($request->query as $key => $value) {
+            if ($value !== "") {
+                $params[$key] = $value;
+            }
+        }
+        dump($params);
+
+        $appointments = $appointmentRepository->findAvailableBookingsByFilters($params);
+        dump($appointments);
+        $data = $serializer->serialize($appointments, 'json', ['groups' => ['get_bookings']]);
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
+    }
+
+    /**
      * @Route(path="/appointments/filter", name="api_appointments_filter", methods={"POST"})
      * @return JsonResponse
      * // Not used but keep it
@@ -219,28 +243,6 @@ class ApiController extends AbstractController
             ['code' => 'ASC']
         );
         $data = $serializer->serialize($towns, ['users','department']);
-        return new JsonResponse($data, Response::HTTP_OK, [], true);
-    }
-
-    /**
-     * @Route(path="/bookings-filtered", name="api_bookings_filtered", methods={"POST"})
-     * @return JsonResponse
-     */
-    public function bookingSearchByFilters(
-        Request $request,
-        CustomSerializer $serializer,
-        AppointmentRepository $appointmentRepository
-    )
-    {
-        $params = [];
-        foreach ($request->request as $key => $value) {
-            if ($value !== "") {
-                $params[$key] = $value;
-            }
-        }
-
-        $appointments = $appointmentRepository->findAvailableBookingsByFilters($params);
-        $data = $serializer->serializeByGroups($appointments, ['create_booking']);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 

@@ -3,13 +3,16 @@ import ReactDOM from "react-dom";
 import Pagination from "./components/Pagination";
 import BookingConfirmation from "./components/BookingConfirmation";
 import BookingRow from "./components/BookingRow";
-import bookingApi, {createBooking, getBookings, updateBookingsByFilters} from "./services/bookingApi";
+import bookingApi from "./services/bookingApi";
 import bookingFilters from "./utils/bookingFilters";
 import BookingSearchForm from "./components/BookingSearchForm";
+import geolocationApi from "./services/geolocationApi";
+import {toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import * as Sentry from '@sentry/browser';
-Sentry.init({dsn: "https://13cbde40e40b44989821c2d5e9b8bafb@o346982.ingest.sentry.io/5211266"});
+//Sentry.init({dsn: "https://13cbde40e40b44989821c2d5e9b8bafb@o346982.ingest.sentry.io/5211266"});
 
-function PatientSearch(props) {
+function PatientSearch() {
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const [isConfirmed, setIsConfirmed] = useState(false);
@@ -19,10 +22,10 @@ function PatientSearch(props) {
     const [appoints, setAppoints] = useState([]);
     const [filtered, setFiltered] = useState([]);
     const [booking, setBooking] = useState({});
+    const [departments, setDepartments] = useState([]);
     const [search, setSearch] = useState({
-        bookingDate: undefined,
-        aroundMe: true,
-        department: "",
+        bookingDate: '',
+        department: document.querySelector('div#patient_search_app').dataset.defaultDepartment,
     });
 
     const handlePageChange = page => {
@@ -40,7 +43,6 @@ function PatientSearch(props) {
         event.preventDefault();
         const { id: userId } = user;
         const currentBooking = JSON.parse(localStorage.getItem('booking'));
-        console.log('ids:',currentBooking.id,userId);
         const response = await bookingApi.createBooking(currentBooking.id, userId);
         if (response.status !== 200) {
             console.log('Une erreur est survenue');
@@ -66,42 +68,48 @@ function PatientSearch(props) {
         }
     }
 
+    const getCountryDepartments = async () => {
+        const country = document.querySelector('div#patient_search_app').dataset.country;
+        const departments = await geolocationApi.getDepartmentsByCountry(country);
+        console.log(departments);
+        setDepartments(departments);
+    }
+
     const filterWithTherapistDelay = (appoints) => {
         return appoints.filter(appoint => bookingFilters.filterWithTherapistDelay(appoint));
     }
 
-    const getAppointments = async () => {
-        const res = await bookingApi.getBookings();
-        if (res.length > 0) {
-            console.log('res:',res.length);
-            const appoints = filterWithTherapistDelay(res);
-            setAppoints(appoints);
-            setLoading(false);
-        }
-    }
-
     const createPatientBooking = (appointId) => {
-        console.log('appointId:',appointId);
-        console.log('userId:',user.id);
         const booking = bookingFilters.filterById(appointId, appoints)[0];
         if (booking === {}) {
-            console.log('Réservation vide');
             return;
         }
         setBooking(booking);
-        console.log('booking:',booking);
         const saved = bookingFilters.setBookingToLocalStorage(booking);
+        if (saved) {
+            toast.success("Veuillez confirmer cette réservation ou l'annuler en cas d'erreur.");
+        } else {
+            toast.error("Une erreur s'est produite lors de la sauvegarde de la réservation.");
+        }
     }
 
     const updateAppointsByUserFilters = () => {
+        console.log(search.bookingDate)
         const updatedAppoints = bookingFilters.updateAppointsByFilters(appoints, search);
         setFiltered(updatedAppoints);
     }
 
-    const updateBookingsByFilters = async () => {
-        const bookings = await bookingApi.updateBookingsByFilters();
+    const updateBookingsByApiFilters = async () => {
+        setLoading(true);
+        const bookings = await bookingApi.updateBookingsByFilters(search);
         if (bookings.length > 0) {
-            console.log(bookings);
+            const appoints = filterWithTherapistDelay(bookings);
+            setAppoints(appoints);
+            setLoading(false);
+            toast.info("Disponibilités mises à jour");
+        } else {
+            setLoading(false);
+            toast.info("Pas de disponibilité dans ce département");
         }
     }
 
@@ -123,22 +131,30 @@ function PatientSearch(props) {
     ) : appointsToDisplay;
 
     useEffect(() => {
-        getAppointments();
+        updateBookingsByApiFilters();
         getCurrentUser();
-    },[]);
+        getCountryDepartments();
+    }, []);
+
+    useEffect(() => {
+        updateBookingsByApiFilters();
+    },[search.department]);
 
     useEffect(() => {
         updateAppointsByUserFilters();
-    },[search]);
+    },[search.bookingDate]);
 
     return (
         <>
+            {/*<div className="container-fluid">
+                <ToastContainer position={toast.POSITION.TOP_CENTER}/>
+            </div>*/}
             {loading && <p>Chargement en cours...</p>}
             {!loading &&
             <div>
                 {
                     (localStorage.getItem('booking') && booking !== {}) ?
-                        <div className={"container mb-3"}>
+                        <div className={"container-fluid mb-3"}>
                             <BookingConfirmation
                                 loading={loading}
                                 isConfirmed={isConfirmed}
@@ -146,10 +162,10 @@ function PatientSearch(props) {
                                 booking={JSON.parse(localStorage.getItem('booking'))}
                             />
                             <br/>
-                            <button className={"btn btn-danger"} type="button" onClick={cancelBooking}>Annuler et prendre un autre rendez-vous</button>
+                            {!isConfirmed && <button className={"btn btn-danger"} type="button" onClick={cancelBooking}>Annuler et prendre un autre rendez-vous</button>}
                         </div> :
-                        <div className="container mb-3">
-                            <BookingSearchForm search={search} handleChange={handleChange} />
+                        <div className="container-fluid mb-3">
+                            <BookingSearchForm departments={departments} search={search} handleChange={handleChange} />
                             <div className="table-responsive js-rep-log-table">
                                 <table className="table table-striped table-sm">
                                     <thead>
@@ -159,7 +175,6 @@ function PatientSearch(props) {
                                         <th>Date</th>
                                         <th>Début</th>
                                         <th>Fin</th>
-                                        <th></th>
                                     </tr>
                                     </thead>
                                     {

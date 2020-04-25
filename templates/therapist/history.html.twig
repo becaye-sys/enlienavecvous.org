@@ -38,7 +38,7 @@
                                 -
                             {% endif %}
                         </td>
-                        <td>{{ h.patient.malus }}</td>
+                        <td>{{ h.usersHistory.patientMalus }}</td>
                         <td>
                             {% if h.bookingHistory is not null %}
                                 {{ constant('App\\Entity\\Appointment::STATUS')[h.bookingHistory.status] }}

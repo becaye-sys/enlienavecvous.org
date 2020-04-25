@@ -95,6 +95,6 @@ class DepartmentFixtures extends Fixture implements FixtureGroupInterface
 
     public static function getGroups(): array
     {
-        return ['departments'];
+        return ['departments', 'usable'];
     }
 }
