@@ -4,14 +4,16 @@
 namespace App\DataFixtures;
 
 
+use App\Entity\Department;
 use App\Entity\Therapist;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class TherapistFixtures extends Fixture implements DependentFixtureInterface
+class TherapistFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     public const THERAPIST_USER_REFERENCE = "therapist_user";
 
@@ -29,7 +31,7 @@ class TherapistFixtures extends Fixture implements DependentFixtureInterface
             $faker = Factory::create("fr");
         }
 
-        for ($i = 1; $i <= 8; $i ++) {
+        for ($i = 1; $i <= 4; $i ++) {
             $therapist = new Therapist();
             if ($i === 1) {
                 $therapist->upgradeToManager();
@@ -45,8 +47,16 @@ class TherapistFixtures extends Fixture implements DependentFixtureInterface
             $therapist->setIsActive(true);
             $therapist->setFirstName($faker ? $faker->firstName : "Firstname");
             $therapist->setLastName($faker ? $faker->lastName : "Lastname");
-            $therapist->setCountry("France");
-            $therapist->setZipCode($faker ? $faker->randomElement(['01500', '01430', '69000']) : "01500");
+            if ($i%2 > 0) {
+                $therapist->setCountry("fr");
+                /** @var Department $department */
+                $department = $this->getReference(DepartmentFixtures::DEPARTMENT_FR_REFERENCE . "_0" . $i);
+            } else {
+                $therapist->setCountry("lu");
+                /** @var Department $department */
+                $department = $this->getReference(DepartmentFixtures::DEPARTMENT_LU_REFERENCE . "_0" . $i);
+            }
+            $therapist->setDepartment($department);
             $therapist->setPhoneNumber($faker ? $faker->phoneNumber : "0600000001");
             $therapist->setHasAcceptedTermsAndPolicies(true);
             $this->addReference(self::THERAPIST_USER_REFERENCE."_$i", $therapist);
@@ -58,7 +68,12 @@ class TherapistFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return array(
-            TownFixtures::class,
+            DepartmentFixtures::class
         );
+    }
+
+    public static function getGroups(): array
+    {
+        return ['usable'];
     }
 }

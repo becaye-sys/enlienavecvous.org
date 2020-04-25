@@ -3,9 +3,15 @@
 {% block body %}
     <p>Bonjour,</p>
     <p>Vous avez rendez-vous :</p>
-    <p>Le {{ appointment.bookingDate|date('d/M/Y') }}</p>
+    <p>Le {{ appointment.bookingDate|date('d/m/Y') }}</p>
     <p>À {{ appointment.bookingStart|date('H:i') }}</p>
-    <p>Avec {{ appointment.patient.displayName }}</p>
+    {% if appointment.patient.displayName is not null %}
+        <p>Avec {{ appointment.patient.displayName }}</p>
+    {% else %}
+        <p>
+            Avec {{ appointment.patient.firstName }} {{ appointment.patient.lastName }}
+        </p>
+    {% endif %}
     <p>Tel: {{ appointment.patient.phoneNumber }}, email: {{ appointment.patient.email }}</p>
 
     <p>La personne vous contactera par téléphone au moment du rendez-vous.</p>

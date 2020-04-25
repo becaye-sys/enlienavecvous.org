@@ -112,6 +112,7 @@ class User implements UserInterface
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="users")
      * @ORM\JoinColumn(nullable=true)
+     * @Groups({"get_bookings"})
      */
     protected $department;
 

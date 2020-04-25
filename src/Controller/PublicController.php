@@ -10,7 +10,6 @@ use App\Entity\Therapist;
 use App\Entity\Town;
 use App\Form\PatientRegisterType;
 use App\Form\TherapistRegisterType;
-use App\Repository\AppointmentRepository;
 use App\Repository\DepartmentRepository;
 use App\Repository\TherapistRepository;
 use App\Repository\TownRepository;

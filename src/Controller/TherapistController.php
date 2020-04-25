@@ -99,9 +99,9 @@ class TherapistController extends AbstractController
                 $malus = $patient->getMalus() + 1;
                 $patient->setMalus($malus);
             }
-            $historyHelper->addHistoryItem($appointment, History::ACTIONS[History::ACTION_DISHONORED]);
+            $historyHelper->addHistoryItem(History::ACTION_DISHONORED, $appointment);
         } else {
-            $historyHelper->addHistoryItem($appointment, History::ACTIONS[History::ACTION_HONORED]);
+            $historyHelper->addHistoryItem(History::ACTION_HONORED, $appointment);
         }
         if ($patient->getMalus() >= 3) {
             $mailerFactory->createAndSend(
@@ -153,7 +153,7 @@ class TherapistController extends AbstractController
         if ($request->isMethod("POST") && $form->isSubmitted() && $form->isValid()) {
             $appointment->setBooked(false);
             $patientEmail = $appointment->getPatient()->getEmail();
-            $appointment->setStatus(Appointment::STATUS[Appointment::STATUS_CANCELLED]);
+            $appointment->setStatus(Appointment::STATUS_CANCELLED);
             $appointment->setPatient(null);
             $appointment->setStatus(Appointment::STATUS_TO_DELETE);
             $mailer->createAndSend(
@@ -163,7 +163,10 @@ class TherapistController extends AbstractController
                 $this->renderView(
                     'email/appointment_cancelled_from_therapist.html.twig',
                     [
-                        'appointment' => $appointment
+                        'appointment' => $appointment,
+                        'project_url' => getenv('project_url')
+                            ? getenv('project_url')
+                            : $this->getParameter('project_url')
                     ]
                 )
             );
@@ -299,12 +302,11 @@ class TherapistController extends AbstractController
     public function history(HistoryRepository $historyRepository)
     {
         $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
-        /** @var Therapist $currentUser */
         $currentUser = $this->getCurrentTherapist();
         return $this->render(
             'therapist/history.html.twig',
             [
-                'history' => $historyRepository->findBy(['therapist' => $currentUser])
+                'history' => $historyRepository->findByTherapist($currentUser)
             ]
         );
     }

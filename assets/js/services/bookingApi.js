@@ -12,18 +12,7 @@ async function createBooking(appointId, userId) {
         `${API_URL}create/booking?appoint=${appointId}&user=${userId}`
     )
         .then(response => {
-            try {
-                if (localStorage.getItem('booking')) {
-                    localStorage.removeItem('booking');
-                    localStorage.setItem('booking', JSON.stringify(response.data));
-                } else {
-                    localStorage.setItem('booking', JSON.stringify(response.data));
-                }
-                console.log(response.data);
-                return response.data
-            } catch (e) {
-                console.log(e);
-            }
+            return response;
         })
         .catch(error => {
             console.log('erreur lors de la création de la réservation :',error);
@@ -45,10 +34,14 @@ async function cancelBooking(id) {
 
 async function updateBookingsByFilters(search) {
     return await axios
-        .post(`${API_URL}bookings-filtered`, {...search})
+        .get(`${API_URL}bookings-filtered?department=${search.department}`)
         .then(response => {
             return response.data;
-        });
+        })
+        .catch(err => {
+            console.log(err);
+        })
+        ;
 }
 
 export default {

@@ -9,6 +9,7 @@ use App\Entity\BookingHistory;
 use App\Entity\History;
 use App\Entity\Patient;
 use App\Entity\Therapist;
+use App\Entity\UsersHistory;
 use Doctrine\ORM\EntityManagerInterface;
 
 class HistoryHelper
@@ -24,18 +25,18 @@ class HistoryHelper
     {
         $history = new History();
         $history->setAction($action);
-        if ($action !== History::ACTIONS[History::ACTION_DELETED_BY_THERAPIST] && null !== $appointment) {
+        if ($action !== History::ACTION_DELETED_BY_THERAPIST && null !== $appointment) {
             $bookingHistory = $this->createBookingHistory($appointment);
             $bookingHistory->addHistory($history);
             $this->entityManager->persist($bookingHistory);
         }
         if (null !== $appointment) {
-            if ($appointment->getTherapist() instanceof Therapist) {
-                $history->setTherapist($appointment->getTherapist());
+            if (!$appointment->getPatient() instanceof Patient) {
+                $userHistory = $this->createUsersHistory($appointment->getTherapist(), null);
+            } else {
+                $userHistory = $this->createUsersHistory($appointment->getTherapist(), $appointment->getPatient());
             }
-            if ($appointment->getPatient() instanceof Patient) {
-                $history->setPatient($appointment->getPatient());
-            }
+            $history->setUsersHistory($userHistory);
         }
         $this->entityManager->persist($history);
         return $history;
@@ -48,5 +49,20 @@ class HistoryHelper
         $bookingHistory->setBookingStart($appointment->getBookingStart());
         $bookingHistory->setStatus($appointment->getStatus());
         return $bookingHistory;
+    }
+
+    private function createUsersHistory(Therapist $therapist, ?Patient $patient = null): UsersHistory
+    {
+        $usersHistory = new UsersHistory();
+        $usersHistory->setTherapistId($therapist->getId());
+        $usersHistory->setTherapistFirstName($therapist->getFirstName());
+        $usersHistory->setTherapistLastName($therapist->getLastName());
+        if ($patient instanceof Patient) {
+            $usersHistory->setPatientId($patient->getId());
+            $usersHistory->setPatientFirstName($patient->getFirstName());
+            $usersHistory->setPatientLastName($patient->getLastName());
+            $usersHistory->setPatientMalus($patient->getMalus());
+        }
+        return $usersHistory;
     }
 }

@@ -44,21 +44,34 @@ class AppointmentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findAvailableAppointments()
+    {
+        $query = $this->createQueryBuilder('a')
+            ->where('a.status = :status')
+            ->setParameter('status', Appointment::STATUS_AVAILABLE)
+            ->andWhere('a.bookingDate >= :now')
+            ->setParameter('now', new \DateTime('now'))
+            ->orderBy('a.bookingDate', 'asc');
+        return $query
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findAvailableBookingsByFilters(array $params)
     {
         $query = $this->createQueryBuilder('a')
             ->where('a.status = :status')
             ->setParameter('status', Appointment::STATUS_AVAILABLE)
+            ->andWhere('a.bookingDate >= :now')
+            ->setParameter('now', new \DateTime('now'))
         ;
 
-        if (isset($params['bookingDate'])) {
-            $query->andWhere("a.bookingDate = :bookingDate")
-                ->setParameter('bookingDate', $params['date_filter']);
-        }
-
-        if (isset($params['aroundMe'])) {
-            $query->innerJoin('a.therapist', '$alias')
-                ->setParameter('bookingDate', $params['date_filter']);
+        if (isset($params['department'])) {
+            $query
+                ->leftJoin('a.therapist', 't')
+                ->leftJoin('t.department', 'd')
+                ->andWhere('d.id = :department')
+                ->setParameter('department', $params['department']);
         }
 
         return $query
@@ -83,19 +96,6 @@ class AppointmentRepository extends ServiceEntityRepository
 
         return $query
             ->orderBy('a.bookingDate', 'asc')
-            ->getQuery()
-            ->getResult();
-    }
-
-    public function findAvailableAppointments()
-    {
-        $query = $this->createQueryBuilder('a')
-            ->where('a.status = :status')
-            ->setParameter('status', Appointment::STATUS_AVAILABLE)
-            ->andWhere('a.bookingDate >= :now')
-            ->setParameter('now', new \DateTime('now'))
-            ->orderBy('a.bookingDate', 'asc');
-        return $query
             ->getQuery()
             ->getResult();
     }

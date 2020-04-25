@@ -2,17 +2,19 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Department;
 use App\Entity\Patient;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class PatientFixtures extends Fixture implements DependentFixtureInterface
+class PatientFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
-    public const PATIENT_USER_REFERENCE = "patient_user";
+    public const PATIENT_USER_REFERENCE = "patient_";
 
     private $encoder;
 
@@ -34,8 +36,17 @@ class PatientFixtures extends Fixture implements DependentFixtureInterface
             $patient->setIsActive(true);
             $patient->setFirstName($faker ? $faker->firstName : "Firstname");
             $patient->setLastName($faker ? $faker->lastName : "Lastname");
-            $patient->setCountry("France");
-            $patient->setZipCode($faker ? $faker->postcode : "01500");
+            $patient->setCountry("fr");
+            if ($i%2 > 0) {
+                $patient->setCountry("fr");
+                /** @var Department $department */
+                $department = $this->getReference(DepartmentFixtures::DEPARTMENT_FR_REFERENCE . "_0" . $i);
+            } else {
+                $patient->setCountry("lu");
+                /** @var Department $department */
+                $department = $this->getReference(DepartmentFixtures::DEPARTMENT_LU_REFERENCE . "_0" . $i);
+            }
+            $patient->setDepartment($department);
             $patient->setPhoneNumber($faker ? $faker->phoneNumber : "0600000000");
             $patient->setHasAcceptedTermsAndPolicies(true);
             $this->addReference(self::PATIENT_USER_REFERENCE."_$i", $patient);
@@ -49,7 +60,12 @@ class PatientFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return array(
-            TownFixtures::class,
+            DepartmentFixtures::class,
         );
+    }
+
+    public static function getGroups(): array
+    {
+        return ['usable'];
     }
 }

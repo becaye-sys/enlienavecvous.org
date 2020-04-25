@@ -8,11 +8,12 @@ use App\Entity\Appointment;
 use App\Entity\Patient;
 use App\Entity\Therapist;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 
-class AppointmentFixtures extends Fixture implements DependentFixtureInterface
+class AppointmentFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     public const APPOINT_REFERENCE = "appoint_";
     public function load(ObjectManager $manager)
@@ -22,7 +23,7 @@ class AppointmentFixtures extends Fixture implements DependentFixtureInterface
         }
 
         for ($i = 1; $i <= 80; $i++) {
-            $therapistId = random_int(1,8);
+            $therapistId = random_int(1,4);
             /** @var Therapist $therapist */
             $therapist = $this->getReference(TherapistFixtures::THERAPIST_USER_REFERENCE."_$therapistId");
 
@@ -31,8 +32,6 @@ class AppointmentFixtures extends Fixture implements DependentFixtureInterface
             $patient = $this->getReference(PatientFixtures::PATIENT_USER_REFERENCE."_$patientId");
             $appointment = new Appointment();
             $appointment->setTherapist($therapist);
-            $appointment->setStatus(Appointment::STATUS_AVAILABLE);
-            $appointment->setLocation($faker ? $faker->city : "Lyon");
             $randomDate = $this->getRandomDate();
             $date = $randomDate['start'];
             $start = new \DateTime($date);
@@ -55,7 +54,7 @@ class AppointmentFixtures extends Fixture implements DependentFixtureInterface
 
     private function getRandomDate(): array
     {
-        $day = random_int(16,31);
+        $day = random_int(25,30);
         $hour = random_int(9,20);
         $minute = random_int(0,59);
         if ($day < 10) {
@@ -70,5 +69,10 @@ class AppointmentFixtures extends Fixture implements DependentFixtureInterface
         return [
             'start' => "$day-04-2020 $hour:$minute:00",
         ];
+    }
+
+    public static function getGroups(): array
+    {
+        return ['usable'];
     }
 }

@@ -8,7 +8,13 @@
 
     <p>Le {{ appointment.bookingDate|date('d/m/Y') }}</p>
     <p>À {{ appointment.bookingStart|date('H:i') }}</p>
-    <p>Avec {{ appointment.therapist.displayName }}</p>
+    {% if appointment.therapist.displayName is not null %}
+        <p>Avec {{ appointment.therapist.displayName }}</p>
+    {% else %}
+        <p>
+            Avec {{ appointment.therapist.firstName }} {{ appointment.therapist.lastName }}
+        </p>
+    {% endif %}
     <p>Tel: {{ appointment.therapist.phoneNumber }}, email: {{ appointment.therapist.email }}</p>
 
     <p>Nous vous invitons à <a href="{{ project_url }}">reprendre rendez-vous</a> dès maintenant avec ce thérapeute ou un.e autre thérapeute via la

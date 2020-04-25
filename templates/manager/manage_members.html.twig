@@ -66,6 +66,7 @@
                                     <input type="hidden" name="user_id" value="{{ u.id }}">
                                     <button type="submit" class="btn btn-primary">Mettre à jour le rôle</button>
                                 </form>
+                                <a href="{{ path('manager_delete_account_by_id', {'id': u.id}) }}" class="btn btn-danger">Supprimer ce compte</a>
                             </td>
                         </tr>
                     {% endfor %}

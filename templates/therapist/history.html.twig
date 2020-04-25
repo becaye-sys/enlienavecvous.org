@@ -22,7 +22,7 @@
                 {% for h in history %}
                     <tr>
                         <td>{{ h.id }}</td>
-                        <td>{{ h.action }}</td>
+                        <td>{{ constant('App\\Entity\\History::ACTIONS')[h.action] }}</td>
                         <td>{{ h.actionedAt|date('d/m/Y H:i') }}</td>
                         <td>
                             {% if h.bookingHistory is not null %}
@@ -38,7 +38,7 @@
                                 -
                             {% endif %}
                         </td>
-                        <td>{{ h.patient.malus }}</td>
+                        <td>{{ h.usersHistory.patientMalus }}</td>
                         <td>
                             {% if h.bookingHistory is not null %}
                                 {{ constant('App\\Entity\\Appointment::STATUS')[h.bookingHistory.status] }}

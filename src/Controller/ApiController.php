@@ -41,11 +41,33 @@ class ApiController extends AbstractController
      */
     public function getAvailableAppointments(
         AppointmentRepository $appointmentRepository,
-        CustomSerializer $serializer, SerializerInterface $defaultSerializer
+        SerializerInterface $serializer
     ): JsonResponse
     {
         $appoints = $appointmentRepository->findAvailableAppointments();
-        $data = $defaultSerializer->serialize($appoints, 'json', ['groups' => ['get_bookings']]);
+        $data = $serializer->serialize($appoints, 'json', ['groups' => ['get_bookings']]);
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
+    }
+
+    /**
+     * @Route(path="/bookings-filtered", name="api_bookings_filtered", methods={"POST","GET"})
+     * @return JsonResponse
+     */
+    public function bookingSearchByFilters(
+        Request $request,
+        SerializerInterface $serializer,
+        AppointmentRepository $appointmentRepository
+    )
+    {
+        $params = [];
+        foreach ($request->query as $key => $value) {
+            if ($value !== "") {
+                $params[$key] = $value;
+            }
+        }
+
+        $appointments = $appointmentRepository->findAvailableBookingsByFilters($params);
+        $data = $serializer->serialize($appointments, 'json', ['groups' => ['get_bookings']]);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
@@ -75,22 +97,43 @@ class ApiController extends AbstractController
         AppointmentRepository $appointmentRepository,
         PatientRepository $patientRepository,
         EntityManagerInterface $entityManager,
-        CustomSerializer $serializer, SerializerInterface $defaultSerializer
+        HistoryHelper $historyHelper,
+        MailerFactory $mailer,
+        SerializerInterface $serializer
     ): JsonResponse
     {
         $appointId = $request->query->get('appoint');
         $userId = $request->query->get('user');
-        //$appointId = (int)$request->attributes->get('appointment');
-        //$userId = (int)$request->attributes->get('user');
         $patient = $patientRepository->find($userId);
         $appointment = $appointmentRepository->find($appointId);
         if (!$appointment instanceof Appointment || !$patient instanceof Patient) {
             return new JsonResponse(['message' => "Requête incorrecte"], Response::HTTP_NOT_FOUND, [], true);
         }
-        $appointment->setStatus(Appointment::STATUS_BOOKING);
+        $appointment->setBooked(true);
+        $appointment->setStatus(Appointment::STATUS_BOOKED);
         $patient->addAppointment($appointment);
+        // add booking history
+        $historyHelper->addHistoryItem(History::ACTION_BOOKED, $appointment);
         $entityManager->flush();
-        $data = $defaultSerializer->serialize($appointment, 'json', ['groups' => ['create_booking']]);
+
+        $mailer->createAndSend(
+            "Confirmation de rendez-vous",
+            $appointment->getPatient()->getEmail(),
+            'no-reply@onestlapourvous.org',
+            $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment])
+        );
+
+        $mailer->createAndSend(
+            "Confirmation de rendez-vous",
+            $appointment->getTherapist()->getEmail(),
+            'no-reply@onestlapourvous.org',
+            $this->renderView('email/appointment_booked_therapist.html.twig', ['appointment' => $appointment])
+        );
+
+        $data = $serializer->serialize(
+            "Rendez-vous confirmé !",
+            'json'
+        );
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
@@ -113,7 +156,7 @@ class ApiController extends AbstractController
         $appointment->setBooked(true);
         $appointment->setStatus(Appointment::STATUS_BOOKED);
         // add booking history
-        $historyHelper->addHistoryItem(History::ACTIONS[History::ACTION_BOOKED], $appointment);
+        $historyHelper->addHistoryItem(History::ACTION_BOOKED, $appointment);
         $entityManager->flush();
 
         $mailer->createAndSend(
@@ -139,6 +182,7 @@ class ApiController extends AbstractController
 
     /**
      * @Route(path="/cancel/booking", name="api_cancel_booking", methods={"GET"})
+     * // not used
      */
     public function cancelBooking(
         Request $request,
@@ -196,28 +240,6 @@ class ApiController extends AbstractController
             ['code' => 'ASC']
         );
         $data = $serializer->serialize($towns, ['users','department']);
-        return new JsonResponse($data, Response::HTTP_OK, [], true);
-    }
-
-    /**
-     * @Route(path="/bookings-filtered", name="api_bookings_filtered", methods={"POST"})
-     * @return JsonResponse
-     */
-    public function bookingSearchByFilters(
-        Request $request,
-        CustomSerializer $serializer,
-        AppointmentRepository $appointmentRepository
-    )
-    {
-        $params = [];
-        foreach ($request->request as $key => $value) {
-            if ($value !== "") {
-                $params[$key] = $value;
-            }
-        }
-
-        $appointments = $appointmentRepository->findAvailableBookingsByFilters($params);
-        $data = $serializer->serializeByGroups($appointments, ['create_booking']);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 

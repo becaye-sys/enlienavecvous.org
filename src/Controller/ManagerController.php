@@ -6,21 +6,25 @@ namespace App\Controller;
 
 use App\Entity\Appointment;
 use App\Entity\Department;
+use App\Entity\Therapist;
 use App\Entity\Town;
 use App\Entity\User;
 use App\Repository\AppointmentRepository;
 use App\Repository\DepartmentRepository;
 use App\Repository\TownRepository;
 use App\Repository\UserRepository;
+use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * Class ManagerController
@@ -308,5 +312,37 @@ class ManagerController extends AbstractController
         $entityManager->flush();
         $this->addFlash('success', "$i Rendez-vous en attente de suppression correctement supprimés.");
         return $this->redirectToRoute('manager_new_users');
+    }
+
+    /**
+     * @Route(path="/account/delete/{id}", name="manager_delete_account_by_id")
+     * @ParamConverter(name="id", class="App\Entity\User")
+     */
+    public function deleteAccount(
+        User $user,
+        EntityManagerInterface $manager,
+        UserPasswordEncoderInterface $encoder,
+        MailerFactory $mailerFactory
+    )
+    {
+        $this->denyAccessUnlessGranted("ROLE_MANAGER", null, "Vous n'avez pas accès à cette fonctionnalité.");
+        if ($user instanceof User) { // add current user check
+            // send email account deletion
+            $mailerFactory->createAndSend(
+                "Suppression de votre compte",
+                $user->getEmail(),
+                'no-reply@onestlapourvous.org',
+                $this->renderView('email/user_delete_account.html.twig')
+            );
+            // delete user
+            $manager->remove($user);
+            $manager->flush();
+            // redirect
+            $session = new Session();
+            $session->invalidate();
+            $this->addFlash('success', "Ce compte a été correctement supprimé.");
+            return $this->redirectToRoute('app_logout');
+        }
+        return $this->redirectToRoute('manager_manage_users');
     }
 }

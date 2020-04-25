@@ -76,6 +76,12 @@
                     </a>
                 </li>
             {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('index') }}" target="_blank">
+                    <span data-feather="check-circle"></span>
+                    Retour à l'accueil
+                </a>
+            </li>
         </ul>
 
         {% if is_granted('ROLE_MANAGER') %}
