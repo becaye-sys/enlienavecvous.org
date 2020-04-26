@@ -11,6 +11,7 @@ use App\Entity\Town;
 use App\Entity\User;
 use App\Repository\AppointmentRepository;
 use App\Repository\DepartmentRepository;
+use App\Repository\TherapistRepository;
 use App\Repository\TownRepository;
 use App\Repository\UserRepository;
 use App\Services\MailerFactory;
@@ -33,6 +34,13 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class ManagerController extends AbstractController
 {
+    private $therapistRepository;
+
+    public function __construct(TherapistRepository $therapistRepository)
+    {
+        $this->therapistRepository = $therapistRepository;
+    }
+
     /**
      * @Route(path="/new-users", name="manager_new_users", defaults={"page"=1})
      * @param UserRepository $userRepository
@@ -321,11 +329,14 @@ class ManagerController extends AbstractController
     public function deleteAccount(
         User $user,
         EntityManagerInterface $manager,
-        UserPasswordEncoderInterface $encoder,
         MailerFactory $mailerFactory
     )
     {
         $this->denyAccessUnlessGranted("ROLE_MANAGER", null, "Vous n'avez pas accès à cette fonctionnalité.");
+        if ($user->getEmail() === $this->getCurrentUser()->getEmail()) {
+            $this->addFlash('info', "Vous avez essayé de supprimer votre compte...");
+            return $this->redirectToRoute('manager_manage_users');
+        }
         if ($user instanceof User) { // add current user check
             // send email account deletion
             $mailerFactory->createAndSend(
@@ -344,5 +355,10 @@ class ManagerController extends AbstractController
             return $this->redirectToRoute('app_logout');
         }
         return $this->redirectToRoute('manager_manage_users');
+    }
+
+    private function getCurrentUser(): Therapist
+    {
+        return $this->therapistRepository->findOneBy(['email' => $this->getUser()->getUsername()]);
     }
 }

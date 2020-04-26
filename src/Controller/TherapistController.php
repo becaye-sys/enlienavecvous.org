@@ -398,6 +398,7 @@ class TherapistController extends AbstractController
             'therapist/security.html.twig',
             [
                 'change_password_form' => $changePasswordForm->createView(),
+                'therapistId' => $user->getId(),
                 'appointments' => $appointmentRepository->findBy(['therapist' => $user, 'status' => Appointment::STATUS_BOOKED])
             ]
         );
@@ -439,6 +440,22 @@ class TherapistController extends AbstractController
                 return $this->redirectToRoute('therapist_security');
             }
         }
+        return $this->redirectToRoute('therapist_security');
+    }
+
+    /**
+     * @Route(path="/activate/manager/{id}", name="therapist_activate_role_manager")
+     * @ParamConverter(name="id", class="App\Entity\Therapist")
+     */
+    public function activateManagerRole(Therapist $therapist, EntityManagerInterface $manager)
+    {
+        if (!$therapist instanceof Therapist) {
+            $this->addFlash('error', "Vous n'avez pas le bon role.");
+            return $this->redirectToRoute('therapist_security');
+        }
+        $therapist->upgradeToManager();
+        $manager->flush();
+        $this->addFlash('success', "Vous avez maintenant le role manager.");
         return $this->redirectToRoute('therapist_security');
     }
 
