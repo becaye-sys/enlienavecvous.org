@@ -333,7 +333,7 @@ class ManagerController extends AbstractController
     )
     {
         $this->denyAccessUnlessGranted("ROLE_MANAGER", null, "Vous n'avez pas accès à cette fonctionnalité.");
-        if ($user->getEmail() === $this->getCurrentUser()->getEmail()) {
+        if ($user->getId() === $this->getCurrentUser()->getId()) {
             $this->addFlash('info', "Vous avez essayé de supprimer votre compte...");
             return $this->redirectToRoute('manager_manage_users');
         }
@@ -348,9 +348,6 @@ class ManagerController extends AbstractController
             // delete user
             $manager->remove($user);
             $manager->flush();
-            // redirect
-            $session = new Session();
-            $session->invalidate();
             $this->addFlash('success', "Ce compte a été correctement supprimé.");
             return $this->redirectToRoute('app_logout');
         }
