@@ -77,10 +77,6 @@
     },
     "scripts": {
         "auto-scripts": {
-            "doctrine:database:drop --force": "symfony-cmd",
-            "doctrine:database:create": "symfony-cmd",
-            "doctrine:schema:update --force": "symfony-cmd",
-            "doctrine:fixtures:load --no-interaction": "symfony-cmd",
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
