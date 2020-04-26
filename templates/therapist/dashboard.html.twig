@@ -10,38 +10,35 @@
         </div>
     </div>
 
-    {#<canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>#}
+    <div class="container">
+        <p>
+            Dans l'onglet disponibilités, vous pouvez renseigner les horaires auxquels vous souhaitez vous rendre disponible par jour et par créneaux de rendez-vous.
+            Vous etes libre de choisir la durée de vos séances et le temps total mis à disposition, et celui-ci peut varier d'un jour à l'autre et d'une semaine à l'autre.
+            Une fois la séance passée, vous avez la possibilité de renseigner dans vos rendez-vous si elle a bien été honorée.
+        </p>
+        <p>
+            C'est à la personne qui prend rendez-vous de prendre contact avec vous à l’heure du rendez-vous.
+            Vous pouvez toutefois contacter la personne en amont si vous souhaitez lui proposer une méthode particulière de prise de contact, ou proposer cet ajustement lors du 1er rendez-vous.
+        </p>
+        <p>
+            Si vous devez annuler votre rendez-vous, merci de le faire au moins 24h.
+        </p>
+        <p>
+            D'une manière générale, ce dispositif met à disposition des personnes en demande un soutient de 5 séances sur l'ensemble de la durée du confinement, avec le/la meme thérapeute ou pas.
+        </p>
+        <p>
+            C'est une plateforme temporaire destinée à répondre à une urgence liée à la crise du Covid-19.
+        </p>
+        <p>
+            Le fonctionnement de la plateforme pourra etre prolongé en fonction de l'évolution de la situation. L'information sera communiquée sur le site en temps voulu.
+        </p>
+        <p>
+            Nb: Si à la suite de ce soutien psychologique ponctuel, une personne décide d'engager une thérapie avec un.e thérapeute de la plateforme, elle est invitée à lui formulaire sa demande directement.
+            Ce suivi se fera aux conditions définies par le/la thérapeute dans le cadre de son activité régulière (régularité, tarif, etc.).
+        </p>
+        <p>*ces modalités peuvent évoluer en fonction de la situation</p>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
-    <script>
-        var ctx = document.getElementById("myChart");
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-                datasets: [{
-                    data: [15339, 21345, 18483, 24003, 23489, 24092, 12034],
-                    lineTension: 0,
-                    backgroundColor: 'transparent',
-                    borderColor: '#007bff',
-                    borderWidth: 4,
-                    pointBackgroundColor: '#007bff'
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: false
-                        }
-                    }]
-                },
-                legend: {
-                    display: false,
-                }
-            }
-        });
-    </script>
 {% endblock %}
