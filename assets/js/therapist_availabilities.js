@@ -1,11 +1,14 @@
-
+import './../public/css/jquery-ui.min.css';
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
-import $ from 'jquery';
+const $ = require('jquery');
+require('../public/js/jquery-ui.min.js');
+
 
 $(document).ready( function () {
     const $filterForm = $("#table_filter_form");
     const $dateFilter = $("#date_filter");
     const $locationFilter = $("#location_filter");
+    $("#appointment_bookingDate").datepicker();
     $dateFilter.on('change', function (e) {
         $filterForm.submit();
     });

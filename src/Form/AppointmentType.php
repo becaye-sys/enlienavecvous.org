@@ -3,7 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Appointment;
+use App\Form\DataTransformer\AppointmentDateTransformer;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\DateIntervalType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -15,16 +17,21 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AppointmentType extends AbstractType
 {
+    private $dateTransformer;
+
+    public function __construct(AppointmentDateTransformer $dateTransformer)
+    {
+        $this->dateTransformer = $dateTransformer;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add(
                 'bookingDate',
-                DateType::class,
+                TextType::class,
                 [
-                    'widget' => 'single_text',
                     'label' => "Sélectionnez une date",
-                    'html5' => true
                 ]
             )
             ->add(
@@ -46,6 +53,8 @@ class AppointmentType extends AbstractType
                 ]
             )
         ;
+        $builder->get('bookingDate')
+            ->addModelTransformer($this->dateTransformer);
     }
 
     public function configureOptions(OptionsResolver $resolver)
