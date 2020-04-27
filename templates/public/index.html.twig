@@ -145,10 +145,8 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <!-- Revolution Slider 5.x SCRIPTS-->
     <script src="{{ asset('js/revolution-slider/js/jquery.themepunch.tools.min.js') }}"></script>
     <script src="{{ asset('js/revolution-slider/js/jquery.themepunch.revolution.min.js') }}"></script>
-    <script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>
     <script>
         $(document).ready(function(e) {
             $(".rev_slider_default").revolution({
@@ -239,22 +237,6 @@
                     nextSlideOnWindowFocus: "off",
                     disableFocusListener: false,
                 }
-            });
-            window.fbAsyncInit = function() {
-                FB.init({
-                    appId            : '580312176175308',
-                    autoLogAppEvents : true,
-                    xfbml            : true,
-                    version          : 'v6.0'
-                });
-            };
-            $("button#facebook_share").on('click', function (e) {
-                FB.ui({
-                    method: 'share',
-                    href: window.location.href
-                }, function (response) {
-                    console.log(response);
-                });
             });
         });
     </script>
