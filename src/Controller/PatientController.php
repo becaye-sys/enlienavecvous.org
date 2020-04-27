@@ -142,7 +142,7 @@ class PatientController extends AbstractController
         $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
         $patient = $this->getCurrentPatient();
         $patientId = $patient->getId();
-        $appoints = $therapist->getAppointments();
+        $appoints = $appointmentRepository->getAppointmentsByTherapist($therapist);
 
         if ($request->isMethod("POST")) {
             $appoint = $appointmentRepository->find($request->request->get('booking_id'));
@@ -182,8 +182,8 @@ class PatientController extends AbstractController
         if ($request->isMethod("POST")) {
             $appointment = $appointmentRepository->find($request->request->get('booking_id'));
             $appointment->setBooked(true);
+            $appointment->setStatus(Appointment::STATUS_BOOKED);
             $historyHelper->addHistoryItem(History::ACTION_BOOKED, $appointment);
-            $entityManager->flush();
 
             $mailerFactory->createAndSend(
                 "Confirmation de rendez-vous",
@@ -191,6 +191,7 @@ class PatientController extends AbstractController
                 null,
                 $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment])
             );
+            dump($appointment);
 
             $mailerFactory->createAndSend(
                 "Confirmation de rendez-vous",
@@ -198,6 +199,7 @@ class PatientController extends AbstractController
                 null,
                 $this->renderView('email/appointment_booked_therapist.html.twig', ['appointment' => $appointment])
             );
+            $entityManager->flush();
             $this->addFlash('success', "Votre rendez-vous est confirmé, un mail de confirmation vous a été envoyé !");
             return $this->redirectToRoute('patient_appointments');
         }

@@ -15,7 +15,7 @@
             Avec {{ appointment.therapist.firstName }} {{ appointment.therapist.lastName }}
         </p>
     {% endif %}
-    <p>Tel: {{ appointment.therapist.phoneNumber }}, email: {{ appointment.therapist.email }}</p>
+    <p>Tel: {{ appointment.therapist.phoneNumber|phone_prefix(appointment.therapist.country, appointment.therapist.phoneNumber) }}, email: {{ appointment.therapist.email }}</p>
 
     <p>Nous vous invitons à <a href="{{ project_url }}">reprendre rendez-vous</a> dès maintenant avec ce thérapeute ou un.e autre thérapeute via la
         plateforme.</p>

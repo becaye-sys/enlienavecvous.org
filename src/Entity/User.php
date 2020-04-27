@@ -22,13 +22,6 @@ class User implements UserInterface
         'ROLE_MANAGER' => "Manager"
     ];
 
-    const PHONE_PREFIX = [
-        'fr' => '+33 ',
-        'be' => '+32 ',
-        'lu' => '+352 ',
-        'ch' => '+41 '
-    ];
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

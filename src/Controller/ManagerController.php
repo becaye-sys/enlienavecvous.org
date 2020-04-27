@@ -347,7 +347,7 @@ class ManagerController extends AbstractController
         }
         $entityManager->flush();
         $this->addFlash('success', "$i Rendez-vous en attente de suppression correctement supprimés.");
-        return $this->redirectToRoute('manager_new_users');
+        return $this->redirectToRoute('therapist_availabilities');
     }
 
     /**

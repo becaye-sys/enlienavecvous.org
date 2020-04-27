@@ -4,21 +4,27 @@
 namespace App\TwigExtension;
 
 
-use App\Entity\User;
 use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
+use Twig\TwigFilter;
 
 class PrefixPhoneNumberExtension extends AbstractExtension
 {
-    public function getFunctions()
+    const PHONE_PREFIX = [
+        'fr' => '+33 ',
+        'be' => '+32 ',
+        'lu' => '+352 ',
+        'ch' => '+41 '
+    ];
+
+    public function getFilters()
     {
         return [
-            new TwigFunction('phone_prefix', [$this, 'showPrefixPhoneNumber']),
+            new TwigFilter('phone_prefix', [$this, 'showPrefixPhoneNumber']),
         ];
     }
 
-    public function showPrefixPhoneNumber(string $country, string $phoneNumber)
+    public function showPrefixPhoneNumber(string $phoneNumber, string $country = 'fr')
     {
-        return User::PHONE_PREFIX[$country] . $phoneNumber;
+        return self::PHONE_PREFIX[$country] . $phoneNumber;
     }
 }

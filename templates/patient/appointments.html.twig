@@ -33,7 +33,7 @@
                             {{ constant('App\\Entity\\Appointment::STATUS')[a.status] }}
                         </td>
                         <td>
-                            {% if a.cancelled == false %}
+                            {% if date(a.bookingDate) < date('-1days') %}
                                 <a href="{{ path('patient_appointment_cancel', {'id': a.id}) }}" class="btn btn-outline-primary">
                                     Annuler
                                 </a>

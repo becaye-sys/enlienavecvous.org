@@ -132,11 +132,15 @@ class AppointmentRepository extends ServiceEntityRepository
             ->getQuery()->getResult();
     }
 
-    public function getDailyPastAppointments()
+    public function getAppointmentsByTherapist(Therapist $therapist)
     {
         return $this->createQueryBuilder('a')
-            ->where('a.bookingDate < :now')
+            ->where('a.bookingDate > :now')
             ->setParameter('now', new \DateTime())
+            ->andWhere('a.therapist = :therapist')
+            ->setParameter('therapist', $therapist)
+            ->andWhere('a.status = :status')
+            ->setParameter('status', Appointment::STATUS_AVAILABLE)
             ->getQuery()->getResult();
     }
 
