@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Appointment;
 use App\Entity\Patient;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -17,6 +18,19 @@ class PatientRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Patient::class);
+    }
+
+    public function findHelped()
+    {
+        $query = $this->createQueryBuilder('p')
+            ->where('p.isActive = :isActive')
+            //->distinct(true)
+            ->setParameter('isActive', true)
+            ->innerJoin('p.appointments', 'a');
+        //$andWhereExp = $query->expr()->andX('a.status = :status');
+        return $query->andWhere('a.status = :status')
+            ->setParameter('status', Appointment::STATUS_HONORED)
+            ->getQuery()->getResult();
     }
 
     // /**

@@ -11,6 +11,7 @@ use App\Entity\Town;
 use App\Form\PatientRegisterType;
 use App\Form\TherapistRegisterType;
 use App\Repository\DepartmentRepository;
+use App\Repository\PatientRepository;
 use App\Repository\TherapistRepository;
 use App\Repository\TownRepository;
 use App\Repository\UserRepository;
