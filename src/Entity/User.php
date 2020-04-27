@@ -17,9 +17,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class User implements UserInterface
 {
     const USER_ROLE = [
-        'ROLE_PATIENT' => "Demandeur",
-        'ROLE_THERAPIST' => "Praticien",
+        'ROLE_PATIENT' => "Demandeur.se",
+        'ROLE_THERAPIST' => "Praticien.ne",
         'ROLE_MANAGER' => "Manager"
+    ];
+
+    const PHONE_PREFIX = [
+        'fr' => '+33 ',
+        'be' => '+32 ',
+        'lu' => '+352 ',
+        'ch' => '+41 '
     ];
 
     /**
@@ -284,7 +291,7 @@ class User implements UserInterface
 
     public function getPhoneNumber(): ?string
     {
-        return $this->phoneNumber;
+        return self::PHONE_PREFIX[$this->country] . $this->phoneNumber;
     }
 
     public function setPhoneNumber(string $phoneNumber): void
