@@ -36,6 +36,7 @@
                     <th>Prénom</th>
                     <th>Validé</th>
                     <th>Changer le role</th>
+                    <th>Supprimer le compte</th>
                 </tr>
                 </thead>
                 {% if users|length %}
@@ -64,9 +65,11 @@
                                         {% endif %}
                                     </select>
                                     <input type="hidden" name="user_id" value="{{ u.id }}">
-                                    <button type="submit" class="btn btn-primary">Mettre à jour le rôle</button>
+                                    <button type="submit" class="btn btn-primary">Mettre à jour</button>
                                 </form>
-                                <a href="{{ path('manager_delete_account_by_id', {'id': u.id}) }}" class="btn btn-danger">Supprimer ce compte</a>
+                            </td>
+                            <td>
+                                <a href="{{ path('manager_delete_account_by_id', {'id': u.id}) }}" class="btn btn-danger"><i class="fa fa-times"></i></a> (action directe et irréversible)
                             </td>
                         </tr>
                     {% endfor %}
@@ -75,6 +78,7 @@
                     <p>Aucun utilisateur trouvé pour ce-s filtre-s.</p>
                 {% endif %}
             </table>
+            {{ knp_pagination_render(users) }}
         </div>
     </div>
 {% endblock %}

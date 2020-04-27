@@ -88,10 +88,38 @@ class ManagerController extends AbstractController
      * @ParamConverter(name="id", class="App\Entity\User")
      * @return RedirectResponse
      */
-    public function resendEmailValidation(User $user)
+    public function resendEmailValidation(User $user, MailerFactory $mailerFactory)
     {
-        $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette fonctionnalité.");
-        return $this->redirectToRoute('manager_new_users');
+        $this->denyAccessUnlessGranted("ROLE_MANAGER", null, "Vous n'avez pas accès à cette fonctionnalité.");
+        if ($user instanceof User && $user->getEmailToken() !== '' && !$user->isActive()) {
+            if (in_array("ROLE_THERAPIST", $user->getRoles())) {
+                $mailerFactory->createAndSend(
+                    "Validation de votre inscription",
+                    $user->getEmail(),
+                    'accueil@enlienavecvous.org',
+                    $this->renderView(
+                        'email/therapist_registration.html.twig',
+                        ['email_token' => $user->getEmailToken(), 'project_url' => $_ENV['PROJECT_URL']]
+                    )
+                );
+            } else {
+                $mailerFactory->createAndSend(
+                    "Validation de votre inscription",
+                    $user->getEmail(),
+                    'accueil@enlienavecvous.org',
+                    $this->renderView(
+                        'email/patient_registration.html.twig',
+                        ['email_token' => $user->getEmailToken(), 'project_url' => $_ENV['PROJECT_URL']]
+                    )
+                );
+            }
+
+            $this->addFlash('success', "Email de validation réenvoyé.");
+        } else {
+            $this->addFlash('error', "Utilisateur non trouvé ou déjà actif.");
+        }
+
+        return $this->redirectToRoute('manager_users_waiting');
     }
     /**
      * @Route(path="/manage-users", name="manager_manage_users", defaults={"page"=1})
@@ -337,7 +365,7 @@ class ManagerController extends AbstractController
             $this->addFlash('info', "Vous avez essayé de supprimer votre compte...");
             return $this->redirectToRoute('manager_manage_users');
         }
-        if ($user instanceof User) { // add current user check
+        if ($user instanceof User) {
             // send email account deletion
             $mailerFactory->createAndSend(
                 "Suppression de votre compte",
@@ -349,9 +377,11 @@ class ManagerController extends AbstractController
             $manager->remove($user);
             $manager->flush();
             $this->addFlash('success', "Ce compte a été correctement supprimé.");
-            return $this->redirectToRoute('app_logout');
+            return $this->redirectToRoute('manager_manage_users');
+        } else {
+            $this->addFlash('error', "Cet utilisateur n'existe pas.");
+            return $this->redirectToRoute('manager_manage_users');
         }
-        return $this->redirectToRoute('manager_manage_users');
     }
 
     private function getCurrentUser(): Therapist
