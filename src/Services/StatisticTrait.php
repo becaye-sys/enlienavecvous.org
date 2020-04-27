@@ -28,7 +28,7 @@ trait StatisticTrait
 
     public function getFunFacts(): array
     {
-        $happyHelped = sizeof($this->patientRepository->findBy(['isActive' => true]));
+        $happyHelped = sizeof($this->patientRepository->findHelped());
         $successMissions = sizeof($this->appointmentRepository->findBy(['status' => Appointment::STATUS_HONORED]));
         $volunteers = sizeof($this->therapistRepository->findBy(['isActive' => true]));
         return [

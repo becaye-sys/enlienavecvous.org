@@ -18,6 +18,6 @@ class SettingDebugToolbarEventSubscriber implements EventSubscriberInterface
     public function onKernelResponse(ResponseEvent $event)
     {
         $response = $event->getResponse();
-        $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
+        //$response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
     }
 }

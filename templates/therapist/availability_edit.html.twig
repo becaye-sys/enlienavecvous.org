@@ -1,6 +1,8 @@
 {% extends "account_layout.html.twig" %}
 
 {% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('therapist_availabilities') }}
 {% endblock %}
 
 {% set form = appointment_form %}
@@ -41,4 +43,5 @@
 {% endblock %}
 
 {% block javascripts %}
+    {{ encore_entry_script_tags('therapist_availabilities') }}
 {% endblock %}

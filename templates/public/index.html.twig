@@ -116,29 +116,31 @@
     <!-- Divider: Funfact -->
     <section class="divider parallax layer-overlay overlay-theme-colored" data-bg-img="" data-parallax-ratio="0.7">
         <div class="container pt-90 pb-90">
-            <div class="row">
-                <div class="col-xs-12 col-sm-4 col-md-4 mb-md-50">
-                    <div class="funfact text-center">
-                        <i class="pe-7s-smile mt-5 text-white"></i>
-                        <h2 data-animation-duration="2000" data-value="{{ fun_facts['happy_helped'] }}" class="animate-number text-white font-42 font-weight-500 mt-0 mb-0">0</h2>
-                        <h5 class="text-white text-uppercase font-weight-600">Personnes aidées</h5>
+            {% if fun_facts is defined %}
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4 col-md-4 mb-md-50">
+                        <div class="funfact text-center">
+                            <i class="pe-7s-smile mt-5 text-white"></i>
+                            <h2 data-animation-duration="1000" data-value="{{ fun_facts['happy_helped'] }}" class="animate-number text-white font-42 font-weight-500 mt-0 mb-0">0</h2>
+                            <h5 class="text-white text-uppercase font-weight-600">Personnes aidées</h5>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 mb-md-50">
+                        <div class="funfact text-center">
+                            <i class="pe-7s-rocket mt-5 text-white"></i>
+                            <h2 data-animation-duration="1000" data-value="{{ fun_facts['success_missions'] }}" class="animate-number text-white font-42 font-weight-500 mt-0 mb-0">0</h2>
+                            <h5 class="text-white text-uppercase font-weight-600">Rendez-vous honorés</h5>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4 mb-md-50">
+                        <div class="funfact text-center">
+                            <i class="pe-7s-add-user mt-5 text-white"></i>
+                            <h2 data-animation-duration="1000" data-value="{{ fun_facts['volunteer_reached'] }}" class="animate-number text-white font-42 font-weight-500 mt-0 mb-0">0</h2>
+                            <h5 class="text-white text-uppercase font-weight-600">Praticien.e.s volontaires</h5>
+                        </div>
                     </div>
                 </div>
-                <div class="col-xs-12 col-sm-4 col-md-4 mb-md-50">
-                    <div class="funfact text-center">
-                        <i class="pe-7s-rocket mt-5 text-white"></i>
-                        <h2 data-animation-duration="2000" data-value="{{ fun_facts['success_missions'] }}" class="animate-number text-white font-42 font-weight-500 mt-0 mb-0">0</h2>
-                        <h5 class="text-white text-uppercase font-weight-600">Rendez-vous honorés</h5>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-4 col-md-4 mb-md-50">
-                    <div class="funfact text-center">
-                        <i class="pe-7s-add-user mt-5 text-white"></i>
-                        <h2 data-animation-duration="2000" data-value="{{ fun_facts['volunteer_reached'] }}" class="animate-number text-white font-42 font-weight-500 mt-0 mb-0">0</h2>
-                        <h5 class="text-white text-uppercase font-weight-600">Praticiens volontaires</h5>
-                    </div>
-                </div>
-            </div>
+            {% endif %}
         </div>
     </section>
 {% endblock %}
@@ -147,97 +149,5 @@
     {{ parent() }}
     <script src="{{ asset('js/revolution-slider/js/jquery.themepunch.tools.min.js') }}"></script>
     <script src="{{ asset('js/revolution-slider/js/jquery.themepunch.revolution.min.js') }}"></script>
-    <script>
-        $(document).ready(function(e) {
-            $(".rev_slider_default").revolution({
-                sliderType:"standard",
-                sliderLayout: "auto",
-                dottedOverlay: "none",
-                delay: 5000,
-                navigation: {
-                    keyboardNavigation: "on",
-                    keyboard_direction: "horizontal",
-                    mouseScrollNavigation: "off",
-                    onHoverStop: "on",
-                    touch: {
-                        touchenabled: "on",
-                        swipe_threshold: 75,
-                        swipe_min_touches: 1,
-                        swipe_direction: "horizontal",
-                        drag_block_vertical: false
-                    },
-                    arrows: {
-                        style:"zeus",
-                        enable:false,
-                        hide_onmobile:true,
-                        hide_under:600,
-                        hide_onleave:true,
-                        hide_delay:200,
-                        hide_delay_mobile:1200,
-                        tmp:'<div class="tp-title-wrap">    <div class="tp-arr-imgholder"></div> </div>',
-                        left: {
-                            h_align:"left",
-                            v_align:"center",
-                            h_offset:30,
-                            v_offset:0
-                        },
-                        right: {
-                            h_align:"right",
-                            v_align:"center",
-                            h_offset:30,
-                            v_offset:0
-                        }
-                    },
-                    bullets: {
-                        enable:false,
-                        hide_onmobile:true,
-                        hide_under:600,
-                        style:"metis",
-                        hide_onleave:true,
-                        hide_delay:200,
-                        hide_delay_mobile:1200,
-                        direction:"horizontal",
-                        h_align:"center",
-                        v_align:"bottom",
-                        h_offset:0,
-                        v_offset:30,
-                        space:5,
-                        tmp:'<span class="tp-bullet-img-wrap">  <span class="tp-bullet-image"></span></span><span class="tp-bullet-title">Titre</span>'
-                    }
-                },
-                responsiveLevels: [1240, 1024, 778],
-                visibilityLevels: [1240, 1024, 778],
-                gridwidth: [1170, 1024, 778, 480],
-                gridheight: [550, 600, 700, 720],
-                lazyType: "none",
-                parallax: {
-                    origo: "slidercenter",
-                    speed: 1000,
-                    levels: [5, 10, 15, 20, 25, 30, 35, 40, 45, 46, 47, 48, 49, 50, 100, 55],
-                    type: "scroll"
-                },
-                shadow: 0,
-                spinner: "off",
-                stopLoop: "on",
-                stopAfterLoops: 0,
-                stopAtSlide: -1,
-                shuffle: "off",
-                autoHeight: "off",
-                fullScreenAutoWidth: "off",
-                fullScreenAlignForce: "off",
-                fullScreenOffsetContainer: "",
-                fullScreenOffset: "0",
-                hideThumbsOnMobile: "off",
-                hideSliderAtLimit: 0,
-                hideCaptionAtLimit: 0,
-                hideAllCaptionAtLilmit: 0,
-                debugMode: false,
-                fallbacks: {
-                    simplifyAll: "off",
-                    nextSlideOnWindowFocus: "off",
-                    disableFocusListener: false,
-                }
-            });
-        });
-    </script>
+    <script src="{{ asset('js/home_slider.js') }}"></script>
 {% endblock %}
