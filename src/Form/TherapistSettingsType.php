@@ -32,7 +32,10 @@ class TherapistSettingsType extends AbstractType
             )
             ->add(
                 'displayName',
-                TextType::class
+                TextType::class,
+                [
+                    'required' => false
+                ]
             )
             ->add(
                 'phoneNumber',

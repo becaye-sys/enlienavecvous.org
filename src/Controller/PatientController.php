@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\Entity\Appointment;
+use App\Entity\Department;
 use App\Entity\History;
 use App\Entity\Patient;
 use App\Entity\Therapist;
@@ -12,6 +13,7 @@ use App\Entity\User;
 use App\Form\ChangePasswordType;
 use App\Form\PatientSettingsType;
 use App\Repository\AppointmentRepository;
+use App\Repository\DepartmentRepository;
 use App\Repository\HistoryRepository;
 use App\Repository\PatientRepository;
 use App\Services\HistoryHelper;
@@ -231,6 +233,7 @@ class PatientController extends AbstractController
     public function settings(
         Request $request,
         EntityManagerInterface $manager,
+        DepartmentRepository $departmentRepository,
         MailerFactory $mailerFactory
     )
     {
@@ -243,6 +246,17 @@ class PatientController extends AbstractController
         if ($request->isMethod('POST') && $settingsType->isSubmitted() && $settingsType->isValid()) {
             /** @var Patient $user */
             $user = $settingsType->getData();
+            if ($request->request->get('country') !== null) {
+                $user->setCountry($request->request->get('country'));
+            }
+            if ($request->request->get('department') !== null) {
+                $department = $departmentRepository->find($request->request->get('department'));
+                if ($department instanceof Department) {
+                    $user->setDepartment($department);
+                } else {
+                    $user->setScalarDepartment($department);
+                }
+            }
             if ($user->getEmail() !== $prevEmail) {
                 $user->setUniqueEmailToken();
                 $mailerFactory->createAndSend(

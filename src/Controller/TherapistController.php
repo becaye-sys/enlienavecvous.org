@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\Entity\Appointment;
+use App\Entity\Department;
 use App\Entity\History;
 use App\Entity\Patient;
 use App\Entity\Therapist;
@@ -13,6 +14,7 @@ use App\Form\ChangePasswordType;
 use App\Form\TherapistAppointmentCancellationMessageType;
 use App\Form\TherapistSettingsType;
 use App\Repository\AppointmentRepository;
+use App\Repository\DepartmentRepository;
 use App\Repository\HistoryRepository;
 use App\Repository\TherapistRepository;
 use App\Services\HistoryHelper;
@@ -330,6 +332,7 @@ class TherapistController extends AbstractController
     public function settings(
         Request $request,
         EntityManagerInterface $manager,
+        DepartmentRepository $departmentRepository,
         MailerFactory $mailerFactory
     )
     {
@@ -342,6 +345,17 @@ class TherapistController extends AbstractController
         if ($request->isMethod('POST') && $settingsType->isSubmitted() && $settingsType->isValid()) {
             /** @var Therapist $user */
             $user = $settingsType->getData();
+            if ($request->request->get('country') !== null) {
+                $user->setCountry($request->request->get('country'));
+            }
+            if ($request->request->get('department') !== null) {
+                $department = $departmentRepository->find($request->request->get('department'));
+                if ($department instanceof Department) {
+                    $user->setDepartment($department);
+                } else {
+                    $user->setScalarDepartment($department);
+                }
+            }
             if ($user->getEmail() !== $prevEmail) {
                 $user->setUniqueEmailToken();
                 $mailerFactory->createAndSend(
