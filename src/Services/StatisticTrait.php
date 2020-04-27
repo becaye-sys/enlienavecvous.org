@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Entity\Appointment;
 use App\Repository\AppointmentRepository;
 use App\Repository\PatientRepository;
 use App\Repository\TherapistRepository;
@@ -27,12 +28,13 @@ trait StatisticTrait
 
     public function getFunFacts(): array
     {
+        $happyHelped = sizeof($this->patientRepository->findBy(['isActive' => true]));
+        $successMissions = sizeof($this->appointmentRepository->findBy(['status' => Appointment::STATUS_HONORED]));
         $volunteers = sizeof($this->therapistRepository->findBy(['isActive' => true]));
         return [
-            'happy_helped' => 0,
-            'success_missions' => 0,
+            'happy_helped' => $happyHelped,
+            'success_missions' => $successMissions,
             'volunteer_reached' => $volunteers,
-            'globalization_work' => 0
         ];
     }
 }
