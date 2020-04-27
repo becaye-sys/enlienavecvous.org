@@ -95,15 +95,15 @@ class PatientController extends AbstractController
             $appointment->setCancelled(true);
             // add booking cancel history
             $historyHelper->addHistoryItem(History::ACTION_CANCELLED_BY_PATIENT, $appointment);
-            $appointment->setPatient(null);
-            $appointment->setStatus(Appointment::STATUS_AVAILABLE);
-            $entityManager->flush();
             $mailerFactory->createAndSend(
                 "Annulation du rendez-vous",
                 $appointment->getTherapist()->getEmail(),
-                'no-reply@onestlapourvous.org',
+                null,
                 $this->renderView('email/appointment_cancelled_from_patient.html.twig', ['appointment' => $appointment])
             );
+            $appointment->setPatient(null);
+            $appointment->setStatus(Appointment::STATUS_AVAILABLE);
+            $entityManager->flush();
             $this->addFlash('info', "Rendez-vous annulé. Vous allez recevoir un mail de confirmation de l'annulation.");
             return $this->redirectToRoute('patient_appointments');
         } else {
@@ -188,14 +188,14 @@ class PatientController extends AbstractController
             $mailerFactory->createAndSend(
                 "Confirmation de rendez-vous",
                 $appointment->getPatient()->getEmail(),
-                'no-reply@onestlapourvous.org',
+                null,
                 $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment])
             );
 
             $mailerFactory->createAndSend(
                 "Confirmation de rendez-vous",
                 $appointment->getTherapist()->getEmail(),
-                'no-reply@onestlapourvous.org',
+                null,
                 $this->renderView('email/appointment_booked_therapist.html.twig', ['appointment' => $appointment])
             );
             $this->addFlash('success', "Votre rendez-vous est confirmé, un mail de confirmation vous a été envoyé !");
@@ -262,7 +262,7 @@ class PatientController extends AbstractController
                 $mailerFactory->createAndSend(
                     "Changement de votre adresse email",
                     $user->getEmail(),
-                    'no-reply@onestlapourvous.org',
+                    null,
                     $this->renderView(
                         'email/user_change_email.html.twig',
                         ['email_token' => $user->getEmailToken(), 'project_url' => $_ENV['PROJECT_URL']]
@@ -336,7 +336,7 @@ class PatientController extends AbstractController
                 $mailerFactory->createAndSend(
                     "Suppression de votre compte",
                     $user->getEmail(),
-                    'no-reply@onestlapourvous.org',
+                    null,
                     $this->renderView('email/user_delete_account.html.twig')
                 );
                 // delete user

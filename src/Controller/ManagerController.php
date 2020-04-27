@@ -370,7 +370,7 @@ class ManagerController extends AbstractController
             $mailerFactory->createAndSend(
                 "Suppression de votre compte",
                 $user->getEmail(),
-                'no-reply@onestlapourvous.org',
+                'accueil@enlienavecvous.org',
                 $this->renderView('email/user_delete_account.html.twig')
             );
             // delete user

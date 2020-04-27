@@ -161,7 +161,7 @@ class TherapistController extends AbstractController
             $mailer->createAndSend(
                 "Annulation du rendez-vous",
                 $patientEmail,
-                'no-reply@onestlapourvous.org',
+                null,
                 $this->renderView(
                     'email/appointment_cancelled_from_therapist.html.twig',
                     [
@@ -361,7 +361,7 @@ class TherapistController extends AbstractController
                 $mailerFactory->createAndSend(
                     "Changement de votre adresse email",
                     $user->getEmail(),
-                    'no-reply@onestlapourvous.org',
+                    null,
                     $this->renderView(
                         'email/user_change_email.html.twig',
                         ['email_token' => $user->getEmailToken(), 'project_url' => $_ENV['PROJECT_URL']]
@@ -438,7 +438,7 @@ class TherapistController extends AbstractController
                 $mailerFactory->createAndSend(
                     "Suppression de votre compte",
                     $user->getEmail(),
-                    'no-reply@onestlapourvous.org',
+                    null,
                     $this->renderView('email/user_delete_account.html.twig')
                 );
                 // delete user

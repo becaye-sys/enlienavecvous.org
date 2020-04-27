@@ -291,7 +291,7 @@ class User implements UserInterface
 
     public function getPhoneNumber(): ?string
     {
-        return self::PHONE_PREFIX[$this->country] . $this->phoneNumber;
+        return $this->phoneNumber;
     }
 
     public function setPhoneNumber(string $phoneNumber): void

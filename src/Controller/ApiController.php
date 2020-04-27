@@ -119,14 +119,14 @@ class ApiController extends AbstractController
         $mailer->createAndSend(
             "Confirmation de rendez-vous",
             $appointment->getPatient()->getEmail(),
-            'no-reply@onestlapourvous.org',
+            'accueil@enlienavecvous.org',
             $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment])
         );
 
         $mailer->createAndSend(
             "Confirmation de rendez-vous",
             $appointment->getTherapist()->getEmail(),
-            'no-reply@onestlapourvous.org',
+            'accueil@enlienavecvous.org',
             $this->renderView('email/appointment_booked_therapist.html.twig', ['appointment' => $appointment])
         );
 
@@ -162,14 +162,14 @@ class ApiController extends AbstractController
         $mailer->createAndSend(
             "Confirmation de rendez-vous",
             $appointment->getPatient()->getEmail(),
-            'no-reply@onestlapourvous.org',
+            'accueil@enlienavecvous.org',
             $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment])
         );
 
         $mailer->createAndSend(
             "Confirmation de rendez-vous",
             $appointment->getTherapist()->getEmail(),
-            'no-reply@onestlapourvous.org',
+            'accueil@enlienavecvous.org',
             $this->renderView('email/appointment_booked_therapist.html.twig', ['appointment' => $appointment])
         );
 
