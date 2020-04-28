@@ -98,7 +98,8 @@ class ManagerController extends AbstractController
                 ]
             );
         }
-        $newUsers = $userRepository->findAll();
+
+        $newUsers = $userRepository->findTodayRegistered();
         $paginated = $paginator->paginate(
             $newUsers,
             $request->query->getInt('page', 1),

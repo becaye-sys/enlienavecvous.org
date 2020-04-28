@@ -35,6 +35,8 @@
                     <th>Nom</th>
                     <th>Prénom</th>
                     <th>Validé</th>
+                    <th>Pays</th>
+                    <th>Département</th>
                     <th>Changer le role</th>
                     <th>Supprimer le compte</th>
                 </tr>
@@ -52,6 +54,16 @@
                             <td>{{ u.lastName|upper }}</td>
                             <td>{{ u.firstName|capitalize }}</td>
                             <td>{{ u.isActive }}</td>
+                            <td>
+                                {% if u.country is defined %}
+                                    {{ constant('App\\Entity\\Department::COUNTRIES')[u.country] }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if u.department is defined %}
+                                    {{ u.department.name }}
+                                {% endif %}
+                            </td>
                             <td>
                                 <form action="{{ path('manager_manage_users') }}" method="post">
                                     <select name="user_role" id="user_role">

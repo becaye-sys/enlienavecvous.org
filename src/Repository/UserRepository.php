@@ -51,6 +51,19 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ;
     }
 
+    public function findTodayRegistered()
+    {
+        $dateToday = new \DateTime('now');
+        $from = new \DateTime($dateToday->format("Y-m-d")." 00:00:00");
+        $to = new \DateTime($dateToday->format("Y-m-d")." 23:59:59");
+        return $this->createQueryBuilder('u')
+            ->where('u.createdAt BETWEEN :from AND :to')
+            ->setParameter('from', $from)
+            ->setParameter('to', $to)
+            ->getQuery()->getResult()
+            ;
+    }
+
     public function findByParams(array $params = null)
     {
         $query = $this->createQueryBuilder('u')
