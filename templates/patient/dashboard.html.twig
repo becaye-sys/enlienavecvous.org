@@ -1,21 +1,18 @@
 {% extends "account_layout.html.twig" %}
 
-{% block body %}
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Dashboard</h1>
-        {#<div class="btn-toolbar mb-2 mb-md-0">
-            <div class="btn-group mr-2">
-                <button class="btn btn-sm btn-outline-secondary">Share</button>
-                <button class="btn btn-sm btn-outline-secondary">Export</button>
-            </div>
-            <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                <span data-feather="calendar"></span>
-                This week
-            </button>
-        </div>#}
+{% block heading %}
+    <div class="page-title-icon">
+        <i class="pe-7s-home icon-gradient bg-mean-fruit">
+        </i>
     </div>
-    <div class="container">
-        <h2>Pour votre premier rendez-vous :</h2>
+    <div>
+        Tableau de bord
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <p>Pour votre premier rendez-vous :</p>
         <p>
             Choisissez l’horaire qui vous convient en fonction de la date et de la localité.
         </p>
@@ -37,7 +34,7 @@
             conditions définies par le/la thérapeute dans le cadre de son activité régulière (régularité, tarif, etc.).
         </p>
     </div>
-
 {% endblock %}
+
 {% block javascripts %}
 {% endblock %}

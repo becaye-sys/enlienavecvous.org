@@ -8,6 +8,9 @@ use App\Entity\Department;
 use App\Entity\Patient;
 use App\Entity\Therapist;
 use App\Entity\Town;
+use App\Entity\User;
+use App\Form\ForgotPasswordType;
+use App\Form\PasswordResetType;
 use App\Form\PatientRegisterType;
 use App\Form\TherapistRegisterType;
 use App\Repository\DepartmentRepository;
@@ -105,6 +108,102 @@ class PublicController extends AbstractController
             [
                 'patient_register_form' => $patientForm->createView(),
                 'https_url' => getenv('project_url')."/demander-de-l-aide"
+            ]
+        );
+    }
+
+    /**
+     * @Route(path="/mot-de-passe/oublie", name="forgot_password")
+     * @param Request $request
+     * @param UserRepository $repository
+     */
+    public function forgotPassword(
+        Request $request,
+        UserRepository $repository,
+        MailerFactory $mailerFactory, EntityManagerInterface $manager
+    )
+    {
+        $form = $this->createForm(ForgotPasswordType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $email = $form->getData()['email'];
+            $user = $repository->findOneBy(['email' => $email]);
+            if ($user instanceof User) {
+                $user->setPasswordResetToken(uniqid('pwd_reset_', true));
+                $manager->flush();
+                $mailerFactory->createAndSend(
+                    "Réinitialisation de votre mot de passe",
+                    $user->getEmail(),
+                    null,
+                    $this->renderView(
+                        'email/user_reset_email.html.twig',
+                        [
+                            'project_url' => $_ENV['PROJECT_URL'],
+                            'token' => $user->getPasswordResetToken()
+                        ]
+                    )
+                );
+                $this->addFlash('success', "Un email vous a été envoyé, pensez à vérifier vos spams.");
+                return $this->redirectToRoute('forgot_password');
+            } else {
+                $this->addFlash('error', "Nous n'avons pas trouvé votre adresse email.");
+                return $this->redirectToRoute('forgot_password');
+            }
+        }
+        return $this->render(
+            'security/forgot_password.html.twig',
+            [
+                'form' => $form->createView()
+            ]
+        );
+    }
+
+    /**
+     * @Route(path="/mot-de-passe/reinitialisation", name="password_reset")
+     * @param Request $request
+     * @param UserRepository $userRepository
+     * @param MailerFactory $mailerFactory
+     * @param EntityManagerInterface $manager
+     * @param UserPasswordEncoderInterface $encoder
+     */
+    public function resetPassword(
+        Request $request,
+        UserRepository $userRepository,
+        MailerFactory $mailerFactory,
+        EntityManagerInterface $manager,
+        UserPasswordEncoderInterface $encoder
+    )
+    {
+        $token = $request->query->get('token');
+        $user = $userRepository->findOneBy(['passwordResetToken' => $token]);
+        if (!$user instanceof User || null === $user->getEmail()) {
+            $this->addFlash('error', "Cet utilisateur n'existe pas");
+            return $this->redirectToRoute('index');
+        }
+        $form = $this->createForm(PasswordResetType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $pass = $form->getData()['password'];
+            $encoded = $encoder->encodePassword($user, $pass);
+            $user->setPassword($encoded);
+            $user->setPasswordResetToken(null);
+            $mailerFactory->createAndSend(
+                "Mot de passe réinitialisé",
+                $user->getEmail(),
+                null,
+                $this->renderView(
+                    'email/user_reset_password_success.html.twig'
+                )
+            );
+            $manager->flush();
+            $this->addFlash('success', "Vous pouvez désormais vous connecter avec votre nouveau mot de passe.");;
+            return $this->redirectToRoute('app_login');
+        }
+        return $this->render(
+            'security/reset_password.html.twig',
+            [
+                'form' => $form->createView()
             ]
         );
     }

@@ -4,60 +4,65 @@
     {{ parent() }}
 {% endblock %}
 
+{% block heading %}
+    <div class="page-title-icon">
+        <i class="pe-7s-settings icon-gradient bg-mean-fruit">
+        </i>
+    </div>
+    <div>
+        Paramètres
+    </div>
+{% endblock %}
+
 {% set form = settings_form %}
 
 {% block body %}
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Paramètres</h1>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 order-md-1">
-                <h4 class="mb-3">Mes informations</h4>
-                {{ form_start(form) }}
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="firstName">Prénom</label>
-                        {{ form_widget(form.firstName, {'attr': {'class': 'form-control'}}) }}
-                        <div class="invalid-feedback">
-                            Valid first name is required.
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="lastName">Nom de famille</label>
-                        {{ form_widget(form.lastName, {'attr': {'class': 'form-control'}}) }}
-                        <div class="invalid-feedback">
-                            Valid last name is required.
-                        </div>
+    <div class="row">
+        <div class="col-md-8 order-md-1">
+            <h4 class="mb-3">Mes informations</h4>
+            {{ form_start(form) }}
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="firstName">Prénom</label>
+                    {{ form_widget(form.firstName, {'attr': {'class': 'form-control'}}) }}
+                    <div class="invalid-feedback">
+                        Valid first name is required.
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="email">E-mail <span class="text-muted">(Un mail de confirmation comme à l'inscription vous sera envoyé afin de confirmer votre nouvelle adresse email)</span></label>
-                        {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
-                        <div class="invalid-feedback">
-                            Please enter a valid email address for shipping updates.
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="phoneNumber">Téléphone </label>
-                        {{ form_widget(form.phoneNumber, {'attr': {'class': 'form-control'}}) }}
-                        <div class="invalid-feedback">
-                            Please enter a valid phone number.
-                        </div>
+                <div class="col-md-6 mb-3">
+                    <label for="lastName">Nom de famille</label>
+                    {{ form_widget(form.lastName, {'attr': {'class': 'form-control'}}) }}
+                    <div class="invalid-feedback">
+                        Valid last name is required.
                     </div>
                 </div>
-                {% if app.user.country is not null and app.user.department is not null %}
-                    Pays enregistré : {{ constant('App\\Entity\\Department::COUNTRIES')[app.user.country] }}
-                    <br>
-                    Département enregistré : {{ app.user.department.name }}
-                {% else %}
-                    <div id="geolocation"></div>
-                {% endif %}
-
-                <button class="btn btn-primary btn-lg btn-block" type="submit">Valider mes modifications</button>
-                {{ form_end(form) }}
             </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="email">E-mail <span class="text-muted">(Un mail de confirmation comme à l'inscription vous sera envoyé afin de confirmer votre nouvelle adresse email)</span></label>
+                    {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                    <div class="invalid-feedback">
+                        Please enter a valid email address for shipping updates.
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="phoneNumber">Téléphone </label>
+                    {{ form_widget(form.phoneNumber, {'attr': {'class': 'form-control'}}) }}
+                    <div class="invalid-feedback">
+                        Please enter a valid phone number.
+                    </div>
+                </div>
+            </div>
+            {% if app.user.country is not null and app.user.department is not null %}
+                Pays enregistré : {{ constant('App\\Entity\\Department::COUNTRIES')[app.user.country] }}
+                <br>
+                Département enregistré : {{ app.user.department.name }}
+            {% else %}
+                <div id="geolocation"></div>
+            {% endif %}
+
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Valider mes modifications</button>
+            {{ form_end(form) }}
         </div>
     </div>
 {% endblock %}

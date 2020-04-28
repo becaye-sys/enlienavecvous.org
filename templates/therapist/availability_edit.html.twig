@@ -5,12 +5,19 @@
     {{ encore_entry_link_tags('therapist_availabilities') }}
 {% endblock %}
 
+{% block heading %}
+    <div class="page-title-icon">
+        <i class="pe-7s-clock icon-gradient bg-mean-fruit">
+        </i>
+    </div>
+    <div>
+        Modification d'une disponibilité
+    </div>
+{% endblock %}
+
 {% set form = appointment_form %}
 
 {% block body %}
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Disponibilité</h1>
-    </div>
     <div class="container-fluid" style="margin-top: 80px;">
         {{ form_start(form) }}
         <div class="row">

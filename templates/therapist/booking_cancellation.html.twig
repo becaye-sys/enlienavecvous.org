@@ -1,23 +1,31 @@
 {% extends "account_layout.html.twig" %}
 
+{% block heading %}
+    <div class="page-title-icon">
+        <i class="pe-7s-clock icon-gradient bg-mean-fruit">
+        </i>
+    </div>
+    <div>
+        Annulation d'un rendez-vous
+    </div>
+{% endblock %}
+
 {% set form = booking_cancellation_form %}
 
 {% block body %}
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Annulation d'un rendez-vous</h1>
-    </div>
     <div class="container">
-    <div class="row">
-        <div class="col-md-8 order-md-1">
-            {{ form_start(form) }}
-            <div class="row">
-                <div class="col-md-12 mb-3">
-                    <label for="firstName">Message à transmettre</label>
-                    {{ form_widget(form.cancelMessage, {'attr': {'class': 'form-control'}}) }}
+        <div class="row">
+            <div class="col-md-8 order-md-1">
+                {{ form_start(form) }}
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label for="firstName">Message à transmettre</label>
+                        {{ form_widget(form.cancelMessage, {'attr': {'class': 'form-control'}}) }}
+                    </div>
                 </div>
+                <button class="btn btn-primary btn-lg btn-block" type="submit">Envoyer le message et annuler le rendez-vous</button>
+                {{ form_end(form) }}
             </div>
-            <button class="btn btn-primary btn-lg btn-block" type="submit">Envoyer le message et annuler le rendez-vous</button>
-            {{ form_end(form) }}
         </div>
     </div>
 {% endblock %}
