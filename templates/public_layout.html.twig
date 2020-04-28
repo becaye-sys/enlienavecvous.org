@@ -11,7 +11,8 @@
     <!-- Stylesheet -->
     <!-- <link href="css/style.css" rel="stylesheet" type="text/css"> -->
     {% block stylesheets %}
-        {{ encore_entry_link_tags('public_layout') }}
+        <link rel="stylesheet" href="{{ asset('build/public.css') }}">
+        {#{{ encore_entry_link_tags('public') }}#}
     {% endblock %}
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->

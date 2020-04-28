@@ -29,7 +29,7 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
-    .addEntry('app', './assets/js/app.js')
+    .addStyleEntry('public', './assets/public/less/style-main.less')
     .addEntry('public_layout', './assets/js/public_layout.js')
     .addEntry('patient_search_app', './assets/js/patient_search_app.js')
     .addEntry('therapist_availabilities', './assets/js/therapist_availabilities.js')
@@ -66,6 +66,7 @@ Encore
 
     // enables Sass/SCSS support
     //.enableSassLoader()
+    .enableLessLoader(lessLoaderOptionsCallback = () => {})
 
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
@@ -84,7 +85,6 @@ Encore
 ;
 Encore.configureDefinePlugin(options => {
     options["process.env"].API_URL = process.env.API_URL;
-    console.log(options["process.env"].API_URL);
 });
 
 module.exports = Encore.getWebpackConfig();
