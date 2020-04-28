@@ -17,7 +17,8 @@ function PatientSearch() {
     const [loading, setLoading] = useState(true);
     const [isConfirmed, setIsConfirmed] = useState(false);
     const [user, setUser] = useState({
-        id: undefined
+        id: document.querySelector('div#patient_search_app').dataset.user,
+        department: document.querySelector('div#patient_search_app').dataset.defaultDepartment
     });
     const [appoints, setAppoints] = useState([]);
     const [filtered, setFiltered] = useState([]);
@@ -25,13 +26,9 @@ function PatientSearch() {
     const [departments, setDepartments] = useState([]);
     const [search, setSearch] = useState({
         bookingDate: '',
-        department: document.querySelector('div#patient_search_app').dataset.defaultDepartment,
+        country: document.querySelector('div#patient_search_app').dataset.country,
+        department: '',
     });
-
-    const loadInitState = () => {
-        const userId = document.querySelector('div#patient_search_app').dataset.user;
-        setUser({...user, id: userId});
-    }
 
     const handlePageChange = page => {
         setCurrentPage(page);
@@ -96,17 +93,14 @@ function PatientSearch() {
     }
 
     const updateBookingsByApiFilters = async () => {
-        const bookings = await bookingApi.updateBookingsByFilters(search);
+        const bookings = await bookingApi.updateBookingsByFilters(search, user);
 
         if (bookings.length > 0) {
-            console.log(bookings);
             const appoints = filterWithTherapistDelay(bookings);
             setAppoints(appoints);
-            //setLoading(false);
             toast.info("Disponibilités mises à jour");
         } else {
             setAppoints([]);
-            //setLoading(false);
             toast.info("Pas de disponibilité dans ce département");
         }
     }
@@ -130,15 +124,16 @@ function PatientSearch() {
 
     useEffect(() => {
         setLoading(true);
-        loadInitState();
         getCountryDepartments();
         updateBookingsByApiFilters();
         setLoading(false);
     }, []);
 
     useEffect(() => {
+        setLoading(true);
         updateBookingsByApiFilters();
-    },[search.department, search.displayName]);
+        setLoading(false);
+    },[search.department]);
 
     useEffect(() => {
         updateAppointsByUserFilters();

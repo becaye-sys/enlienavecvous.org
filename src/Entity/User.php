@@ -116,6 +116,11 @@ class User implements UserInterface
      */
     protected $department;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $passwordResetToken;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime('now');
@@ -352,6 +357,18 @@ class User implements UserInterface
     public function setDepartment(?Department $department): self
     {
         $this->department = $department;
+
+        return $this;
+    }
+
+    public function getPasswordResetToken(): ?string
+    {
+        return $this->passwordResetToken;
+    }
+
+    public function setPasswordResetToken(?string $passwordResetToken): self
+    {
+        $this->passwordResetToken = $passwordResetToken;
 
         return $this;
     }

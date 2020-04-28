@@ -3,13 +3,19 @@
 {% block stylesheets %}
 {% endblock %}
 
+{% block heading %}
+    <div class="page-title-icon">
+        <i class="pe-7s-loop icon-gradient bg-mean-fruit">
+        </i>
+    </div>
+    <div>
+        Recherche
+    </div>
+{% endblock %}
+
 {% set user = current_user %}
 
 {% block body %}
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Ma recherche</h1>
-    </div>
-
     <div id="patient_search_app" data-user="{{ user.id }}" data-country="{{ user.country }}" data-default-department="{{ user.department.id }}"></div>
 {% endblock %}
 

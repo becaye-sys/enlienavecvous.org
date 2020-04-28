@@ -1,0 +1,12 @@
+{% extends "email_layout.html.twig" %}
+
+{% block body %}
+    <h1>Vous avez demandé à réinitialiser votre mot de passe.</h1>
+
+    <p>Réinitialisez votre mot de passe en cliquant sur le lien ci-dessous :</p>
+    <a href="{{ project_url }}mot-de-passe/reinitialisation?token={{ token }}">{{ project_url }}mot-de-passe/reinitialisation?token={{ token }}</a>
+    <br>
+    <p>Nous avons créé un <a href="https://www.facebook.com/groups/626405607947776" target="_blank">groupe Facebook</a> d'échange entre thérapeutes de la plateforme. Nous vous invitons à rejoindre cet espace pour partager votre expérience et chercher du soutien si besoin.</p>
+    <p>Pour toutes questions d'utilisation de la plateforme vous pouvez nous contacter à :</p>
+    <a href="mailto:contact-therapeutes@enlienavecvous.org">contact-therapeutes@enlienavecvous.org</a>
+{% endblock %}

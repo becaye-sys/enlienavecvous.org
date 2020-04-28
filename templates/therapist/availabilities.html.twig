@@ -5,35 +5,69 @@
     {{ encore_entry_link_tags('therapist_availabilities') }}
 {% endblock %}
 
+{% block heading %}
+    <div class="page-title-icon">
+        <i class="pe-7s-clock icon-gradient bg-mean-fruit">
+        </i>
+    </div>
+    <div>
+        Disponibilités
+    </div>
+{% endblock %}
+
 {% set form = appointment_form %}
 
 {% block body %}
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Disponibilités - {{ total_appointments }}</h1>
-    </div>
-    <div class="container-fluid mt-5">
-        <div class="row">
-            <div class="col-md-2">
-                {% if permission is defined and permission == true %}
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCreateAvailability">
-                        Ajouter un créneau
-                    </button>
-                {% endif %}
-                {% include "_modales/_add_availability_form.html.twig" %}
-            </div>
-            <div class="col-md-4">
-                <form class="form-inline" action="{{ path('therapist_availabilities') }}" method="get" id="table_filter_form">
-                    <fieldset class="form-group">
-                        <label for="date_filter">Filter par date</label>
-                        <input type="date" name="date_filter" id="date_filter" class="form-control" value="{% if filters.date_filter is defined %}{{ filters.date_filter ?: filters.date_filter }}{% endif %}">
-                    </fieldset>
-                </form>
-            </div>
+    <div class="row">
+        <div class="col-md-2">
+            {% if permission is defined and permission == true %}
+                <!-- Button trigger modal -->
+                <button type="button" id="btn_add_availability" class="btn btn-primary" data-toggle="modal" data-target="#modalCreateAvailability">
+                    Ajouter un créneau
+                </button>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            <form class="form-inline" action="{{ path('therapist_availabilities') }}" method="get" id="table_filter_form">
+                <fieldset class="form-group">
+                    <label for="date_filter">Filter par date</label>
+                    <input type="date" name="date_filter" id="date_filter" class="form-control" value="{% if filters.date_filter is defined %}{{ filters.date_filter ?: filters.date_filter }}{% endif %}">
+                </fieldset>
+            </form>
         </div>
     </div>
-    <div class="container-fluid mt-5">
-        <div class="table-responsive">
+    <div class="row mt-5" id="add_availability_form">
+        {{ form_start(form) }}
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                <fieldset class="form-group">
+                    {{ form_label(form.bookingDate) }}
+                    {{ form_widget(form.bookingDate, {'attr': {'class': 'form-control'}}) }}
+                </fieldset>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                <fieldset class="form-group">
+                    {{ form_label(form.bookingStart) }}
+                    {{ form_widget(form.bookingStart, {'attr': {'class': 'booking_start_picker'}}) }}
+                </fieldset>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                <fieldset class="form-group">
+                    {{ form_label(form.bookingEnd) }}
+                    {{ form_widget(form.bookingEnd, {'attr': {'class': 'booking_end_picker'}}) }}
+                </fieldset>
+            </div>
+            <div class="col-md-12 col-sm-6">
+                <fieldset class="form-group">
+                    <button class="btn btn-primary" type="submit">Enregistrer</button>
+                </fieldset>
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+
+    <div class="row mt-5">
+        <div class="table table-responsive">
             <table class="table table-striped table-sm" data-toggle="table" id="availabilitiesTable">
                 <thead>
                 <tr>

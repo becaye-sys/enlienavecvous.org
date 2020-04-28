@@ -1,9 +1,16 @@
 {% extends "account_layout.html.twig" %}
 
-{% block body %}
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Envoi d'un mail à tous les utilisateurs</h1>
+{% block heading %}
+    <div class="page-title-icon">
+        <i class="pe-7s-mail icon-gradient bg-mean-fruit">
+        </i>
     </div>
+    <div>
+        Envoi d'un mail à tous les utilisateurs
+    </div>
+{% endblock %}
+
+{% block body %}
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">

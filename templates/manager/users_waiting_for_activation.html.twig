@@ -1,11 +1,18 @@
 {% extends "account_layout.html.twig" %}
 
-{% block body %}
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Utilisateurs en attente de validation</h1>
+{% block heading %}
+    <div class="page-title-icon">
+        <i class="pe-7s-users icon-gradient bg-mean-fruit">
+        </i>
     </div>
+    <div>
+        Utilisateurs en attente de validation
+    </div>
+{% endblock %}
+
+{% block body %}
     <div class="container-fluid">
-        <div class="table-responsive">
+        <div class="table table-responsive">
             <table class="table table-striped table-sm">
                 <thead>
                 <tr>

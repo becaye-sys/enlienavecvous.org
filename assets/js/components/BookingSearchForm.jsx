@@ -16,6 +16,7 @@ function BookingSearchForm({ handleChange, search, departments }) {
                         <fieldset className="form-group">
                             <label htmlFor="department">Sélectionnez un département :</label>
                             <select defaultValue={search.department} onChange={handleChange} name="department" id="department" className={"form-control"}>
+                                <option value="">Dans tout le pays</option>
                                 {departments.map((d, k) => {
                                     return (
                                         <option
