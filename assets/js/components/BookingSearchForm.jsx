@@ -1,6 +1,6 @@
 import React from "react";
 
-function BookingSearchForm({ handleChange, search, departments, therapists }) {
+function BookingSearchForm({ handleChange, search, departments }) {
     return (
         <form>
             <div className="row">
@@ -8,12 +8,6 @@ function BookingSearchForm({ handleChange, search, departments, therapists }) {
                     <fieldset className="form-group">
                         <label htmlFor="bookingDate">Date</label>
                         <input onChange={handleChange} value={search.bookingDate} type="date" name={"bookingDate"} id={"bookingDate"} className={"form-control"}/>
-                    </fieldset>
-                </div>
-                <div className="col-sm-12 col-md-6 col-lg-3">
-                    <fieldset className="form-group">
-                        <label htmlFor="displayName">Nom ou Prénom</label>
-                        <input onChange={handleChange} value={search.displayName} type="text" name={"displayName"} id={"displayName"} className={"form-control"}/>
                     </fieldset>
                 </div>
                 {

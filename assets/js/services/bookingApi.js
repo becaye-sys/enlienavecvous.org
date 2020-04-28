@@ -33,11 +33,8 @@ async function cancelBooking(id) {
 }
 
 async function updateBookingsByFilters(search) {
-    console.log('department:',search.department)
-    const displayName = search.displayName.length >= 3 ? search.displayName : undefined;
     const params = {
-        department: displayName === undefined ? search.department : undefined,
-        displayName
+        department: search.department
     }
     return await axios
         .post(

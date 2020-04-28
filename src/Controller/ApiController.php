@@ -63,9 +63,7 @@ class ApiController extends AbstractController
     )
     {
         $params = json_decode($request->getContent(), true);
-        dump($params);
         $appointments = $appointmentRepository->findAvailableBookingsByFilters($params);
-        dump($appointments);
         $data = $serializer->serialize($appointments, 'json', ['groups' => ['get_bookings']]);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
@@ -241,7 +239,7 @@ class ApiController extends AbstractController
             ['country' => $request->query->get('country')],
             ['code' => 'ASC']
         );
-        dump($departments);
+
         $data = $serializer->serialize($departments, ['towns','users']);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }

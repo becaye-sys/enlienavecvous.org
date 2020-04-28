@@ -21,29 +21,6 @@ class AppointmentRepository extends ServiceEntityRepository
         parent::__construct($registry, Appointment::class);
     }
 
-    public function findAvailableAppointmentsByParamsSplited(array $params)
-    {
-        $query = $this->createQueryBuilder('a')
-            ->where('a.booked = :booked')
-            ->setParameter('booked', false)
-            ->orderBy('a.bookingDate', 'desc')
-            ;
-
-        if (isset($params['bookingDate'])) {
-            $query->andWhere("a.bookingDate = :bookingDate")
-                ->setParameter('bookingDate', $params['bookingDate']);
-        }
-
-        if (isset($params['location'])) {
-            $query->andWhere('a.location LIKE :location')
-                ->setParameter('location', $params['location']);
-        }
-
-        return $query
-            ->getQuery()
-            ->getResult();
-    }
-
     public function findAvailableAppointments()
     {
         $query = $this->createQueryBuilder('a')
@@ -67,28 +44,28 @@ class AppointmentRepository extends ServiceEntityRepository
             ->leftJoin('a.therapist', 'th')
         ;
 
-        if (array_key_exists('displayName', $params)) {
-            dump('display name is here, not department');
+        if (array_key_exists('department', $params)) {
             $query
-                //->andWhere($query->expr()->like('th.displayName', ($params['displayName'])))
-                ->andWhere('th.displayName LIKE :displayName')
-                ->setParameter('displayName', $params['displayName'])
-            ;
-        } else {
-            dump('department is here, not display name');
-            if (array_key_exists('department', $params)) {
-                $query
-                    ->leftJoin('th.department', 'd')
-                    ->andWhere('d.id = :department')
-                    ->setParameter('department', (int)$params['department']);
-            }
+                ->leftJoin('th.department', 'd')
+                ->andWhere('d.id = :department')
+                ->setParameter('department', (int)$params['department']);
         }
-        dump($query->getQuery());
 
         return $query
             ->orderBy('a.bookingDate', 'asc')
             ->getQuery()
             ->getResult();
+    }
+
+    public function countAppointmentsByDepartments(string $country)
+    {
+        $query = $this->createQueryBuilder('a')
+            ->where('a.status = :status')
+            ->setParameter('status', Appointment::STATUS_AVAILABLE)
+            ->leftJoin('a.therapist', 'th')
+            ->andWhere('th.country = :country')
+            ->setParameter('country', $country)
+            ->leftJoin('th.department', 'depart');
     }
 
     public function findAvailableBookingsByParams(array $params, Therapist $therapist)
@@ -116,8 +93,8 @@ class AppointmentRepository extends ServiceEntityRepository
         $date = new \DateTime();
         $query = $this->createQueryBuilder('a')
             ->orderBy('a.bookingDate', 'asc')
-            ->where('a.booked = :booked')
-            ->setParameter('booked', false)
+            ->where('a.status = :status')
+            ->setParameter('status', Appointment::STATUS_AVAILABLE)
             ->andWhere('a.bookingDate = :now')
             ->setParameter('now', $date->format('Y-m-d'));
         return $query

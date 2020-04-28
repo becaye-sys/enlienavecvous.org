@@ -23,11 +23,9 @@ function PatientSearch() {
     const [filtered, setFiltered] = useState([]);
     const [booking, setBooking] = useState({});
     const [departments, setDepartments] = useState([]);
-    const [therapists, setTherapists] = useState([]);
     const [search, setSearch] = useState({
         bookingDate: '',
         department: document.querySelector('div#patient_search_app').dataset.defaultDepartment,
-        displayName: '',
     });
 
     const loadInitState = () => {
@@ -98,8 +96,6 @@ function PatientSearch() {
     }
 
     const updateBookingsByApiFilters = async () => {
-        //console.log('department:',search.department)
-        //setLoading(true);
         const bookings = await bookingApi.updateBookingsByFilters(search);
 
         if (bookings.length > 0) {
@@ -112,13 +108,6 @@ function PatientSearch() {
             setAppoints([]);
             //setLoading(false);
             toast.info("Pas de disponibilité dans ce département");
-        }
-    }
-
-    const findTherapistByDepartment = async () => {
-        const therapists = await bookingApi.getTherapistsByDepartment(search.department);
-        if (therapists.data.length > 0) {
-            setTherapists(therapists.data);
         }
     }
 
@@ -174,7 +163,7 @@ function PatientSearch() {
                             {!isConfirmed && <button className={"btn btn-danger"} type="button" onClick={cancelBooking}>Annuler et prendre un autre rendez-vous</button>}
                         </div>) :
                         (<div>
-                            <BookingSearchForm therapists={therapists} departments={departments} search={search} handleChange={handleChange} />
+                            <BookingSearchForm departments={departments} search={search} handleChange={handleChange} />
                             {!loading ?
                                 (paginatedAppoints.length > 0 ?
                                     <div className="table-responsive js-rep-log-table">
