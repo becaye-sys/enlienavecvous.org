@@ -8,6 +8,8 @@ $(document).ready( function () {
     const $filterForm = $("#table_filter_form");
     const $dateFilter = $("#date_filter");
     const $locationFilter = $("#location_filter");
+    const $btnAvailability = $("#btn_add_availability");
+    const $availibilityForm = $("#add_availability_form");
     $("#appointment_bookingDate").datepicker({
         dateFormat: "d/mm/yy"
     });
@@ -16,6 +18,10 @@ $(document).ready( function () {
     });
     $locationFilter.on('change', function (e) {
         $filterForm.submit();
+    });
+
+    $btnAvailability.on('click', function(event) {
+        $availibilityForm.toggle();
     });
 
     function ajaxRequest() {

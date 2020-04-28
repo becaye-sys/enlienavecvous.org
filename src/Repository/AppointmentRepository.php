@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Appointment;
+use App\Entity\Department;
 use App\Entity\Therapist;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -34,21 +35,23 @@ class AppointmentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findAvailableBookingsByFilters(array $params)
+    public function findAvailableBookingsByFilters(string $country, Department $department = null)
     {
         $query = $this->createQueryBuilder('a')
             ->where('a.status = :status')
             ->setParameter('status', Appointment::STATUS_AVAILABLE)
             ->andWhere('a.bookingDate >= :now')
             ->setParameter('now', new \DateTime('now'))
-            ->leftJoin('a.therapist', 'th')
+            ->leftJoin('a.therapist', 'therapist')
         ;
 
-        if (array_key_exists('department', $params)) {
+        if (null === $department) {
             $query
-                ->leftJoin('th.department', 'd')
-                ->andWhere('d.id = :department')
-                ->setParameter('department', (int)$params['department']);
+                ->andWhere('therapist.country = :country')
+                ->setParameter('country', $country);
+        } else {
+            $query->andWhere('therapist.department = :department')
+                ->setParameter('department', $department);
         }
 
         return $query

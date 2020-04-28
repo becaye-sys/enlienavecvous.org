@@ -13,6 +13,7 @@ use App\Repository\DepartmentRepository;
 use App\Repository\PatientRepository;
 use App\Repository\TherapistRepository;
 use App\Repository\TownRepository;
+use App\Repository\UserRepository;
 use App\Services\CustomSerializer;
 use App\Services\HistoryHelper;
 use App\Services\MailerFactory;
@@ -59,11 +60,18 @@ class ApiController extends AbstractController
         Request $request,
         SerializerInterface $serializer,
         AppointmentRepository $appointmentRepository,
-        DepartmentRepository $departmentRepository
+        DepartmentRepository $departmentRepository, UserRepository $userRepository
     )
     {
         $params = json_decode($request->getContent(), true);
-        $appointments = $appointmentRepository->findAvailableBookingsByFilters($params);
+        $user = $userRepository->find((int)$params["user"]["id"]);
+        $country = $user->getCountry();
+        if ("" !== $params["search"]["department"]) {
+            $department = $departmentRepository->find((int)$params["search"]["department"]);
+        } else {
+            $department = null;
+        }
+        $appointments = $appointmentRepository->findAvailableBookingsByFilters($country, $department);
         $data = $serializer->serialize($appointments, 'json', ['groups' => ['get_bookings']]);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
