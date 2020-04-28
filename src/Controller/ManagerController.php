@@ -401,6 +401,70 @@ class ManagerController extends AbstractController
     }
 
     /**
+     * @Route(path="/contact/all", name="manager_contact_by_roles")
+     * @return Response
+     */
+    public function contactAllUsers(
+        Request $request,
+        TherapistRepository $therapistRepository,
+        PatientRepository $patientRepository,
+        MailerFactory $mailerFactory
+    )
+    {
+        if ($request->isMethod("POST")) {
+            $role = $request->request->get('role');
+            $subject = $request->request->get('subject');
+            $message = $request->request->get('message');
+            $count = 0;
+            dump($role, $subject, $message);
+            if ("ROLE_THERAPIST" === $role) {
+                $users = $therapistRepository->findAll();
+                foreach ($users as $user) {
+                    $count++;
+                    $mailerFactory->createAndSend(
+                        $subject,
+                        $user->getEmail(),
+                        null,
+                        $this->renderView(
+                            'email/manager_contact_user.html.twig',
+                            [
+                                'subject' => $subject,
+                                'message' => $message
+                            ]
+                        )
+                    );
+                }
+            } else {
+                $users = $patientRepository->findAll();
+                foreach ($users as $user) {
+                    $count++;
+                    $mailerFactory->createAndSend(
+                        $subject,
+                        $user->getEmail(),
+                        null,
+                        $this->renderView(
+                            'email/manager_contact_user.html.twig',
+                            [
+                                'subject' => $subject,
+                                'message' => $message
+                            ]
+                        )
+                    );
+                }
+            }
+
+            $messageRole = User::USER_ROLE[$role];
+
+            $this->addFlash('success', "Message envoyé aux {$count} {$messageRole}.");
+            return $this->redirectToRoute('manager_contact_by_roles');
+        }
+
+        return $this->render(
+            'manager/contact_all_users_by_role.html.twig'
+        );
+    }
+
+    /**
      * @Route(path="/appoints-to-delete", name="manager_appoints_to_delete")
      * @param AppointmentRepository $appointmentRepository
      * @param EntityManagerInterface $entityManager

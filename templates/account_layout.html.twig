@@ -2,72 +2,100 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <title>{% block title %}En lien avec vous - tableau de bord{% endblock %}</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    {{ encore_entry_link_tags('app') }}
+    <link rel="stylesheet" href="{{ asset('main.css') }}">
     {% block stylesheets %}
     {% endblock %}
 </head>
 <body>
-<header>
-    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">
-            {% if is_granted('ROLE_THERAPIST') %}
-                Praticien.ne
-            {% else %}
-                Demandeur.se
-            {% endif %}
-        </a>
-        <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
-        <ul class="navbar-nav px-3">
-            <li class="nav-item text-nowrap">
-                <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
-            </li>
-        </ul>
-    </nav>
-</header>
-
-<div class="container-fluid">
-    <div class="row">
-        {% include "common/sidebar.html.twig" %}
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-            {% for message in app.flashes('success') %}
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <strong>Succès !</strong> {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+<div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
+    {% include "common/_admin_header.html.twig" %}
+    <div class="app-main">
+        {% include "common/_admin_sidebar.html.twig" %}
+        <div class="app-main__outer">
+            <div class="app-main__inner">
+                {% include "common/_flash_messages.html.twig" %}
+                <div class="app-page-title">
+                    <div class="page-title-wrapper">
+                        <div class="page-title-heading">
+                            <div class="page-title-icon">
+                                <i class="pe-7s-car icon-gradient bg-mean-fruit">
+                                </i>
+                            </div>
+                            <div>Analytics Dashboard
+                                <div class="page-title-subheading">This is an example dashboard created using build-in elements and components.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="page-title-actions">
+                            <button type="button" data-toggle="tooltip" title="Example Tooltip" data-placement="bottom" class="btn-shadow mr-3 btn btn-dark">
+                                <i class="fa fa-star"></i>
+                            </button>
+                            <div class="d-inline-block dropdown">
+                                <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn-shadow dropdown-toggle btn btn-info">
+                                            <span class="btn-icon-wrapper pr-2 opacity-7">
+                                                <i class="fa fa-business-time fa-w-20"></i>
+                                            </span>
+                                    Buttons
+                                </button>
+                                <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a href="javascript:void(0);" class="nav-link">
+                                                <i class="nav-link-icon lnr-inbox"></i>
+                                                <span>
+                                                            Inbox
+                                                        </span>
+                                                <div class="ml-auto badge badge-pill badge-secondary">86</div>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="javascript:void(0);" class="nav-link">
+                                                <i class="nav-link-icon lnr-book"></i>
+                                                <span>
+                                                            Book
+                                                        </span>
+                                                <div class="ml-auto badge badge-pill badge-danger">5</div>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="javascript:void(0);" class="nav-link">
+                                                <i class="nav-link-icon lnr-picture"></i>
+                                                <span>
+                                                            Picture
+                                                        </span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a disabled href="javascript:void(0);" class="nav-link disabled">
+                                                <i class="nav-link-icon lnr-file-empty"></i>
+                                                <span>
+                                                            File Disabled
+                                                        </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            {% endfor %}
-            {% for message in app.flashes('info') %}
-                <div class="alert alert-info alert-dismissible fade show" role="alert">
-                    <strong>Info !</strong> {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endfor %}
-            {% for message in app.flashes('error') %}
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>Erreur !</strong> {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endfor %}
-            {% block body %}{% endblock %}
-        </main>
+                {% block body %}{% endblock %}
+            </div>
+            {#footer links#}
+        </div>
+        <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+{#<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
 <script>
     feather.replace()
-</script>
-{{ encore_entry_script_tags('app') }}
+</script>#}
+<script type="text/javascript" src="{{ asset('assets/scripts/main.js') }}"></script></body>
 {% block javascripts %}
 {% endblock %}
 </body>

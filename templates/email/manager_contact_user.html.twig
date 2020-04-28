@@ -1,0 +1,12 @@
+{% extends "email_layout.html.twig" %}
+
+{% block body %}
+    <h1>Message d'information.</h1>
+    <br>
+    <h2>{{ subject }}</h2>
+    <br>
+    <p>{{ message }}</p>
+    <br>
+    <p>Pour toutes questions d'utilisation de la plateforme vous pouvez nous contacter à :</p>
+    <a href="mailto:contact-therapeutes@enlienavecvous.org">contact-therapeutes@enlienavecvous.org</a>
+{% endblock %}
