@@ -11,6 +11,7 @@ return array (
   'CORS_ALLOW_ORIGIN' => '^http?://(localhost|127\\.0\\.0\\.1)(:[0-9]+)?$',
   'CORS_ALLOW_ORIGIN_IPIFY_API' => '^https://api.ipify.org/?format=json$',
   'API_LOGIN' => 'onestlapourvous',
+  'SENTRY_DSN' => 'https://13cbde40e40b44989821c2d5e9b8bafb@o346982.ingest.sentry.io/5211266',
   'DATABASE_URL' => 'mysql://kztydjpazh49rbc8:o2s9m49k63vjh05r@ivgz2rnl5rh7sphb.chr7pe7iynqr.eu-west-1.rds.amazonaws.com:3306/jef7f7odukvdpxxq',
   'MAILER_DSN' => 'smtp://mail.gandi.net:465?encryption=ssl&auth_mod=login&username=accueil@enlienavecvous.org&password=Gestalthost2020',
   'MAILER_URL' => 'smtp://mail.gandi.net:465?encryption=ssl&auth_mod=login&username=accueil@enlienavecvous.org&password=Gestalthost2020',
