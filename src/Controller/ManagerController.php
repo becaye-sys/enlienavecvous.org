@@ -156,12 +156,21 @@ class ManagerController extends AbstractController
      * @ParamConverter(name="id", class="App\Entity\User")
      * @return RedirectResponse
      */
-    public function activateUser(User $user, EntityManagerInterface $manager)
+    public function activateUser(User $user, EntityManagerInterface $manager, MailerFactory $mailerFactory)
     {
         $this->denyAccessUnlessGranted("ROLE_MANAGER", null, "Vous n'avez pas accès à cette fonctionnalité.");
         if ($user instanceof User && $user->getEmailToken() !== '' && !$user->isActive()) {
             $user->setIsActive(true);
             $user->setEmailToken('');
+            $mailerFactory->createAndSend(
+                "Activation de votre compte",
+                $user->getEmail(),
+                'accueil@enlienavecvous.org',
+                $this->renderView(
+                    'email/user_activated.html.twig',
+                    ['project_url' => $_ENV['PROJECT_URL']]
+                )
+            );
             $manager->flush();
             $this->addFlash('success', "Utilisateur activé.");
         } else {
