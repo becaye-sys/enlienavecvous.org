@@ -150,6 +150,27 @@ class ManagerController extends AbstractController
 
         return $this->redirectToRoute('manager_users_waiting');
     }
+
+    /**
+     * @Route(path="/activate/user/{id}", name="manager_activate_user")
+     * @ParamConverter(name="id", class="App\Entity\User")
+     * @return RedirectResponse
+     */
+    public function activateUser(User $user, EntityManagerInterface $manager)
+    {
+        $this->denyAccessUnlessGranted("ROLE_MANAGER", null, "Vous n'avez pas accès à cette fonctionnalité.");
+        if ($user instanceof User && $user->getEmailToken() !== '' && !$user->isActive()) {
+            $user->setIsActive(true);
+            $user->setEmailToken('');
+            $manager->flush();
+            $this->addFlash('success', "Utilisateur activé.");
+        } else {
+            $this->addFlash('error', "Utilisateur non trouvé ou déjà actif.");
+        }
+
+        return $this->redirectToRoute('manager_users_waiting');
+    }
+
     /**
      * @Route(path="/manage-users", name="manager_manage_users", defaults={"page"=1})
      * @param UserRepository $userRepository

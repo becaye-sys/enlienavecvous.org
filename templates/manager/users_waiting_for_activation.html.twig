@@ -38,6 +38,11 @@
                                         Renvoyer l'email de confirmation
                                     </a>
                                 {% endif %}
+                                {% if u.isActive == false %}
+                                    <a href="{{ path('manager_activate_user', {'id': u.id}) }}" class="btn btn-primary">
+                                        Activer
+                                    </a>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
