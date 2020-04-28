@@ -9,8 +9,8 @@ import BookingSearchForm from "./components/BookingSearchForm";
 import geolocationApi from "./services/geolocationApi";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import * as Sentry from '@sentry/browser';
-Sentry.init({dsn: "https://13cbde40e40b44989821c2d5e9b8bafb@o346982.ingest.sentry.io/5211266"});
+//import * as Sentry from '@sentry/browser';
+//Sentry.init({dsn: "https://13cbde40e40b44989821c2d5e9b8bafb@o346982.ingest.sentry.io/5211266"});
 
 function PatientSearch() {
     const [currentPage, setCurrentPage] = useState(1);
@@ -23,10 +23,17 @@ function PatientSearch() {
     const [filtered, setFiltered] = useState([]);
     const [booking, setBooking] = useState({});
     const [departments, setDepartments] = useState([]);
+    const [therapists, setTherapists] = useState([]);
     const [search, setSearch] = useState({
         bookingDate: '',
         department: document.querySelector('div#patient_search_app').dataset.defaultDepartment,
+        displayName: '',
     });
+
+    const loadInitState = () => {
+        const userId = document.querySelector('div#patient_search_app').dataset.user;
+        setUser({...user, id: userId});
+    }
 
     const handlePageChange = page => {
         setCurrentPage(page);
@@ -61,14 +68,6 @@ function PatientSearch() {
         setLoading(false);
     }
 
-    const getCurrentUser = async () => {
-        const userId = document.querySelector('div#patient_search_app').dataset.user;
-        console.log(userId);
-        if (userId !== undefined && userId !== '') {
-            setUser({ id: userId });
-        }
-    }
-
     const getCountryDepartments = async () => {
         const country = document.querySelector('div#patient_search_app').dataset.country;
         const departments = await geolocationApi.getDepartmentsByCountry(country);
@@ -99,18 +98,27 @@ function PatientSearch() {
     }
 
     const updateBookingsByApiFilters = async () => {
-        setLoading(true);
+        //console.log('department:',search.department)
+        //setLoading(true);
         const bookings = await bookingApi.updateBookingsByFilters(search);
+
         if (bookings.length > 0) {
             console.log(bookings);
             const appoints = filterWithTherapistDelay(bookings);
             setAppoints(appoints);
-            setLoading(false);
+            //setLoading(false);
             toast.info("Disponibilités mises à jour");
         } else {
             setAppoints([]);
-            setLoading(false);
+            //setLoading(false);
             toast.info("Pas de disponibilité dans ce département");
+        }
+    }
+
+    const findTherapistByDepartment = async () => {
+        const therapists = await bookingApi.getTherapistsByDepartment(search.department);
+        if (therapists.data.length > 0) {
+            setTherapists(therapists.data);
         }
     }
 
@@ -132,14 +140,16 @@ function PatientSearch() {
     ) : appointsToDisplay;
 
     useEffect(() => {
-        updateBookingsByApiFilters();
-        getCurrentUser();
+        setLoading(true);
+        loadInitState();
         getCountryDepartments();
+        updateBookingsByApiFilters();
+        setLoading(false);
     }, []);
 
     useEffect(() => {
         updateBookingsByApiFilters();
-    },[search.department]);
+    },[search.department, search.displayName]);
 
     useEffect(() => {
         updateAppointsByUserFilters();
@@ -150,12 +160,10 @@ function PatientSearch() {
             {/*<div className="container-fluid">
                 <ToastContainer position={toast.POSITION.TOP_CENTER}/>
             </div>*/}
-            {loading && <p>Chargement en cours...</p>}
-            {!loading &&
-            <div>
+            <div className="container-fluid mb-3">
                 {
                     (localStorage.getItem('booking') && booking !== {}) ?
-                        <div className={"container-fluid mb-3"}>
+                        (<div>
                             <BookingConfirmation
                                 loading={loading}
                                 isConfirmed={isConfirmed}
@@ -164,11 +172,11 @@ function PatientSearch() {
                             />
                             <br/>
                             {!isConfirmed && <button className={"btn btn-danger"} type="button" onClick={cancelBooking}>Annuler et prendre un autre rendez-vous</button>}
-                        </div> :
-                        <div className="container-fluid mb-3">
-                            <BookingSearchForm departments={departments} search={search} handleChange={handleChange} />
-                            {
-                                paginatedAppoints.length > 0 ?
+                        </div>) :
+                        (<div>
+                            <BookingSearchForm therapists={therapists} departments={departments} search={search} handleChange={handleChange} />
+                            {!loading ?
+                                (paginatedAppoints.length > 0 ?
                                     <div className="table-responsive js-rep-log-table">
                                         <table className="table table-striped table-sm">
                                             <thead>
@@ -196,7 +204,27 @@ function PatientSearch() {
                                             </tbody>
                                         </table>
                                     </div> :
-                                    <p>Aucune disponibilité dans ce département...</p>
+                                    <p>Aucune disponibilité...</p>) : (
+                                    <div className="table-responsive js-rep-log-table">
+                                        <table className="table table-striped table-sm">
+                                            <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Thérapeute</th>
+                                                <th>Date</th>
+                                                <th>Début</th>
+                                                <th>Fin</th>
+                                                <th>Département</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td>Chargement en cours...</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                )
                             }
                             {itemsPerPage < appointsToDisplay.length &&
                             <Pagination
@@ -206,10 +234,9 @@ function PatientSearch() {
                                 length={appointsToDisplay.length}
                             />
                             }
-                        </div>
+                        </div>)
                 }
             </div>
-            }
         </>
     )
 }

@@ -8,7 +8,9 @@ $(document).ready( function () {
     const $filterForm = $("#table_filter_form");
     const $dateFilter = $("#date_filter");
     const $locationFilter = $("#location_filter");
-    $("#appointment_bookingDate").datepicker();
+    $("#appointment_bookingDate").datepicker({
+        dateFormat: "d/mm/yy"
+    });
     $dateFilter.on('change', function (e) {
         $filterForm.submit();
     });

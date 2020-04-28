@@ -21,7 +21,7 @@ class Therapist extends User implements TherapistInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"create_booking"})
+     * @Groups({"create_booking", "patient_research"})
      */
     protected $id;
 

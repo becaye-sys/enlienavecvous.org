@@ -11,10 +11,12 @@ use App\Entity\Town;
 use App\Entity\User;
 use App\Repository\AppointmentRepository;
 use App\Repository\DepartmentRepository;
+use App\Repository\PatientRepository;
 use App\Repository\TherapistRepository;
 use App\Repository\TownRepository;
 use App\Repository\UserRepository;
 use App\Services\MailerFactory;
+use App\Services\StatisticTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -39,6 +41,33 @@ class ManagerController extends AbstractController
     public function __construct(TherapistRepository $therapistRepository)
     {
         $this->therapistRepository = $therapistRepository;
+    }
+
+    /**
+     * @Route(path="/", name="manager_dashboard")
+     * @return Response
+     */
+    public function dashboard(
+        PatientRepository $patientRepository,
+        AppointmentRepository $appointmentRepository,
+        TherapistRepository $therapistRepository
+    )
+    {
+        $this->denyAccessUnlessGranted("ROLE_MANAGER", null, "Vous n'avez pas accès à cette fonctionnalité.");
+        $happyHelped = sizeof($patientRepository->findHelped());
+        $successMissions = sizeof($appointmentRepository->findBy(['status' => Appointment::STATUS_HONORED]));
+        $volunteers = sizeof($therapistRepository->findBy(['isActive' => true]));
+        $funFacts = [
+            'happy_helped' => $happyHelped,
+            'success_missions' => $successMissions,
+            'volunteer_reached' => $volunteers,
+        ];
+        return $this->render(
+            'manager/dashboard.html.twig',
+            [
+                'fun_facts' => $funFacts
+            ]
+        );
     }
 
     /**
@@ -172,6 +201,14 @@ class ManagerController extends AbstractController
             $request->query->getInt('page', 1),
             10
         );
+        $allUsers = $userRepository->findAll();
+        foreach ($allUsers as $singleUser) {
+            $singleUser->setFirstName(strtolower($singleUser->getFirstName()));
+            $singleUser->setLastName(strtolower($singleUser->getLastName()));
+            $singleUser->setDisplayName($singleUser->getFirstName(). " " .$singleUser->getLastName());
+        }
+        $manager->flush();
+        $this->addFlash('success', "Nom, prénom et display name de tous les utilisateurs enregistrés en lower case");
 
         return $this->render(
             'manager/manage_members.html.twig',

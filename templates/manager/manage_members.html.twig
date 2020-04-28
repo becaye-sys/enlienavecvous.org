@@ -49,8 +49,8 @@
                             <td>
                                 {{ constant('App\\Entity\\User::USER_ROLE')[u.roles|last] }}
                             </td>
-                            <td>{{ u.lastName }}</td>
-                            <td>{{ u.firstName }}</td>
+                            <td>{{ u.lastName|upper }}</td>
+                            <td>{{ u.firstName|capitalize }}</td>
                             <td>{{ u.isActive }}</td>
                             <td>
                                 <form action="{{ path('manager_manage_users') }}" method="post">

@@ -64,15 +64,26 @@ class AppointmentRepository extends ServiceEntityRepository
             ->setParameter('status', Appointment::STATUS_AVAILABLE)
             ->andWhere('a.bookingDate >= :now')
             ->setParameter('now', new \DateTime('now'))
+            ->leftJoin('a.therapist', 'th')
         ;
 
-        if (isset($params['department'])) {
+        if (array_key_exists('displayName', $params)) {
+            dump('display name is here, not department');
             $query
-                ->leftJoin('a.therapist', 't')
-                ->leftJoin('t.department', 'd')
-                ->andWhere('d.id = :department')
-                ->setParameter('department', $params['department']);
+                //->andWhere($query->expr()->like('th.displayName', ($params['displayName'])))
+                ->andWhere('th.displayName LIKE :displayName')
+                ->setParameter('displayName', $params['displayName'])
+            ;
+        } else {
+            dump('department is here, not display name');
+            if (array_key_exists('department', $params)) {
+                $query
+                    ->leftJoin('th.department', 'd')
+                    ->andWhere('d.id = :department')
+                    ->setParameter('department', (int)$params['department']);
+            }
         }
+        dump($query->getQuery());
 
         return $query
             ->orderBy('a.bookingDate', 'asc')

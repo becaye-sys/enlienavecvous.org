@@ -1,0 +1,44 @@
+<div class="modal fade" id="modalCreateAvailability" tabindex="-1" role="dialog" aria-labelledby="modalCreateAvailability" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ajouter un créneau</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {{ form_start(form) }}
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <fieldset class="form-group">
+                            {{ form_label(form.bookingDate) }}
+                            {{ form_widget(form.bookingDate, {'attr': {'class': 'form-control'}}) }}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <fieldset class="form-group">
+                            {{ form_label(form.bookingStart) }}
+                            {{ form_widget(form.bookingStart, {'attr': {'class': 'booking_start_picker'}}) }}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <fieldset class="form-group">
+                            {{ form_label(form.bookingEnd) }}
+                            {{ form_widget(form.bookingEnd, {'attr': {'class': 'booking_end_picker'}}) }}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-12 col-sm-6">
+                        <fieldset class="form-group">
+                            <button class="btn btn-primary" type="submit">Enregistrer</button>
+                        </fieldset>
+                    </div>
+                </div>
+                {{ form_end(form) }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+    </div>
+</div>

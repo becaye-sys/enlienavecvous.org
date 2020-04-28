@@ -29,7 +29,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class PublicController extends AbstractController
 {
-    use StatisticTrait;
     use FixturesTrait;
 
     /**
@@ -38,12 +37,8 @@ class PublicController extends AbstractController
      */
     public function index()
     {
-        $funFacts = $this->getFunFacts();
         return $this->render(
-            'public/index.html.twig',
-            [
-                'fun_facts' => $funFacts
-            ]
+            'public/index.html.twig'
         );
     }
 

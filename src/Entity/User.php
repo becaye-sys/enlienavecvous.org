@@ -63,13 +63,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string")
-     * @Groups({"create_booking", "get_bookings"})
+     * @Groups({"create_booking", "get_bookings", "patient_research"})
      */
     protected $firstName;
 
     /**
      * @ORM\Column(type="string")
-     * @Groups({"create_booking", "get_bookings"})
+     * @Groups({"create_booking", "get_bookings", "patient_research"})
      */
     protected $lastName;
 

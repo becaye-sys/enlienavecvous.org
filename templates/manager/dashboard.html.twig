@@ -1,0 +1,20 @@
+{% extends "account_layout.html.twig" %}
+
+{% block body %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Tableau de bord du Manager</h1>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <p>Personnes aidées : {{ fun_facts['happy_helped'] }}</p>
+                <p>Rendez-vous honorés : {{ fun_facts['success_missions'] }}</p>
+                <p>Volontaires inscrits : {{ fun_facts['volunteer_reached'] }}</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('manage_members') }}
+{% endblock %}

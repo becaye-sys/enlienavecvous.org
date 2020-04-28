@@ -49,9 +49,29 @@ function updateAppointsByFilters(appoints, search) {
     }
 }
 
+function mergeBookings(array1, array2) {
+    var result_array = [];
+    var arr = array1.concat(array2);
+    var len = arr.length;
+    var assoc = {};
+
+    while(len--) {
+        var item = arr[len];
+
+        if(!assoc[item])
+        {
+            result_array.unshift(item);
+            assoc[item] = true;
+        }
+    }
+
+    return result_array;
+}
+
 export default {
     filterWithTherapistDelay,
     filterById,
     setBookingToLocalStorage,
-    updateAppointsByFilters
+    updateAppointsByFilters,
+    mergeBookings
 }
