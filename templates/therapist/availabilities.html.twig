@@ -12,136 +12,95 @@
         <h1 class="h2">Disponibilités - {{ total_appointments }}</h1>
     </div>
     <div class="container-fluid mt-5">
-        {% if permission is defined and permission == true %}
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCreateAvailability">
-                Ajouter un créneau
-            </button>
-        {% endif %}
-
-        <!-- Modal -->
-        <div class="modal fade" id="modalCreateAvailability" tabindex="-1" role="dialog" aria-labelledby="modalCreateAvailability" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Ajouter un créneau</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        {{ form_start(form) }}
-                        <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                <fieldset class="form-group">
-                                    {{ form_label(form.bookingDate) }}
-                                    {{ form_widget(form.bookingDate, {'attr': {'class': 'form-control'}}) }}
-                                </fieldset>
-                            </div>
-                            <div class="col-md-6 col-sm-6">
-                                <fieldset class="form-group">
-                                    {{ form_label(form.bookingStart) }}
-                                    {{ form_widget(form.bookingStart, {'attr': {'class': 'booking_start_picker'}}) }}
-                                </fieldset>
-                            </div>
-                            <div class="col-md-6 col-sm-6">
-                                <fieldset class="form-group">
-                                    {{ form_label(form.bookingEnd) }}
-                                    {{ form_widget(form.bookingEnd, {'attr': {'class': 'booking_end_picker'}}) }}
-                                </fieldset>
-                            </div>
-                            <div class="col-md-12 col-sm-6">
-                                <fieldset class="form-group">
-                                    <button class="btn btn-primary" type="submit">Enregistrer</button>
-                                </fieldset>
-                            </div>
-                        </div>
-                        {{ form_end(form) }}
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                    </div>
-                </div>
+        <div class="row">
+            <div class="col-md-2">
+                {% if permission is defined and permission == true %}
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCreateAvailability">
+                        Ajouter un créneau
+                    </button>
+                {% endif %}
+                {% include "_modales/_add_availability_form.html.twig" %}
+            </div>
+            <div class="col-md-4">
+                <form class="form-inline" action="{{ path('therapist_availabilities') }}" method="get" id="table_filter_form">
+                    <fieldset class="form-group">
+                        <label for="date_filter">Filter par date</label>
+                        <input type="date" name="date_filter" id="date_filter" class="form-control" value="{% if filters.date_filter is defined %}{{ filters.date_filter ?: filters.date_filter }}{% endif %}">
+                    </fieldset>
+                </form>
             </div>
         </div>
     </div>
-    <div class="container mt-5 mb-5">
-        <div class="row">
-            <form class="form-inline" action="{{ path('therapist_availabilities') }}" method="get" id="table_filter_form">
-                <fieldset class="form-group">
-                    <label for="date_filter">Filter par date</label>
-                    <input type="date" name="date_filter" id="date_filter" class="form-control" value="{% if filters.date_filter is defined %}{{ filters.date_filter ?: filters.date_filter }}{% endif %}">
-                </fieldset>
-            </form>
-        </div>
-    </div>
-    <div class="table-responsive">
-        <table class="table table-striped table-sm" data-toggle="table" id="availabilitiesTable">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>Date</th>
-                <th>Début</th>
-                <th>Fin</th>
-                <th>Statut</th>
-                <th></th>
-            </tr>
-            </thead>
-            {% if availabilities|length > 0 %}
-                <tbody>
-                {% for a in availabilities %}
-                    <tr>
-                        <td>{{ a.id }}</td>
-                        <td>{{ a.bookingDate|date('d/m/Y') }}</td>
-                        <td>{{ a.bookingStart|date('H:i') }}</td>
-                        <td>{{ a.bookingEnd|date('H:i') }}</td>
-                        <td>
-                            {{ constant('App\\Entity\\Appointment::STATUS')[a.status] }}
-                        </td>
-                        <td>
-                            <!-- Button trigger modal -->
-                            {% if a.booked == false %}
-                                <a href="{{ path('therapist_availability_edit', {'id': a.id}) }}" class="btn btn-outline-primary">
-                                    <i class="fa fa-edit"></i>
-                                </a>
-                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ a.id }}">
-                                    <i class="fa fa-times"></i>
-                                </button>
-                            {% endif %}
+    <div class="container-fluid mt-5">
+        <div class="table-responsive">
+            <table class="table table-striped table-sm" data-toggle="table" id="availabilitiesTable">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Début</th>
+                    <th>Fin</th>
+                    <th>Statut</th>
+                    <th></th>
+                </tr>
+                </thead>
+                {% if availabilities|length > 0 %}
+                    <tbody>
+                    {% for a in availabilities %}
+                        <tr>
+                            <td>{{ a.id }}</td>
+                            <td>{{ a.bookingDate|date('d/m/Y') }}</td>
+                            <td>{{ a.bookingStart|date('H:i') }}</td>
+                            <td>{{ a.bookingEnd|date('H:i') }}</td>
+                            <td>
+                                {{ constant('App\\Entity\\Appointment::STATUS')[a.status] }}
+                            </td>
+                            <td>
+                                <!-- Button trigger modal -->
+                                {% if a.booked == false %}
+                                    <a href="{{ path('therapist_availability_edit', {'id': a.id}) }}" class="btn btn-outline-primary">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ a.id }}">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                {% endif %}
 
-                            <!-- Modal -->
-                            <div class="modal fade" id="deleteModal{{ a.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel{{ a.id }}" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Supprimer un créneau</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Êtes-vous certain-e de vouloir supprimer ce créneau ?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Non, annuler</button>
-                                            <a href="{{ path('therapist_availability_delete', {'id': a.id}) }}" type="button" class="btn btn-outline-danger">Oui, supprimer</a>
+                                <!-- Modal -->
+                                <div class="modal fade" id="deleteModal{{ a.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel{{ a.id }}" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Supprimer un créneau</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Êtes-vous certain-e de vouloir supprimer ce créneau ?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Non, annuler</button>
+                                                <a href="{{ path('therapist_availability_delete', {'id': a.id}) }}" type="button" class="btn btn-outline-danger">Oui, supprimer</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            {% else %}
-                {% if app.request.query.has('date_filter') %}
-                    <p>Vous n'avez enregistré aucune disponibilité pour le {{ app.request.query.get('date_filter') }}</p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
                 {% else %}
-                    <p>Vous n'avez pas encore enregistré vos disponibilité.</p>
+                    {% if app.request.query.has('date_filter') %}
+                        <p>Vous n'avez enregistré aucune disponibilité pour le {{ app.request.query.get('date_filter') }}</p>
+                    {% else %}
+                        <p>Vous n'avez pas encore enregistré vos disponibilité.</p>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
-        </table>
-        {{ knp_pagination_render(availabilities) }}
+            </table>
+            {{ knp_pagination_render(availabilities) }}
+        </div>
     </div>
 {% endblock %}
 

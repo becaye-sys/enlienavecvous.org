@@ -11,10 +11,12 @@ use App\Entity\Town;
 use App\Entity\User;
 use App\Repository\AppointmentRepository;
 use App\Repository\DepartmentRepository;
+use App\Repository\PatientRepository;
 use App\Repository\TherapistRepository;
 use App\Repository\TownRepository;
 use App\Repository\UserRepository;
 use App\Services\MailerFactory;
+use App\Services\StatisticTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -39,6 +41,33 @@ class ManagerController extends AbstractController
     public function __construct(TherapistRepository $therapistRepository)
     {
         $this->therapistRepository = $therapistRepository;
+    }
+
+    /**
+     * @Route(path="/", name="manager_dashboard")
+     * @return Response
+     */
+    public function dashboard(
+        PatientRepository $patientRepository,
+        AppointmentRepository $appointmentRepository,
+        TherapistRepository $therapistRepository
+    )
+    {
+        $this->denyAccessUnlessGranted("ROLE_MANAGER", null, "Vous n'avez pas accès à cette fonctionnalité.");
+        $happyHelped = sizeof($patientRepository->findHelped());
+        $successMissions = sizeof($appointmentRepository->findBy(['status' => Appointment::STATUS_HONORED]));
+        $volunteers = sizeof($therapistRepository->findBy(['isActive' => true]));
+        $funFacts = [
+            'happy_helped' => $happyHelped,
+            'success_missions' => $successMissions,
+            'volunteer_reached' => $volunteers,
+        ];
+        return $this->render(
+            'manager/dashboard.html.twig',
+            [
+                'fun_facts' => $funFacts
+            ]
+        );
     }
 
     /**
@@ -69,7 +98,8 @@ class ManagerController extends AbstractController
                 ]
             );
         }
-        $newUsers = $userRepository->findAll();
+
+        $newUsers = $userRepository->findTodayRegistered();
         $paginated = $paginator->paginate(
             $newUsers,
             $request->query->getInt('page', 1),
@@ -88,11 +118,69 @@ class ManagerController extends AbstractController
      * @ParamConverter(name="id", class="App\Entity\User")
      * @return RedirectResponse
      */
-    public function resendEmailValidation(User $user)
+    public function resendEmailValidation(User $user, MailerFactory $mailerFactory)
     {
-        $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette fonctionnalité.");
-        return $this->redirectToRoute('manager_new_users');
+        $this->denyAccessUnlessGranted("ROLE_MANAGER", null, "Vous n'avez pas accès à cette fonctionnalité.");
+        if ($user instanceof User && $user->getEmailToken() !== '' && !$user->isActive()) {
+            if (in_array("ROLE_THERAPIST", $user->getRoles())) {
+                $mailerFactory->createAndSend(
+                    "Validation de votre inscription",
+                    $user->getEmail(),
+                    'accueil@enlienavecvous.org',
+                    $this->renderView(
+                        'email/therapist_registration.html.twig',
+                        ['email_token' => $user->getEmailToken(), 'project_url' => $_ENV['PROJECT_URL']]
+                    )
+                );
+            } else {
+                $mailerFactory->createAndSend(
+                    "Validation de votre inscription",
+                    $user->getEmail(),
+                    'accueil@enlienavecvous.org',
+                    $this->renderView(
+                        'email/patient_registration.html.twig',
+                        ['email_token' => $user->getEmailToken(), 'project_url' => $_ENV['PROJECT_URL']]
+                    )
+                );
+            }
+
+            $this->addFlash('success', "Email de validation réenvoyé.");
+        } else {
+            $this->addFlash('error', "Utilisateur non trouvé ou déjà actif.");
+        }
+
+        return $this->redirectToRoute('manager_users_waiting');
     }
+
+    /**
+     * @Route(path="/activate/user/{id}", name="manager_activate_user")
+     * @ParamConverter(name="id", class="App\Entity\User")
+     * @return RedirectResponse
+     */
+    public function activateUser(User $user, EntityManagerInterface $manager, MailerFactory $mailerFactory)
+    {
+        $this->denyAccessUnlessGranted("ROLE_MANAGER", null, "Vous n'avez pas accès à cette fonctionnalité.");
+        if ($user instanceof User && $user->getEmailToken() !== '' && !$user->isActive()) {
+            $user->setIsActive(true);
+            $user->setEmailToken('');
+            $mailerFactory->createAndSend(
+                "Activation de votre compte",
+                $user->getEmail(),
+                'accueil@enlienavecvous.org',
+                $this->renderView(
+                    'email/user_activated.html.twig',
+                    ['project_url' => $_ENV['PROJECT_URL']]
+                )
+            );
+            $manager->flush();
+            $this->addFlash('success', "Utilisateur activé.");
+        } else {
+            $this->addFlash('error', "Utilisateur non trouvé ou déjà actif.");
+        }
+
+        return $this->redirectToRoute('manager_users_waiting');
+    }
+
     /**
      * @Route(path="/manage-users", name="manager_manage_users", defaults={"page"=1})
      * @param UserRepository $userRepository
@@ -144,6 +232,14 @@ class ManagerController extends AbstractController
             $request->query->getInt('page', 1),
             10
         );
+        $allUsers = $userRepository->findAll();
+        foreach ($allUsers as $singleUser) {
+            $singleUser->setFirstName(strtolower($singleUser->getFirstName()));
+            $singleUser->setLastName(strtolower($singleUser->getLastName()));
+            $singleUser->setDisplayName($singleUser->getFirstName(). " " .$singleUser->getLastName());
+        }
+        $manager->flush();
+        $this->addFlash('success', "Nom, prénom et display name de tous les utilisateurs enregistrés en lower case");
 
         return $this->render(
             'manager/manage_members.html.twig',
@@ -319,7 +415,7 @@ class ManagerController extends AbstractController
         }
         $entityManager->flush();
         $this->addFlash('success', "$i Rendez-vous en attente de suppression correctement supprimés.");
-        return $this->redirectToRoute('manager_new_users');
+        return $this->redirectToRoute('therapist_availabilities');
     }
 
     /**
@@ -337,21 +433,23 @@ class ManagerController extends AbstractController
             $this->addFlash('info', "Vous avez essayé de supprimer votre compte...");
             return $this->redirectToRoute('manager_manage_users');
         }
-        if ($user instanceof User) { // add current user check
+        if ($user instanceof User) {
             // send email account deletion
             $mailerFactory->createAndSend(
                 "Suppression de votre compte",
                 $user->getEmail(),
-                'no-reply@onestlapourvous.org',
+                'accueil@enlienavecvous.org',
                 $this->renderView('email/user_delete_account.html.twig')
             );
             // delete user
             $manager->remove($user);
             $manager->flush();
             $this->addFlash('success', "Ce compte a été correctement supprimé.");
-            return $this->redirectToRoute('app_logout');
+            return $this->redirectToRoute('manager_manage_users');
+        } else {
+            $this->addFlash('error', "Cet utilisateur n'existe pas.");
+            return $this->redirectToRoute('manager_manage_users');
         }
-        return $this->redirectToRoute('manager_manage_users');
     }
 
     private function getCurrentUser(): Therapist

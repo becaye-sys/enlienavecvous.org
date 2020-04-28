@@ -16,6 +16,8 @@
                     <th>Nom</th>
                     <th>Prénom</th>
                     <th>Validé</th>
+                    <th>Pays</th>
+                    <th>Département</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -33,9 +35,24 @@
                             <td>{{ u.firstName }}</td>
                             <td>{{ u.isActive }}</td>
                             <td>
+                                {% if u.country is defined %}
+                                    {{ constant('App\\Entity\\Department::COUNTRIES')[u.country] }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if u.department is defined %}
+                                    {{ u.department.name }}
+                                {% endif %}
+                            </td>
+                            <td>
                                 {% if u.isActive == false %}
                                     <a href="{{ path('manager_resend_email_confirmation', {'id': u.id}) }}" class="btn btn-primary">
                                         Renvoyer l'email de confirmation
+                                    </a>
+                                {% endif %}
+                                {% if u.isActive == false %}
+                                    <a href="{{ path('manager_activate_user', {'id': u.id}) }}" class="btn btn-primary">
+                                        Activer
                                     </a>
                                 {% endif %}
                             </td>

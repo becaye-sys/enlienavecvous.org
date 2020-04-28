@@ -17,8 +17,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class User implements UserInterface
 {
     const USER_ROLE = [
-        'ROLE_PATIENT' => "Demandeur",
-        'ROLE_THERAPIST' => "Praticien",
+        'ROLE_PATIENT' => "Demandeur.se",
+        'ROLE_THERAPIST' => "Praticien.ne",
         'ROLE_MANAGER' => "Manager"
     ];
 
@@ -63,13 +63,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string")
-     * @Groups({"create_booking", "get_bookings"})
+     * @Groups({"create_booking", "get_bookings", "patient_research"})
      */
     protected $firstName;
 
     /**
      * @ORM\Column(type="string")
-     * @Groups({"create_booking", "get_bookings"})
+     * @Groups({"create_booking", "get_bookings", "patient_research"})
      */
     protected $lastName;
 

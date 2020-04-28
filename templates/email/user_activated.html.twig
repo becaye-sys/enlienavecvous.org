@@ -1,0 +1,13 @@
+{% extends "email_layout.html.twig" %}
+
+{% block body %}
+    <h1>Votre compte a été activé.</h1>
+    <p>L'équipe de Enlienavecvous.org vous souhaite la bienvenue.</p>
+
+    <p>Si vous n'avez pas pu renseigner votre pays ou votre département lors de l'inscription, merci de le faire depuis votre compte dans la section paramètres.</p>
+
+    <p>Si les champs de sélection du pays et du département n'apparaissent pas dans la page, merci de vérifier que vous êtes bien connecté en https.</p>
+
+    <p>Nous vous proposons de prendre votre premier rendez-vous dès maintenant en cliquant sur le lien ci-dessous :</p>
+    <a href="{{ project_url }}login">{{ project_url }}login</a>
+{% endblock %}

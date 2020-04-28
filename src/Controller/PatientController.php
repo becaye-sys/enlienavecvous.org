@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\Entity\Appointment;
+use App\Entity\Department;
 use App\Entity\History;
 use App\Entity\Patient;
 use App\Entity\Therapist;
@@ -12,6 +13,7 @@ use App\Entity\User;
 use App\Form\ChangePasswordType;
 use App\Form\PatientSettingsType;
 use App\Repository\AppointmentRepository;
+use App\Repository\DepartmentRepository;
 use App\Repository\HistoryRepository;
 use App\Repository\PatientRepository;
 use App\Services\HistoryHelper;
@@ -93,15 +95,15 @@ class PatientController extends AbstractController
             $appointment->setCancelled(true);
             // add booking cancel history
             $historyHelper->addHistoryItem(History::ACTION_CANCELLED_BY_PATIENT, $appointment);
-            $appointment->setPatient(null);
-            $appointment->setStatus(Appointment::STATUS_AVAILABLE);
-            $entityManager->flush();
             $mailerFactory->createAndSend(
                 "Annulation du rendez-vous",
                 $appointment->getTherapist()->getEmail(),
-                'no-reply@onestlapourvous.org',
+                null,
                 $this->renderView('email/appointment_cancelled_from_patient.html.twig', ['appointment' => $appointment])
             );
+            $appointment->setPatient(null);
+            $appointment->setStatus(Appointment::STATUS_AVAILABLE);
+            $entityManager->flush();
             $this->addFlash('info', "Rendez-vous annulé. Vous allez recevoir un mail de confirmation de l'annulation.");
             return $this->redirectToRoute('patient_appointments');
         } else {
@@ -140,7 +142,7 @@ class PatientController extends AbstractController
         $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
         $patient = $this->getCurrentPatient();
         $patientId = $patient->getId();
-        $appoints = $therapist->getAppointments();
+        $appoints = $appointmentRepository->getAppointmentsByTherapist($therapist);
 
         if ($request->isMethod("POST")) {
             $appoint = $appointmentRepository->find($request->request->get('booking_id'));
@@ -180,22 +182,24 @@ class PatientController extends AbstractController
         if ($request->isMethod("POST")) {
             $appointment = $appointmentRepository->find($request->request->get('booking_id'));
             $appointment->setBooked(true);
+            $appointment->setStatus(Appointment::STATUS_BOOKED);
             $historyHelper->addHistoryItem(History::ACTION_BOOKED, $appointment);
-            $entityManager->flush();
 
             $mailerFactory->createAndSend(
                 "Confirmation de rendez-vous",
                 $appointment->getPatient()->getEmail(),
-                'no-reply@onestlapourvous.org',
+                null,
                 $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment])
             );
+            dump($appointment);
 
             $mailerFactory->createAndSend(
                 "Confirmation de rendez-vous",
                 $appointment->getTherapist()->getEmail(),
-                'no-reply@onestlapourvous.org',
+                null,
                 $this->renderView('email/appointment_booked_therapist.html.twig', ['appointment' => $appointment])
             );
+            $entityManager->flush();
             $this->addFlash('success', "Votre rendez-vous est confirmé, un mail de confirmation vous a été envoyé !");
             return $this->redirectToRoute('patient_appointments');
         }
@@ -231,6 +235,7 @@ class PatientController extends AbstractController
     public function settings(
         Request $request,
         EntityManagerInterface $manager,
+        DepartmentRepository $departmentRepository,
         MailerFactory $mailerFactory
     )
     {
@@ -243,12 +248,23 @@ class PatientController extends AbstractController
         if ($request->isMethod('POST') && $settingsType->isSubmitted() && $settingsType->isValid()) {
             /** @var Patient $user */
             $user = $settingsType->getData();
+            if ($request->request->get('country') !== null) {
+                $user->setCountry($request->request->get('country'));
+            }
+            if ($request->request->get('department') !== null) {
+                $department = $departmentRepository->find($request->request->get('department'));
+                if ($department instanceof Department) {
+                    $user->setDepartment($department);
+                } else {
+                    $user->setScalarDepartment($department);
+                }
+            }
             if ($user->getEmail() !== $prevEmail) {
                 $user->setUniqueEmailToken();
                 $mailerFactory->createAndSend(
                     "Changement de votre adresse email",
                     $user->getEmail(),
-                    'no-reply@onestlapourvous.org',
+                    null,
                     $this->renderView(
                         'email/user_change_email.html.twig',
                         ['email_token' => $user->getEmailToken(), 'project_url' => $_ENV['PROJECT_URL']]
@@ -322,7 +338,7 @@ class PatientController extends AbstractController
                 $mailerFactory->createAndSend(
                     "Suppression de votre compte",
                     $user->getEmail(),
-                    'no-reply@onestlapourvous.org',
+                    null,
                     $this->renderView('email/user_delete_account.html.twig')
                 );
                 // delete user

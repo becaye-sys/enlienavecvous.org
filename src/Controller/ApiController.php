@@ -5,11 +5,13 @@ namespace App\Controller;
 
 
 use App\Entity\Appointment;
+use App\Entity\Department;
 use App\Entity\History;
 use App\Entity\Patient;
 use App\Repository\AppointmentRepository;
 use App\Repository\DepartmentRepository;
 use App\Repository\PatientRepository;
+use App\Repository\TherapistRepository;
 use App\Repository\TownRepository;
 use App\Services\CustomSerializer;
 use App\Services\HistoryHelper;
@@ -56,19 +58,37 @@ class ApiController extends AbstractController
     public function bookingSearchByFilters(
         Request $request,
         SerializerInterface $serializer,
-        AppointmentRepository $appointmentRepository
+        AppointmentRepository $appointmentRepository,
+        DepartmentRepository $departmentRepository
     )
     {
-        $params = [];
-        foreach ($request->query as $key => $value) {
-            if ($value !== "") {
-                $params[$key] = $value;
-            }
-        }
-
+        $params = json_decode($request->getContent(), true);
         $appointments = $appointmentRepository->findAvailableBookingsByFilters($params);
         $data = $serializer->serialize($appointments, 'json', ['groups' => ['get_bookings']]);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
+    }
+
+    /**
+     * @Route(path="/therapists-by-department", name="api_therapists_by_department", methods={"GET"})
+     * @param Request $request
+     * @param DepartmentRepository $departmentRepository
+     */
+    public function getTherapistsByDepartment(
+        Request $request,
+        DepartmentRepository $departmentRepository,
+        TherapistRepository $therapistRepository, SerializerInterface $serializer
+    )
+    {
+        $departmentId = $request->query->get('department');
+        $department = $departmentRepository->find($departmentId);
+        if ($department instanceof Department) {
+            $therapists = $therapistRepository->findBy(['department' => $department]);
+            dump($therapists);
+            $data = $serializer->serialize($therapists, 'json', ['groups' => ['patient_research']]);
+            return new JsonResponse($data, Response::HTTP_OK, [], true);
+        } else {
+            return new JsonResponse(['message' => "Département non trouvé"], Response::HTTP_NOT_FOUND, [], true);
+        }
     }
 
     /**
@@ -119,14 +139,14 @@ class ApiController extends AbstractController
         $mailer->createAndSend(
             "Confirmation de rendez-vous",
             $appointment->getPatient()->getEmail(),
-            'no-reply@onestlapourvous.org',
+            'accueil@enlienavecvous.org',
             $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment])
         );
 
         $mailer->createAndSend(
             "Confirmation de rendez-vous",
             $appointment->getTherapist()->getEmail(),
-            'no-reply@onestlapourvous.org',
+            'accueil@enlienavecvous.org',
             $this->renderView('email/appointment_booked_therapist.html.twig', ['appointment' => $appointment])
         );
 
@@ -162,14 +182,14 @@ class ApiController extends AbstractController
         $mailer->createAndSend(
             "Confirmation de rendez-vous",
             $appointment->getPatient()->getEmail(),
-            'no-reply@onestlapourvous.org',
+            'accueil@enlienavecvous.org',
             $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment])
         );
 
         $mailer->createAndSend(
             "Confirmation de rendez-vous",
             $appointment->getTherapist()->getEmail(),
-            'no-reply@onestlapourvous.org',
+            'accueil@enlienavecvous.org',
             $this->renderView('email/appointment_booked_therapist.html.twig', ['appointment' => $appointment])
         );
 
@@ -219,6 +239,7 @@ class ApiController extends AbstractController
             ['country' => $request->query->get('country')],
             ['code' => 'ASC']
         );
+
         $data = $serializer->serialize($departments, ['towns','users']);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }

@@ -28,11 +28,7 @@
                             <td>{{ a.bookingStart|date('H:i') }}</td>
                             <td>{{ a.bookingEnd|date('H:i') }}</td>
                             <td>
-                                {% if a.patient.displayName is not null %}
-                                    {{ a.patient.displayName }}
-                                {% else %}
-                                    {{ a.patient.firstName }} {{ a.patient.lastName }}
-                                {% endif %}
+                                {{ a.patient.firstName|capitalize }} {{ a.patient.lastName|upper }}
                             </td>
                             <td>{{ a.patient.email }}</td>
                             <td>

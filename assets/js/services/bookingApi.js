@@ -33,8 +33,14 @@ async function cancelBooking(id) {
 }
 
 async function updateBookingsByFilters(search) {
+    const params = {
+        department: search.department
+    }
     return await axios
-        .get(`${API_URL}bookings-filtered?department=${search.department}`)
+        .post(
+            `${API_URL}bookings-filtered`,
+            JSON.stringify(params)
+        )
         .then(response => {
             return response.data;
         })
@@ -44,10 +50,19 @@ async function updateBookingsByFilters(search) {
         ;
 }
 
+async function getTherapistsByDepartment(department) {
+    return await axios
+        .get(`${API_URL}therapists-by-department?department=${department}`)
+        .then(response => {
+            return response;
+        });
+}
+
 export default {
     getBookings,
     createBooking,
     confirmBooking,
     cancelBooking,
-    updateBookingsByFilters
+    updateBookingsByFilters,
+    getTherapistsByDepartment
 }

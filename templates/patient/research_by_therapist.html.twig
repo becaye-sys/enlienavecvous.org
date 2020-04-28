@@ -24,15 +24,17 @@
                         <td>{{ a.bookingDate|date('d/m/Y') }}</td>
                         <td>{{ a.bookingStart|date('H:i') }}</td>
                         <td>{{ a.bookingEnd|date('H:i') }}</td>
-                        <td>{{ a.location }}</td>
+                        <td>{{ a.therapist.department.name }} - {{ constant('App\\Entity\\Department::COUNTRIES')[a.therapist.country] }}</td>
                         <td>
-                            {% if a.booked == false %}
+                            {% if a.status == constant('App\\Entity\\Appointment::STATUS_AVAILABLE') and date(a.bookingDate) > date('+12hours') %}
                                 <form action="{{ path('patient_research_by_therapist', {'id': a.therapist.id}) }}" method="post">
                                     <input type="hidden" name="booking_id" value="{{ a.id }}">
                                     <button type="submit" class="btn btn-primary">Réserver</button>
                                 </form>
+                            {% elseif a.status == constant('App\\Entity\\Appointment::STATUS_AVAILABLE') and date(a.bookingDate) < date('+12hours') %}
+                                <button type="button" disabled class="btn btn-info">Indisponible</button>
                             {% else %}
-                                <button type="button" disabled class="btn btn-info">Réservé</button>
+                                <button type="button" disabled class="btn btn-info">Indisponible</button>
                             {% endif %}
                         </td>
                     </tr>

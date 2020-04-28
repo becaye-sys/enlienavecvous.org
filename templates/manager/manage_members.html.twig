@@ -35,7 +35,10 @@
                     <th>Nom</th>
                     <th>Prénom</th>
                     <th>Validé</th>
+                    <th>Pays</th>
+                    <th>Département</th>
                     <th>Changer le role</th>
+                    <th>Supprimer le compte</th>
                 </tr>
                 </thead>
                 {% if users|length %}
@@ -48,9 +51,19 @@
                             <td>
                                 {{ constant('App\\Entity\\User::USER_ROLE')[u.roles|last] }}
                             </td>
-                            <td>{{ u.lastName }}</td>
-                            <td>{{ u.firstName }}</td>
+                            <td>{{ u.lastName|upper }}</td>
+                            <td>{{ u.firstName|capitalize }}</td>
                             <td>{{ u.isActive }}</td>
+                            <td>
+                                {% if u.country is defined %}
+                                    {{ constant('App\\Entity\\Department::COUNTRIES')[u.country] }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if u.department is defined %}
+                                    {{ u.department.name }}
+                                {% endif %}
+                            </td>
                             <td>
                                 <form action="{{ path('manager_manage_users') }}" method="post">
                                     <select name="user_role" id="user_role">
@@ -64,9 +77,11 @@
                                         {% endif %}
                                     </select>
                                     <input type="hidden" name="user_id" value="{{ u.id }}">
-                                    <button type="submit" class="btn btn-primary">Mettre à jour le rôle</button>
+                                    <button type="submit" class="btn btn-primary">Mettre à jour</button>
                                 </form>
-                                <a href="{{ path('manager_delete_account_by_id', {'id': u.id}) }}" class="btn btn-danger">Supprimer ce compte</a>
+                            </td>
+                            <td>
+                                <a href="{{ path('manager_delete_account_by_id', {'id': u.id}) }}" class="btn btn-danger"><i class="fa fa-times"></i></a> (action directe et irréversible)
                             </td>
                         </tr>
                     {% endfor %}
@@ -75,6 +90,7 @@
                     <p>Aucun utilisateur trouvé pour ce-s filtre-s.</p>
                 {% endif %}
             </table>
+            {{ knp_pagination_render(users) }}
         </div>
     </div>
 {% endblock %}

@@ -62,7 +62,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
     {
         $token = new CsrfToken('authenticate', $credentials['csrf_token']);
         if (!$this->csrfTokenManager->isTokenValid($token)) {
-            throw new InvalidCsrfTokenException();
+            throw new InvalidCsrfTokenException("Veuillez recharger la page pour vous connecter.");
         }
 
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['email']]);

@@ -6,10 +6,9 @@
     </div>
     <div>
         <h2>Demande de rendez-vous</h2>
-        {{ booking.bookingDate|date('d/m/Y H:i') }} avec {{ booking.therapist.firstName }} {{ booking.therapist.lastName }}
-        {{ booking.therapist.zipCode }}
+        {{ booking.bookingDate|date('d/m/Y') }} à {{ booking.bookingStart|date('H:i') }} avec {{ booking.therapist.firstName }} {{ booking.therapist.lastName }}
         <div class="alert alert-warning">
-            En cas d'annulation, merci de prévenir votre thérapeute au plus vite en cliquant sur le bouton d'annulation disponible dans vos rendez-vous.
+            En cas d'annulation, merci de prévenir votre thérapeute au moins 24h à l'avance en cliquant sur le bouton d'annulation disponible dans vos rendez-vous.
         </div>
         <form action="{{ path('patient_confirm_booking', {'id': booking.id}) }}" method="post">
             <input type="hidden" name="booking_id" value="{{ booking.id }}">
